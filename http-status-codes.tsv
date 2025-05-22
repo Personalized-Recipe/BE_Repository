@@ -1,0 +1,18 @@
+Category	Status Code	Status Text	Description	사용 예시
+Successful Responses	200	OK	요청이 성공적으로 수행되었음	GET 요청으로 데이터 조회 성공, PUT 요청으로 데이터 수정 성공
+Successful Responses	201	Created	새로운 리소스가 성공적으로 생성됨	POST 요청으로 새로운 사용자 생성, 새로운 레시피 생성
+Successful Responses	204	No Content	요청이 성공했으나 응답 데이터는 없음	DELETE 요청 성공, 리소스 삭제 완료
+Client Errors	400	Bad Request	잘못된 요청 구문, 유효하지 않은 요청	필수 파라미터 누락, 잘못된 형식의 데이터 전송
+Client Errors	401	Unauthorized	인증이 필요한 리소스에 인증 없이 접근	로그인하지 않은 사용자가 보호된 리소스 접근 시도
+Client Errors	403	Forbidden	서버가 요청을 이해했지만 수행 권한이 없음	일반 사용자가 관리자 전용 기능 접근 시도
+Client Errors	404	Not Found	요청한 리소스를 찾을 수 없음	존재하지 않는 사용자 ID로 조회, 잘못된 URL 접근
+Client Errors	409	Conflict	현재 서버의 상태와 충돌	이미 존재하는 사용자명으로 회원가입 시도
+Client Errors	429	Too Many Requests	일정 시간 동안 너무 많은 요청을 보냄	API 호출 제한 초과
+Server Errors	500	Internal Server Error	서버 내부 오류	예기치 않은 서버 오류, 데이터베이스 연결 실패
+Server Errors	502	Bad Gateway	게이트웨이나 프록시 서버가 업스트림 서버로부터 잘못된 응답을 받음	외부 API 서버 응답 오류
+Server Errors	503	Service Unavailable	서버가 일시적으로 요청을 처리할 수 없음	서버 과부하, 유지보수 중
+Server Errors	504	Gateway Timeout	게이트웨이나 프록시 서버가 업스트림 서버로부터 응답을 받지 못함	외부 API 서버 응답 시간 초과
+Redirection	301	Moved Permanently	요청한 리소스의 URI가 영구적으로 변경됨	웹사이트 주소 변경
+Redirection	302	Found	요청한 리소스의 URI가 일시적으로 변경됨	임시 리다이렉션
+Informational	100	Continue	진행 중	대용량 데이터 업로드 시 서버가 계속 진행하라고 알림
+Informational	101	Switching Protocols	프로토콜 전환	웹소켓 연결 시작 

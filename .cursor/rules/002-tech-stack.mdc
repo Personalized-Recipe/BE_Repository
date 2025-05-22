@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+ #주요 스택 및 우선순위 지정
+- Spring Boot (JPA, QueryDSL)
+- RDB (MySQL, H2 for memory DB for test)
+- Redis cache DB
+- 프론트엔드는 React Web 사용 
+- Perplexity API 활용
+- 데이터 크롤링 수행

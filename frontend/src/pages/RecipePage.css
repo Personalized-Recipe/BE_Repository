@@ -1,0 +1,98 @@
+.recipe-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-page h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.recipe-form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.recipe-form textarea {
+  min-height: 100px;
+}
+
+.login-prompt {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.login-prompt p {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.recipe-result {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.recipe-result h3 {
+  color: #4CAF50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.recipe-request {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.recipe-response p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.recipe-history {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-history h3 {
+  color: #4CAF50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.history-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.history-item:hover {
+  background-color: #f9f9f9;
+}
+
+.history-item p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.history-date {
+  font-size: 0.85rem;
+  color: #777;
+} 
