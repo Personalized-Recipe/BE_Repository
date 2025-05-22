@@ -17,7 +17,7 @@ public class TestController {
     @GetMapping("/perplexity")
     public ResponseEntity<String> testPerplexity() {
         String testPrompt = "간단한 김치찌개 레시피를 알려줘";
-        String response = perplexityService.getResponse(1L, testPrompt);
+        String response = perplexityService.getResponseAsString(1, testPrompt);
         return ResponseEntity.ok(response);
     }
 } 

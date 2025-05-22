@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 public class UserPrompt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer promptId;
+    private Integer id;
     
-    @Column(name = "user_id", unique = true)
+    @Column(name = "user_id")
     private Integer userId;
     
     @Column(nullable = false, length = 10)

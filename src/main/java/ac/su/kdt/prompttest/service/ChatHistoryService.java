@@ -26,7 +26,7 @@ public class ChatHistoryService {
     private static final long CHAT_CACHE_TTL = 24 * 60 * 60; // 24시간
     
     @Transactional
-    public ChatHistory processRecipeRequest(Long userId, String message) {
+    public ChatHistory processRecipeRequest(Integer userId, String message) {
         // 세션 ID 가져오기
         String sessionId = getCurrentSessionId(userId);
         
@@ -34,7 +34,7 @@ public class ChatHistoryService {
         String prompt = promptService.generatePrompt(userId, message);
         
         // Perplexity API 호출
-        String response = perplexityService.getResponse(userId, message);
+        String response = perplexityService.getResponseAsString(userId, message);
         
         // 채팅 기록 생성
         ChatHistory chatHistory = ChatHistory.builder()
@@ -68,7 +68,7 @@ public class ChatHistoryService {
     }
     
     @Transactional(readOnly = true)
-    public List<ChatHistory> getUserChatHistory(Long userId, String sessionId) {
+    public List<ChatHistory> getUserChatHistory(Integer userId, String sessionId) {
         // 먼저 Redis 캐시에서 조회
         String cacheKey = CHAT_CACHE_KEY + userId + ":" + sessionId;
         List<Object> cachedChats = redisTemplate.opsForList().range(cacheKey, 0, -1);
@@ -83,7 +83,7 @@ public class ChatHistoryService {
         return chatHistoryRepository.findByUserIdAndSessionIdOrderByCreatedAtDesc(userId, sessionId);
     }
     
-    private String getCurrentSessionId(Long userId) {
+    private String getCurrentSessionId(Integer userId) {
         String cacheKey = USER_SESSION_KEY + userId;
         String sessionId = (String) redisTemplate.opsForValue().get(cacheKey);
         

@@ -20,19 +20,19 @@ public class UserController {
         return ResponseEntity.ok(UserDTO.from(user));
     }
     
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // 유저 프로필 업데이트
     public ResponseEntity<UserDTO> updateProfile(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
         User user = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(UserDTO.from(user));
     }
 
-    @GetMapping("/me")
+    @GetMapping("/me") // 현재 로그인한 유저 정보 조회
     public ResponseEntity<UserDTO> getCurrentUser() {
         User user = userService.getCurrentUser();
         return ResponseEntity.ok(UserDTO.from(user));
     }
 
-    @PutMapping("/me/profile-image")
+    @PutMapping("/me/profile-image") // 유저 프로필 업데이트
     public ResponseEntity<UserDTO> updateProfileImage(@RequestBody String profileImageUrl) {
         User user = userService.updateProfileImage(profileImageUrl);
         return ResponseEntity.ok(UserDTO.from(user));

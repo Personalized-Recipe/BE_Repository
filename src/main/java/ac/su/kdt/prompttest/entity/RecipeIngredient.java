@@ -19,7 +19,7 @@ public class RecipeIngredient {
     @Id
     @Column(name = "recipe_id")
     private Integer recipeId;
-    
+
     @Id
     @Column(name = "ingredient_id")
     private Integer ingredientId;
