@@ -126,12 +126,41 @@ public class PerplexityService {
         Recipe recipe = new Recipe();
         List<RecipeIngredient> recipeIngredients = new ArrayList<>();
         
-        // 요리 이름 파싱
-        Pattern namePattern = Pattern.compile("1\\.\\s*요리 이름\\s*:\\s*(.+?)(?=\\n|$)");
-        Matcher nameMatcher = namePattern.matcher(content);
-        if (nameMatcher.find()) {
-            recipe.setTitle(nameMatcher.group(1).trim());
+        // 요리 이름 파싱 - 여러 패턴 시도
+        String title = null;
+        
+        // 패턴 1: "1. 요리 이름: [이름]"
+        Pattern namePattern1 = Pattern.compile("1\\.\\s*요리 이름\\s*:\\s*(.+?)(?=\\n|$)");
+        Matcher nameMatcher1 = namePattern1.matcher(content);
+        if (nameMatcher1.find()) {
+            title = nameMatcher1.group(1).trim();
         }
+        
+        // 패턴 2: "요리 이름: [이름]"
+        if (title == null) {
+            Pattern namePattern2 = Pattern.compile("요리 이름\\s*:\\s*(.+?)(?=\\n|$)");
+            Matcher nameMatcher2 = namePattern2.matcher(content);
+            if (nameMatcher2.find()) {
+                title = nameMatcher2.group(1).trim();
+            }
+        }
+        
+        // 패턴 3: 첫 번째 줄이 제목인 경우
+        if (title == null) {
+            String[] lines = content.split("\\n");
+            if (lines.length > 0) {
+                title = lines[0].trim();
+            }
+        }
+        
+        // 제목이 여전히 null이면 기본값 설정
+        if (title == null || title.isEmpty()) {
+            log.warn("Failed to parse recipe title from content: {}", content);
+            title = "레시피 제목";
+        }
+        
+        log.info("Parsed recipe title: {}", title);
+        recipe.setTitle(title);
         
         // 재료와 양 파싱
         Pattern ingredientPattern = Pattern.compile("2\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
@@ -152,10 +181,19 @@ public class PerplexityService {
                         .orElseGet(() -> {
                             Ingredient newIngredient = new Ingredient();
                             newIngredient.setName(ingredientName);
-                            // 단위 추출
+                            
+                            // 양과 단위 추출 및 변환
                             String[] amountParts = amount.split("\\s+");
                             if (amountParts.length >= 2) {
-                                newIngredient.setUnit(amountParts[1]);
+                                try {
+                                    float value = Float.parseFloat(amountParts[0]);
+                                    String unit = amountParts[1];
+                                    // 단위를 g 또는 ml로 변환
+                                    float convertedAmount = convertToStandardUnit(value, unit);
+                                    newIngredient.setRequiredAmount(convertedAmount);
+                                } catch (NumberFormatException e) {
+                                    log.warn("Invalid amount format for ingredient {}: {}", ingredientName, amount);
+                                }
                             }
                             return ingredientRepository.save(newIngredient);
                         });
@@ -163,7 +201,7 @@ public class PerplexityService {
                     // RecipeIngredient 생성
                     RecipeIngredient recipeIngredient = new RecipeIngredient();
                     recipeIngredient.setRecipeId(recipe.getRecipeId());
-                    recipeIngredient.setIngredientId(ingredient.getId());
+                    recipeIngredient.setIngredientId(ingredient.getIngredientId());
                     recipeIngredients.add(recipeIngredient);
                 }
             }
@@ -174,6 +212,8 @@ public class PerplexityService {
         Matcher timeMatcher = timePattern.matcher(content);
         if (timeMatcher.find()) {
             recipe.setCookingTime(Integer.parseInt(timeMatcher.group(1)));
+        } else {
+            recipe.setCookingTime(30); // 기본값
         }
         
         // 난이도 파싱
@@ -181,23 +221,34 @@ public class PerplexityService {
         Matcher difficultyMatcher = difficultyPattern.matcher(content);
         if (difficultyMatcher.find()) {
             recipe.setDifficulty(difficultyMatcher.group(1).trim());
+        } else {
+            recipe.setDifficulty("중"); // 기본값
         }
         
         // 조리 방법과 팁을 description에 통합
         StringBuilder descriptionBuilder = new StringBuilder();
         
         // 조리 방법 파싱
-        Pattern methodPattern = Pattern.compile("5\\.\\s*상세한 조리 방법\\s*:\\s*(.+?)(?=\\n\\s*-|$)");
+        Pattern methodPattern = Pattern.compile("5\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
         Matcher methodMatcher = methodPattern.matcher(content);
         if (methodMatcher.find()) {
             descriptionBuilder.append("조리 방법:\n").append(methodMatcher.group(1).trim()).append("\n\n");
         }
         
         // 요리 팁과 주의사항 파싱
-        Pattern tipsPattern = Pattern.compile("요리 팁과 주의사항\\s*:\\s*(.+?)(?=\\n\\s*-|$)");
+        Pattern tipsPattern = Pattern.compile("6\\.\\s*요리 팁과 주의사항\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
         Matcher tipsMatcher = tipsPattern.matcher(content);
         if (tipsMatcher.find()) {
-            descriptionBuilder.append("요리 팁과 주의사항:\n").append(tipsMatcher.group(1).trim());
+            descriptionBuilder.append("요리 팁과 주의사항:\n").append(tipsMatcher.group(1).trim()).append("\n\n");
+        }
+        
+        // 이미지 URL 파싱
+        Pattern imagePattern = Pattern.compile("7\\.\\s*요리 이미지 URL\\s*:\\s*(.+?)(?=\\n|$)");
+        Matcher imageMatcher = imagePattern.matcher(content);
+        if (imageMatcher.find()) {
+            String imageUrl = imageMatcher.group(1).trim();
+            // URL을 바이트 배열로 변환
+            recipe.setImage(imageUrl.getBytes());
         }
         
         recipe.setDescription(descriptionBuilder.toString());
@@ -212,6 +263,27 @@ public class PerplexityService {
         }
         
         return recipe;
+    }
+
+    private float convertToStandardUnit(float value, String unit) {
+        if (unit == null) return value;
+        
+        // 단위 변환 로직
+        switch (unit.trim()) {
+            case "g":
+            case "ml":
+                return value;
+            case "kg":
+                return value * 1000;
+            case "L":
+                return value * 1000;
+            case "개":
+            case "장":
+            case "쪽":
+                return value; // 기본 단위로 변환하지 않음
+            default:
+                return value;
+        }
     }
 
     private String buildSystemPrompt(Integer userId) {

@@ -2,6 +2,7 @@ package ac.su.kdt.prompttest.controller;
 
 import ac.su.kdt.prompttest.dto.RecipeRequestDTO;
 import ac.su.kdt.prompttest.entity.Recipe;
+import ac.su.kdt.prompttest.entity.UserRecipe;
 import ac.su.kdt.prompttest.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class RecipeController {
         return ResponseEntity.ok(recipe);
     }
     
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Recipe>> getHistory(@PathVariable Long userId) {
-        List<Recipe> recipes = recipeService.getRecipeHistory(userId);
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<UserRecipe>> getRecipeHistory(@PathVariable Integer userId) {
+        List<UserRecipe> recipes = recipeService.getRecipeHistory(userId);
         return ResponseEntity.ok(recipes);
     }
 }

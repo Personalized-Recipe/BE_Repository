@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 엔티티를 계속 생성하려고 하지말고 내가 요구한 사항에 부합하는 엔티티가 이미 있는지 우선확인해

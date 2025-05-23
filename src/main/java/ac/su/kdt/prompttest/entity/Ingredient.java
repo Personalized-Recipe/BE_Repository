@@ -1,13 +1,10 @@
 package ac.su.kdt.prompttest.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Table(name = "ingredient")
+@Table(name = "Ingredient")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,11 +12,17 @@ import lombok.NoArgsConstructor;
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false, unique = true)
+    private Integer ingredientId;
+    
+    @Column(nullable = false, length = 50)
     private String name;  // 재료 이름
-
+    
+    @Column(name = "required_amount")
+    private Float requiredAmount;  // g 또는 ml단위
+    
     @Column
-    private String unit;  // 기본 단위 (g, ml, 개 등)
+    private Integer calories;  // 100g 당 칼로리
+    
+    @Column(columnDefinition = "TEXT")
+    private String nutritionInfo;  // 영양 정보 (단백질, 지방, 탄수화물 등)
 } 
