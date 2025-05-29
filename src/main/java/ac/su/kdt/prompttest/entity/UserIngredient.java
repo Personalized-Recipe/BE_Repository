@@ -8,7 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "User_Ingredient")
+@Table(
+        name = "User_Ingredient",
+        uniqueConstraints = @UniqueConstraint( // 🔽 변경된 부분
+                columnNames = {"user_id", "ingredient_id"}
+        )
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,15 +21,17 @@ import lombok.NoArgsConstructor;
 public class UserIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ingredientId;
-    
-    @Column(nullable = false, length = 50)
-    private String name;
-    
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ingredient_id", nullable = false)
+    private Ingredient ingredient;
+
     @Positive(message = "무게는 양수여야 합니다")
     @Column(name = "weight_in_grams")
     private Float weightInGrams;
-    
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-} 
+}

@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ChatHistoryRepository extends JpaRepository<ChatHistory, Integer> {
-    List<ChatHistory> findByUserIdAndSessionIdOrderByCreatedAtDesc(Integer userId, String sessionId);
+    List<ChatHistory> findByUserIdAndSessionId(Integer userId, String sessionId);
     List<ChatHistory> findByCreatedAtBefore(LocalDateTime dateTime);
     void deleteByCreatedAtBefore(LocalDateTime dateTime);
+
+    List<ChatHistory> findByUserIdAndSessionIdOrderByCreatedAtDesc(Integer userId, String sessionId);
 } 

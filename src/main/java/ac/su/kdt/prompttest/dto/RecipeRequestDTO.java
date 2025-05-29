@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RecipeRequestDTO {
-    private Long userId;
+    private Integer userId;
     private String request;
 } 
