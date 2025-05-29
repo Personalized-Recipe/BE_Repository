@@ -1,10 +1,7 @@
 package ac.su.kdt.prompttest.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -15,6 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @IdClass(RecipeIngredient.RecipeIngredientId.class)
+@Getter
+@Setter
 public class RecipeIngredient {
     @Id
     @Column(name = "recipe_id")
@@ -23,7 +22,8 @@ public class RecipeIngredient {
     @Id
     @Column(name = "ingredient_id")
     private Integer ingredientId;
-    
+
+
     // 복합 키 클래스
     @Data
     @NoArgsConstructor

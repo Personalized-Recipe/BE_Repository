@@ -3,6 +3,8 @@ package ac.su.kdt.prompttest.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Ingredient")
 @Data
@@ -22,6 +24,9 @@ public class Ingredient {
     
     @Column
     private Integer calories;  // 100g 당 칼로리
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<UserIngredient> userIngredients;
     
     @Column(columnDefinition = "TEXT")
     private String nutritionInfo;  // 영양 정보 (단백질, 지방, 탄수화물 등)

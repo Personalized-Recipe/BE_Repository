@@ -17,18 +17,40 @@ public class RecipeController {
     
     private final RecipeService recipeService;
     
-    @PostMapping
+    @PostMapping("/request") // 사용자의 요청을 받아 레시피 생성
     public ResponseEntity<Recipe> requestRecipe(@RequestBody RecipeRequestDTO recipeRequest) {
         Recipe recipe = recipeService.requestRecipe(
-                recipeRequest.getUserId(),
-                recipeRequest.getRequest()
+            recipeRequest.getUserId(),
+            recipeRequest.getRequest()
         );
         return ResponseEntity.ok(recipe);
     }
     
-    @GetMapping("/history/{userId}")
+    @GetMapping("/history/{userId}") // 사용자의 레시피 조회 이력 조회
     public ResponseEntity<List<UserRecipe>> getRecipeHistory(@PathVariable Integer userId) {
         List<UserRecipe> recipes = recipeService.getRecipeHistory(userId);
         return ResponseEntity.ok(recipes);
+    }
+
+    @PostMapping("/save/{userId}/{recipeId}") // 사용자가 레시피를 저장
+    public ResponseEntity<UserRecipe> saveRecipe(
+            @PathVariable Integer userId,
+            @PathVariable Integer recipeId) {
+        UserRecipe savedRecipe = recipeService.saveUserRecipe(userId, recipeId);
+        return ResponseEntity.ok(savedRecipe);
+    }
+
+    @DeleteMapping("/delete/{userId}/{recipeId}") // 사용자가 저장한 레시피 삭제
+    public ResponseEntity<Void> deleteRecipe(
+            @PathVariable Integer userId,
+            @PathVariable Integer recipeId) {
+        recipeService.deleteUserRecipe(userId, recipeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{recipeId}") // 레시피 상세 정보 조회
+    public ResponseEntity<Recipe> getRecipe(@PathVariable Integer recipeId) {
+        Recipe recipe = recipeService.getRecipeById(recipeId);
+        return ResponseEntity.ok(recipe);
     }
 }

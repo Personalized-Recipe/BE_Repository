@@ -16,15 +16,6 @@ public class ChatHistoryController {
     
     private final ChatHistoryService chatHistoryService;
     
-    @PostMapping("/recipes")
-    public ResponseEntity<ChatHistory> requestRecipe(@RequestBody ChatRequestDTO request) {
-        ChatHistory chatHistory = chatHistoryService.processRecipeRequest(
-                request.getUserId(),
-                request.getMessage()
-        );
-        return ResponseEntity.ok(chatHistory);
-    }
-    
     @GetMapping("/user/{userId}/session/{sessionId}")
     public ResponseEntity<List<ChatHistory>> getChatHistory(
             @PathVariable Integer userId,

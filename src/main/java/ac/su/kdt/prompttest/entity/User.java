@@ -9,10 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "User", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"provider", "providerId"}, name = "uk_provider_provider_id")
+    @UniqueConstraint(columnNames = {"provider", "provider_Id"}, name = "uk_provider_provider_id")
 })
 @Data
 @NoArgsConstructor
@@ -48,6 +49,9 @@ public class User {
     
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserIngredient> userIngredients;
     
     @PrePersist
     protected void onCreate() {

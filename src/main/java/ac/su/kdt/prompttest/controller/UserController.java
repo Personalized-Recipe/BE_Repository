@@ -14,7 +14,7 @@ public class UserController {
     
     private final UserService userService;
     
-    @GetMapping("/{id}") 
+    @GetMapping("/{userId}") 
     public ResponseEntity<UserDTO> getUserProfile(@PathVariable Integer id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(UserDTO.from(user));

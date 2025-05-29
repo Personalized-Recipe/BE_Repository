@@ -25,7 +25,7 @@ public class RecipeService {
     @Transactional
     public Recipe requestRecipe(Integer userId, String request) {
         // 프롬프트 생성
-        String prompt = promptService.generatePrompt(userId, request);
+        String prompt = promptService.generatePrompt(userId, request); // 이 프롬프트는 사용자의 프롬프트
         
         // Perplexity API를 통해 레시피 생성
         String response = perplexityService.getResponseAsString(userId, prompt);
@@ -53,6 +53,30 @@ public class RecipeService {
     
     public List<UserRecipe> getRecipeHistory(Integer userId) {
         return userRecipeRepository.findByUserId(userId);
+    }
+
+    @Transactional // 사용자가 레시피를 저장
+    public UserRecipe saveUserRecipe(Integer userId, Integer recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+            .orElseThrow(() -> new RuntimeException("Recipe not found"));
+            
+        UserRecipe userRecipe = UserRecipe.builder()
+            .userId(userId)
+            .recipeId(recipeId)
+            .build();
+            
+        return userRecipeRepository.save(userRecipe);
+    }
+
+    @Transactional // 사용자가 저장한 레시피 삭제
+    public void deleteUserRecipe(Integer userId, Integer recipeId) {
+        UserRecipe.UserRecipeId id = new UserRecipe.UserRecipeId(userId, recipeId);
+        userRecipeRepository.deleteById(id);
+    }
+
+    public Recipe getRecipeById(Integer recipeId) { // 레시피 상세 조회
+        return recipeRepository.findById(recipeId)
+            .orElseThrow(() -> new RuntimeException("Recipe not found"));
     }
 
     // Helper methods
