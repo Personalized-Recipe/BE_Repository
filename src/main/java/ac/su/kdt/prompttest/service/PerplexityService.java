@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import ac.su.kdt.prompttest.dto.RecipeRequestDTO;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -376,5 +377,34 @@ public class PerplexityService {
             default:
                 return value;
         }
+    }
+
+    public Recipe generateRecipe(RecipeRequestDTO requestDTO) {
+        String prompt = buildRecipePrompt(requestDTO);
+        return getResponse(requestDTO.getUserId(), prompt);
+    }
+
+    private String buildRecipePrompt(RecipeRequestDTO requestDTO) {
+        StringBuilder promptBuilder = new StringBuilder();
+        promptBuilder.append("다음 조건에 맞는 레시피를 추천해주세요:\n\n");
+        
+        // 사용자 정보 추가
+        promptBuilder.append("1. 선호하는 음식: ").append(requestDTO.getPreferences()).append("\n");
+        promptBuilder.append("2. 건강 상태: ").append(requestDTO.getHealthConditions()).append("\n");
+        promptBuilder.append("3. 알레르기: ").append(requestDTO.getAllergies()).append("\n");
+        
+        // 사용자 프롬프트 추가
+        if (requestDTO.getPrompt() != null && !requestDTO.getPrompt().isEmpty()) {
+            promptBuilder.append("\n추가 요구사항:\n").append(requestDTO.getPrompt());
+        }
+        
+        promptBuilder.append("\n\n위 조건을 고려하여 다음 형식으로 레시피를 제안해주세요:\n");
+        promptBuilder.append("1. 요리 이름\n");
+        promptBuilder.append("2. 필요한 재료와 양\n");
+        promptBuilder.append("3. 조리 시간\n");
+        promptBuilder.append("4. 난이도\n");
+        promptBuilder.append("5. 조리 방법");
+        
+        return promptBuilder.toString();
     }
 }

@@ -37,4 +37,10 @@ public class UserController {
         User user = userService.updateProfileImage(profileImageUrl);
         return ResponseEntity.ok(UserDTO.from(user));
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
+        UserDTO registeredUser = userService.registerUser(userDTO);
+        return ResponseEntity.ok(registeredUser);
+    }
 }

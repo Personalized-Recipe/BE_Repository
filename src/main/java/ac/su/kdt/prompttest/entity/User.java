@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "User", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"provider", "provider_Id"}, name = "uk_provider_provider_id")
-})
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,13 +22,20 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Integer id;
     
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = false)
     private String username;
     
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String password;
+    
+    private String name;
+    private Integer age;
+    private String gender;
+    private String preferences;
+    private String healthConditions;
+    private String allergies;
     
     @Column(length = 20)
     private String provider;

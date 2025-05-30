@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RecipeRequestDTO {
     private Integer userId;
-    private String request;
+    private String preferences;
+    private String healthConditions;
+    private String allergies;
+    private String prompt;
 } 
