@@ -15,12 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
-    private Integer userId;
+    private Integer id;
     private String username;
-    private String email;
-    private String provider;
-    private String providerId;
-    private String profileImage;
+    private String password;
+    private String name;
+    private Integer age;
+    private String gender;
+    private String preferences;
+    private String healthConditions;
+    private String allergies;
     
     /**
      * User 엔티티를 UserDTO로 변환하는 정적 메서드입니다.
@@ -32,12 +35,14 @@ public class UserDTO {
      */
     public static UserDTO from(User user) {
         return UserDTO.builder()
-                .userId(user.getUserId())
+                .id(user.getId())
                 .username(user.getUsername())
-                .email(user.getEmail())
-                .provider(user.getProvider())
-                .providerId(user.getProviderId())
-                .profileImage(user.getProfileImage())
+                .name(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender())
+                .preferences(user.getPreferences())
+                .healthConditions(user.getHealthConditions())
+                .allergies(user.getAllergies())
                 .build();
     }
 } 

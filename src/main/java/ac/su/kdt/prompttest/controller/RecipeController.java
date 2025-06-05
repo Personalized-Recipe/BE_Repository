@@ -21,7 +21,7 @@ public class RecipeController {
     public ResponseEntity<Recipe> requestRecipe(@RequestBody RecipeRequestDTO recipeRequest) {
         Recipe recipe = recipeService.requestRecipe(
             recipeRequest.getUserId(),
-            recipeRequest.getRequest()
+            recipeRequest.getPrompt()
         );
         return ResponseEntity.ok(recipe);
     }

@@ -112,3 +112,11 @@ CREATE TABLE Chat_History (
     INDEX idx_user_session (user_id, session_id) COMMENT '사용자별 세션 조회를 위한 인덱스',
     INDEX idx_created_at (created_at) COMMENT '오래된 데이터 아카이빙을 위한 인덱스'
 );
+
+CREATE TABLE chat_rooms (
+    room_id INT NOT NULL AUTO_INCREMENT COMMENT '채팅방 ID',
+    room_name VARCHAR(100) NOT NULL COMMENT '채팅방 이름',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
+    PRIMARY KEY (room_id)
+);

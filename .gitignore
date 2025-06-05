@@ -38,3 +38,6 @@ out/
 ### VS Code ###
 .vscode/
 .vscode/launch.json
+
+### Secret Properties ###
+src/main/resources/application-secret.properties
