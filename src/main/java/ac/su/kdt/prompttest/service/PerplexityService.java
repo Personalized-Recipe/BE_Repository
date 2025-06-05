@@ -107,17 +107,19 @@ public class PerplexityService {
         return formatRecipeAsString(recipe);
     }
 
-    private String formatRecipeAsString(Recipe recipe) {
+    public String formatRecipeAsString(Recipe recipe) {
         StringBuilder sb = new StringBuilder();
+        
+        // 요리 이름
         sb.append("1. 요리 이름: ").append(recipe.getTitle()).append("\n\n");
         
-        // 재료 정보 추가
+        // 재료와 양
         sb.append("2. 필요한 재료와 양:\n");
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findByRecipeId(recipe.getRecipeId());
         for (RecipeIngredient ri : recipeIngredients) {
             Ingredient ingredient = ingredientRepository.findById(ri.getIngredientId()).orElse(null);
             if (ingredient != null) {
-                sb.append("   - ").append(ingredient.getName()).append("\n");
+                sb.append("- ").append(ingredient.getName()).append("\n");
             }
         }
         sb.append("\n");
@@ -333,6 +335,10 @@ public class PerplexityService {
         }
         
         String description = descriptionBuilder.toString().trim();
+        if (description.isEmpty()) {
+            // description이 비어있으면 전체 content를 저장
+            description = content.trim();
+        }
         log.info("Final description: {}", description);
         recipe.setDescription(description);
         
