@@ -1,15 +1,11 @@
 package ac.su.kdt.prompttest.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class LoginRequestDTO {
-    private String username;
-    private String password;
+    private String authCode;
+    private String provider;
 } 

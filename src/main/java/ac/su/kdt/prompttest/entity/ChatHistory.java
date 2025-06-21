@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+// 첫 번째 인덱싱 : 특정 유저, 특정 세션의 대화기록 조회
+// 두 번째 인덱싱 : 대화기록 생성 시간 순서대로 조회
 @Table(name = "Chat_History", indexes = {
-    @Index(name = "idx_user_session", columnList = "user_id,session_id"),
-    @Index(name = "idx_created_at", columnList = "created_at")
+    @Index(name = "idx_chat_user_session", columnList = "user_id,session_id"),
+    @Index(name = "idx_chat_created_at", columnList = "created_at")
 })
 @Data
 @NoArgsConstructor

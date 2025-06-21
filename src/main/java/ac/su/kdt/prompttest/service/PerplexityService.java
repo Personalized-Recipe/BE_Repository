@@ -3,7 +3,6 @@ package ac.su.kdt.prompttest.service;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.Ingredient;
 import ac.su.kdt.prompttest.entity.RecipeIngredient;
-import ac.su.kdt.prompttest.entity.UserPrompt;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
 import ac.su.kdt.prompttest.repository.IngredientRepository;
 import ac.su.kdt.prompttest.repository.RecipeIngredientRepository;
