@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,11 +24,11 @@ public class UserPromptController {
      * @param userId 사용자 ID
      * @return UserPrompt 객체
      */
-    @GetMapping("/{userId}/prompt")
-    public ResponseEntity<?> getUserPrompt(@PathVariable Integer userId) {
+    @GetMapping("/{userId}/prompts")
+    public ResponseEntity<?> getUserPrompts(@PathVariable Integer userId) {
         try {
-            UserPrompt userPrompt = userPromptService.getUserPrompt(userId);
-            return ResponseEntity.ok(userPrompt);
+            List<UserPrompt> userPrompts = userPromptService.getUserPrompts(userId);
+            return ResponseEntity.ok(userPrompts);
         } catch (RuntimeException e) {
             log.error("Error getting user prompt: {}", e.getMessage());
             return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
@@ -40,11 +41,22 @@ public class UserPromptController {
      * @param userPrompt 생성할 프롬프트 정보
      * @return 생성된 UserPrompt 객체
      */
-    @PostMapping("/{userId}/prompt")
+    @PostMapping("/{userId}/prompts")
     public ResponseEntity<?> createUserPrompt(
             @PathVariable Integer userId,
             @RequestBody UserPrompt userPrompt) {
         try {
+            // 필수 필드 설정
+            if (userPrompt.getName() == null || userPrompt.getName().trim().isEmpty()) {
+                userPrompt.setName("기본프롬프트");
+            }
+            if (userPrompt.getAge() == null) {
+                userPrompt.setAge(25);
+            }
+            if (userPrompt.getGender() == null) {
+                userPrompt.setGender("M");
+            }
+            
             UserPrompt createdPrompt = userPromptService.createUserPrompt(userId, userPrompt);
             return ResponseEntity.ok(createdPrompt);
         } catch (RuntimeException e) {
@@ -56,15 +68,17 @@ public class UserPromptController {
     /**
      * 사용자의 프롬프트 정보를 업데이트합니다.
      * @param userId 사용자 ID
+     * @param promptId 업데이트할 프롬프트 ID
      * @param userPrompt 업데이트할 프롬프트 정보
      * @return 업데이트된 UserPrompt 객체
      */
-    @PutMapping("/{userId}/prompt")
+    @PutMapping("/{userId}/prompts/{promptId}")
     public ResponseEntity<?> updateUserPrompt(
             @PathVariable Integer userId,
+            @PathVariable Integer promptId,
             @RequestBody UserPrompt userPrompt) {
         try {
-            UserPrompt updatedPrompt = userPromptService.updateUserPrompt(userId, userPrompt);
+            UserPrompt updatedPrompt = userPromptService.updateUserPrompt(userId, promptId, userPrompt);
             return ResponseEntity.ok(updatedPrompt);
         } catch (RuntimeException e) {
             log.error("Error updating user prompt: {}", e.getMessage());
@@ -75,12 +89,13 @@ public class UserPromptController {
     /**
      * 사용자의 프롬프트 정보를 삭제합니다.
      * @param userId 사용자 ID
+     * @param promptId 삭제할 프롬프트 ID
      * @return 성공 메시지
      */
-    @DeleteMapping("/{userId}/prompt")
-    public ResponseEntity<?> deleteUserPrompt(@PathVariable Integer userId) {
+    @DeleteMapping("/{userId}/prompts/{promptId}")
+    public ResponseEntity<?> deleteUserPrompt(@PathVariable Integer userId, @PathVariable Integer promptId) {
         try {
-            userPromptService.deleteUserPrompt(userId);
+            userPromptService.deleteUserPrompt(userId, promptId);
             return ResponseEntity.ok(createSuccessResponse("User prompt deleted successfully"));
         } catch (RuntimeException e) {
             log.error("Error deleting user prompt: {}", e.getMessage());

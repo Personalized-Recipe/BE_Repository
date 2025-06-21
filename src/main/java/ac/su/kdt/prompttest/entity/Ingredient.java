@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +27,12 @@ public class Ingredient {
     private Integer calories;  // 100g 당 칼로리
 
     @OneToMany(mappedBy = "ingredient")
+    @JsonIgnore
     private List<UserIngredient> userIngredients;
+    
+    @OneToMany(mappedBy = "ingredient")
+    @JsonIgnore
+    private List<RefrigeratorIngredient> refrigeratorIngredients;
     
     @Column(columnDefinition = "TEXT")
     private String nutritionInfo;  // 영양 정보 (단백질, 지방, 탄수화물 등)

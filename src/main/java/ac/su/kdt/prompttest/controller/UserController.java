@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -14,9 +17,16 @@ public class UserController {
     
     private final UserService userService;
     
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> userDTOs = users.stream().map(UserDTO::from).collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOs);
+    }
+    
     @GetMapping("/{userId}") 
-    public ResponseEntity<UserDTO> getUserProfile(@PathVariable Integer id) {
-        User user = userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserProfile(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
         return ResponseEntity.ok(UserDTO.from(user));
     }
     

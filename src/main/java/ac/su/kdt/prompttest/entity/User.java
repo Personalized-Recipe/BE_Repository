@@ -58,6 +58,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserIngredient> userIngredients;
     
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Refrigerator> refrigerators;
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

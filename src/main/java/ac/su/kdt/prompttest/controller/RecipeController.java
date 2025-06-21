@@ -53,4 +53,10 @@ public class RecipeController {
         Recipe recipe = recipeService.getRecipeById(recipeId);
         return ResponseEntity.ok(recipe);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Recipe>> searchRecipes(@RequestParam String query) {
+        List<Recipe> recipes = recipeService.searchRecipes(query);
+        return ResponseEntity.ok(recipes);
+    }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRequestDTO {
     private Integer userId;
+    private Integer roomId;
     private String message;
     private String sessionId;  // 선택적 필드: 없으면 새로운 세션 생성
 } 

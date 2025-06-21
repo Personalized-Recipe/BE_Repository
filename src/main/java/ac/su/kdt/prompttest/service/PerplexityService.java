@@ -8,6 +8,8 @@ import ac.su.kdt.prompttest.repository.RecipeRepository;
 import ac.su.kdt.prompttest.repository.IngredientRepository;
 import ac.su.kdt.prompttest.repository.RecipeIngredientRepository;
 import ac.su.kdt.prompttest.repository.UserPromptRepository;
+import ac.su.kdt.prompttest.dto.RecipeRecommendationRequestDTO;
+import ac.su.kdt.prompttest.dto.RefrigeratorIngredientDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -40,11 +42,23 @@ public class PerplexityService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
+    private final RefrigeratorIngredientService refrigeratorIngredientService;
     
     @PostConstruct
     public void init() {
         log.info("API URL: {}", apiUrl);
         log.info("API Key length: {}", apiKey != null ? apiKey.length() : "null");
+        log.info("API Key value: {}", apiKey != null ? apiKey.substring(0, Math.min(10, apiKey.length())) + "..." : "null");
+        log.info("Full API Key: {}", apiKey);
+        
+        // API 키 유효성 검사
+        if (apiKey == null || apiKey.isEmpty()) {
+            log.error("API Key is null or empty!");
+        } else if (!apiKey.startsWith("pplx-")) {
+            log.error("API Key format is invalid! Should start with 'pplx-' but got: {}", apiKey.substring(0, Math.min(10, apiKey.length())));
+        } else {
+            log.info("API Key format is valid");
+        }
     }
     
     public Recipe getResponse(Integer userId, String userPrompt) {
@@ -53,6 +67,8 @@ public class PerplexityService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);
+        
+        log.info("Authorization header: Bearer {}", apiKey != null ? apiKey.substring(0, Math.min(10, apiKey.length())) + "..." : "null");
         
         String systemPrompt = promptService.generatePrompt(userId, userPrompt);
         log.debug("System prompt: {}", systemPrompt);
@@ -136,6 +152,93 @@ public class PerplexityService {
         return sb.toString();
     }
 
+    /**
+     * 냉장고 재료를 기반으로 레시피를 추천받는 메서드
+     */
+    public Recipe getRecipeRecommendation(Integer userId, RecipeRecommendationRequestDTO requestDTO) {
+        log.info("Starting recipe recommendation for userId: {}, refrigeratorId: {}", userId, requestDTO.getRefrigeratorId());
+        
+        // 냉장고 재료 목록 조회
+        List<RefrigeratorIngredientDTO> refrigeratorIngredients = refrigeratorIngredientService.getRefrigeratorIngredients(requestDTO.getRefrigeratorId());
+        
+        if (refrigeratorIngredients.isEmpty()) {
+            throw new RuntimeException("냉장고에 재료가 없습니다. 먼저 재료를 추가해주세요.");
+        }
+        
+        // 냉장고 재료 정보를 포함한 프롬프트 생성
+        String prompt = buildRefrigeratorBasedPrompt(refrigeratorIngredients, requestDTO);
+        
+        // Perplexity API 호출
+        return getResponse(userId, prompt);
+    }
+    
+    /**
+     * 냉장고 재료 기반 레시피 추천 프롬프트 생성
+     */
+    private String buildRefrigeratorBasedPrompt(List<RefrigeratorIngredientDTO> refrigeratorIngredients, RecipeRecommendationRequestDTO requestDTO) {
+        StringBuilder prompt = new StringBuilder();
+        
+        prompt.append("현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.\n\n");
+        
+        // 냉장고 재료 목록
+        prompt.append("【냉장고 재료 목록】\n");
+        for (RefrigeratorIngredientDTO ingredient : refrigeratorIngredients) {
+            prompt.append("- ").append(ingredient.getIngredientName())
+                  .append(" ").append(ingredient.getQuantity())
+                  .append(ingredient.getUnit())
+                  .append(" (유통기한: ").append(ingredient.getExpiryDate()).append(")\n");
+        }
+        prompt.append("\n");
+        
+        // 추가 요구사항
+        if (requestDTO.getCuisineType() != null && !requestDTO.getCuisineType().isEmpty()) {
+            prompt.append("요리 종류: ").append(requestDTO.getCuisineType()).append("\n");
+        }
+        
+        if (requestDTO.getDifficulty() != null && !requestDTO.getDifficulty().isEmpty()) {
+            prompt.append("난이도: ").append(requestDTO.getDifficulty()).append("\n");
+        }
+        
+        if (requestDTO.getServingSize() != null) {
+            prompt.append("인분 수: ").append(requestDTO.getServingSize()).append("인분\n");
+        }
+        
+        if (requestDTO.getCookingTime() != null && !requestDTO.getCookingTime().isEmpty()) {
+            prompt.append("조리 시간: ").append(requestDTO.getCookingTime()).append("\n");
+        }
+        
+        if (requestDTO.getPreference() != null && !requestDTO.getPreference().isEmpty()) {
+            prompt.append("선호도: ").append(requestDTO.getPreference()).append("\n");
+        }
+        
+        if (requestDTO.getDietaryRestrictions() != null && !requestDTO.getDietaryRestrictions().isEmpty()) {
+            prompt.append("식이 제한: ").append(requestDTO.getDietaryRestrictions()).append("\n");
+        }
+        
+        // 추가 재료가 있다면
+        if (requestDTO.getAdditionalIngredients() != null && !requestDTO.getAdditionalIngredients().isEmpty()) {
+            prompt.append("\n【추가로 필요한 재료】\n");
+            for (String additionalIngredient : requestDTO.getAdditionalIngredients()) {
+                prompt.append("- ").append(additionalIngredient).append("\n");
+            }
+            prompt.append("\n");
+        }
+        
+        prompt.append("\n위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. ");
+        prompt.append("유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, ");
+        prompt.append("재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.\n\n");
+        
+        prompt.append("응답은 다음 형식으로 해주세요:\n");
+        prompt.append("1. 요리 이름: [요리명]\n");
+        prompt.append("2. 필요한 재료와 양:\n");
+        prompt.append("- [재료명] [양]\n");
+        prompt.append("3. 조리 시간: [시간]분\n");
+        prompt.append("4. 난이도: [난이도]\n");
+        prompt.append("5. 조리 방법과 팁: [상세한 조리 방법과 팁]\n");
+        
+        return prompt.toString();
+    }
+
     private Recipe parseRecipeResponse(String content) {
         log.info("Starting to parse recipe response");
         log.debug("Content to parse: {}", content);
@@ -198,191 +301,88 @@ public class PerplexityService {
             }
         }
         
+        // 재료 파싱 및 RecipeIngredient 생성
         if (ingredientsText != null) {
-            log.info("Found ingredients text: {}", ingredientsText);
-            // 재료 라인별로 처리
             String[] ingredientLines = ingredientsText.split("\\n");
-            log.info("Number of ingredient lines: {}", ingredientLines.length);
-            
             for (String line : ingredientLines) {
                 line = line.trim();
-                if (line.isEmpty() || line.startsWith("-")) {
-                    log.debug("Skipping empty or bullet line: {}", line);
-                    continue;
+                if (line.startsWith("-") || line.startsWith("•")) {
+                    line = line.substring(1).trim();
                 }
                 
-                log.info("Processing ingredient line: {}", line);
-                
-                // 재료명과 양을 분리 (여러 패턴 시도)
-                String ingredientName = null;
-                String amount = null;
-                
-                // 패턴 1: "재료명: 양 단위"
-                Pattern pattern1 = Pattern.compile("([^:]+):\\s*(.+)");
-                Matcher matcher1 = pattern1.matcher(line);
-                if (matcher1.find()) {
-                    ingredientName = matcher1.group(1).trim();
-                    amount = matcher1.group(2).trim();
-                    log.info("Pattern 1 matched - Name: {}, Amount: {}", ingredientName, amount);
-                }
-                
-                // 패턴 2: "재료명 양 단위"
-                if (ingredientName == null) {
-                    Pattern pattern2 = Pattern.compile("([가-힣a-zA-Z]+)\\s*(\\d+[가-힣a-zA-Z]+)");
-                    Matcher matcher2 = pattern2.matcher(line);
-                    if (matcher2.find()) {
-                        ingredientName = matcher2.group(1).trim();
-                        amount = matcher2.group(2).trim();
-                        log.info("Pattern 2 matched - Name: {}, Amount: {}", ingredientName, amount);
-                    }
-                }
-                
-                if (ingredientName != null && amount != null) {
-                    log.info("Found valid ingredient - Name: {}, Amount: {}", ingredientName, amount);
+                if (!line.isEmpty()) {
+                    // 재료명과 양 분리 (예: "양파 1개", "돼지고기 200g")
+                    Pattern ingredientPattern = Pattern.compile("(.+?)\\s+(\\d+(?:\\.\\d+)?)\\s*(.+)?");
+                    Matcher matcher = ingredientPattern.matcher(line);
                     
-                    try {
-                        // 재료 찾기 또는 생성
-                        String finalAmount = amount;
-                        String finalIngredientName = ingredientName;
+                    if (matcher.find()) {
+                        String ingredientName = matcher.group(1).trim();
+                        float quantity = Float.parseFloat(matcher.group(2));
+                        String unit = matcher.group(3) != null ? matcher.group(3).trim() : "개";
+                        
+                        // 재료가 데이터베이스에 있는지 확인하고 없으면 생성
                         Ingredient ingredient = ingredientRepository.findByName(ingredientName)
-                            .orElseGet(() -> {
-                                log.info("Creating new ingredient: {}", finalIngredientName);
-                                Ingredient newIngredient = new Ingredient();
-                                newIngredient.setName(finalIngredientName);
-                                
-                                // 양과 단위 추출 및 변환
-                                String[] amountParts = finalAmount.split("\\s+");
-                                if (amountParts.length >= 2) {
-                                    try {
-                                        float value = Float.parseFloat(amountParts[0]);
-                                        String unit = amountParts[1];
-                                        // 단위를 g 또는 ml로 변환
-                                        float convertedAmount = convertToStandardUnit(value, unit);
-                                        newIngredient.setRequiredAmount(convertedAmount);
-                                        log.info("Converted amount for {}: {} {} -> {} g/ml", 
-                                            finalIngredientName, value, unit, convertedAmount);
-                                    } catch (NumberFormatException e) {
-                                        log.warn("Invalid amount format for ingredient {}: {}", 
-                                            finalIngredientName, finalAmount);
-                                    }
-                                }
-                                Ingredient savedIngredient = ingredientRepository.save(newIngredient);
-                                log.info("Saved new ingredient with ID: {}", savedIngredient.getIngredientId());
-                                return savedIngredient;
-                            });
+                                .orElseGet(() -> {
+                                    Ingredient newIngredient = new Ingredient();
+                                    newIngredient.setName(ingredientName);
+                                    newIngredient.setRequiredAmount(quantity);
+                                    return ingredientRepository.save(newIngredient);
+                                });
                         
-                        log.info("Found existing ingredient with ID: {}", ingredient.getIngredientId());
-                        
-                        // RecipeIngredient 생성
                         RecipeIngredient recipeIngredient = new RecipeIngredient();
                         recipeIngredient.setRecipeId(recipe.getRecipeId());
                         recipeIngredient.setIngredientId(ingredient.getIngredientId());
                         recipeIngredients.add(recipeIngredient);
-                        log.info("Created recipe ingredient relationship");
-                    } catch (Exception e) {
-                        log.error("Error processing ingredient: {}", ingredientName, e);
                     }
-                } else {
-                    log.warn("Failed to parse ingredient line: {}", line);
                 }
             }
-        } else {
-            log.warn("No ingredients text found in content");
         }
         
         // 조리 시간 파싱
+        Integer cookingTime = 30; // 기본값
         Pattern timePattern = Pattern.compile("3\\.\\s*조리 시간\\s*:\\s*(\\d+)\\s*분");
         Matcher timeMatcher = timePattern.matcher(content);
         if (timeMatcher.find()) {
-            recipe.setCookingTime(Integer.parseInt(timeMatcher.group(1)));
-        } else {
-            recipe.setCookingTime(30); // 기본값
+            cookingTime = Integer.parseInt(timeMatcher.group(1));
         }
+        recipe.setCookingTime(cookingTime);
         
         // 난이도 파싱
-        Pattern difficultyPattern = Pattern.compile("4\\.\\s*난이도\\s*:\\s*(.+?)(?=\\n|$)");
+        String difficulty = "중"; // 기본값
+        Pattern difficultyPattern = Pattern.compile("4\\.\\s*난이도\\s*:\\s*(.+)");
         Matcher difficultyMatcher = difficultyPattern.matcher(content);
         if (difficultyMatcher.find()) {
-            recipe.setDifficulty(difficultyMatcher.group(1).trim());
-        } else {
-            recipe.setDifficulty("중"); // 기본값
+            String rawDifficulty = difficultyMatcher.group(1).trim();
+            // AI 응답의 난이도를 엔티티 검증에 맞는 값으로 변환
+            difficulty = mapDifficultyToEntityFormat(rawDifficulty);
         }
-        
-        // 조리 방법과 팁을 description에 통합
-        StringBuilder descriptionBuilder = new StringBuilder();
-        
-        // 재료 정보 추가
-        if (ingredientsText != null) {
-            descriptionBuilder.append("필요한 재료와 양:\n").append(ingredientsText.trim()).append("\n\n");
-        }
+        recipe.setDifficulty(difficulty);
         
         // 조리 방법 파싱
-        Pattern methodPattern = Pattern.compile("5\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-        Matcher methodMatcher = methodPattern.matcher(content);
-        if (methodMatcher.find()) {
-            String method = methodMatcher.group(1).trim();
-            // 조리 방법에서 번호 제거
-            method = method.replaceAll("\\d+\\)", "").trim();
-            descriptionBuilder.append("조리 방법:\n").append(method).append("\n\n");
+        String description = "";
+        Pattern descPattern = Pattern.compile("5\\.\\s*조리 방법과 팁\\s*:\\s*(.+)", Pattern.DOTALL);
+        Matcher descMatcher = descPattern.matcher(content);
+        if (descMatcher.find()) {
+            description = descMatcher.group(1).trim();
         }
-        
-        // 요리 팁과 주의사항 파싱
-        Pattern tipsPattern = Pattern.compile("6\\.\\s*요리 팁과 주의사항\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-        Matcher tipsMatcher = tipsPattern.matcher(content);
-        if (tipsMatcher.find()) {
-            String tips = tipsMatcher.group(1).trim();
-            descriptionBuilder.append("요리 팁과 주의사항:\n").append(tips);
-        }
-        
-        String description = descriptionBuilder.toString().trim();
-        if (description.isEmpty()) {
-            // description이 비어있으면 전체 content를 저장
-            description = content.trim();
-        }
-        log.info("Final description: {}", description);
         recipe.setDescription(description);
         
-        try {
-            // Recipe 저장
-            log.info("Saving recipe with title: {}", recipe.getTitle());
-            recipe = recipeRepository.save(recipe);
-            log.info("Saved recipe with ID: {}", recipe.getRecipeId());
-            
-            // RecipeIngredient 저장
-            for (RecipeIngredient ri : recipeIngredients) {
-                ri.setRecipeId(recipe.getRecipeId());
-                log.info("Saving recipe ingredient relationship - Recipe ID: {}, Ingredient ID: {}", 
-                    ri.getRecipeId(), ri.getIngredientId());
-                RecipeIngredient savedRI = recipeIngredientRepository.save(ri);
-                log.info("Saved recipe ingredient relationship with ID: {}", savedRI.getRecipeId());
-            }
-            
-            return recipe;
-        } catch (Exception e) {
-            log.error("Error saving recipe or recipe ingredients", e);
-            throw new RuntimeException("Failed to save recipe: " + e.getMessage(), e);
+        // Recipe 저장
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        
+        // RecipeIngredient 저장
+        for (RecipeIngredient ri : recipeIngredients) {
+            ri.setRecipeId(savedRecipe.getRecipeId());
+            recipeIngredientRepository.save(ri);
         }
+        
+        log.info("Successfully parsed and saved recipe: {}", savedRecipe.getRecipeId());
+        return savedRecipe;
     }
 
     private float convertToStandardUnit(float value, String unit) {
-        if (unit == null) return value;
-        
-        // 단위 변환 로직
-        switch (unit.trim()) {
-            case "g":
-            case "ml":
-                return value;
-            case "kg":
-                return value * 1000;
-            case "L":
-                return value * 1000;
-            case "개":
-            case "장":
-            case "쪽":
-                return value; // 기본 단위로 변환하지 않음
-            default:
-                return value;
-        }
+        // 단위 변환 로직 (필요시 구현)
+        return value;
     }
 
     public Recipe generateRecipe(RecipeRequestDTO requestDTO) {
@@ -391,26 +391,63 @@ public class PerplexityService {
     }
 
     private String buildRecipePrompt(RecipeRequestDTO requestDTO) {
-        StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("다음 조건에 맞는 레시피를 추천해주세요:\n\n");
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("다음 요구사항에 맞는 레시피를 생성해주세요:\n\n");
         
-        // 사용자 정보 추가
-        promptBuilder.append("1. 선호하는 음식: ").append(requestDTO.getPreferences()).append("\n");
-        promptBuilder.append("2. 건강 상태: ").append(requestDTO.getHealthConditions()).append("\n");
-        promptBuilder.append("3. 알레르기: ").append(requestDTO.getAllergies()).append("\n");
-        
-        // 사용자 프롬프트 추가
-        if (requestDTO.getPrompt() != null && !requestDTO.getPrompt().isEmpty()) {
-            promptBuilder.append("\n추가 요구사항:\n").append(requestDTO.getPrompt());
+        if (requestDTO.getPreferences() != null) {
+            prompt.append("선호도: ").append(requestDTO.getPreferences()).append("\n");
+        }
+        if (requestDTO.getHealthConditions() != null) {
+            prompt.append("건강 상태: ").append(requestDTO.getHealthConditions()).append("\n");
+        }
+        if (requestDTO.getAllergies() != null) {
+            prompt.append("알레르기: ").append(requestDTO.getAllergies()).append("\n");
+        }
+        if (requestDTO.getPrompt() != null) {
+            prompt.append("추가 요구사항: ").append(requestDTO.getPrompt()).append("\n");
         }
         
-        promptBuilder.append("\n\n위 조건을 고려하여 다음 형식으로 레시피를 제안해주세요:\n");
-        promptBuilder.append("1. 요리 이름\n");
-        promptBuilder.append("2. 필요한 재료와 양\n");
-        promptBuilder.append("3. 조리 시간\n");
-        promptBuilder.append("4. 난이도\n");
-        promptBuilder.append("5. 조리 방법");
+        prompt.append("\n위의 요구사항에 맞는 맛있는 레시피를 생성해주세요.\n\n");
+        prompt.append("응답은 다음 형식으로 해주세요:\n");
+        prompt.append("1. 요리 이름: [요리명]\n");
+        prompt.append("2. 필요한 재료와 양:\n");
+        prompt.append("- [재료명] [양]\n");
+        prompt.append("3. 조리 시간: [시간]분\n");
+        prompt.append("4. 난이도: [난이도]\n");
+        prompt.append("5. 조리 방법과 팁: [상세한 조리 방법과 팁]\n");
         
-        return promptBuilder.toString();
+        return prompt.toString();
+    }
+
+    private String mapDifficultyToEntityFormat(String rawDifficulty) {
+        if (rawDifficulty == null || rawDifficulty.trim().isEmpty()) {
+            return "중";
+        }
+        
+        String normalized = rawDifficulty.toLowerCase().trim();
+        
+        // 초급/쉬움/간단 → 하
+        if (normalized.contains("초급") || normalized.contains("쉬움") || 
+            normalized.contains("간단") || normalized.contains("easy") ||
+            normalized.contains("기본") || normalized.contains("입문")) {
+            return "하";
+        }
+        
+        // 고급/어려움/복잡 → 상
+        if (normalized.contains("고급") || normalized.contains("어려움") || 
+            normalized.contains("복잡") || normalized.contains("hard") ||
+            normalized.contains("전문") || normalized.contains("고급자")) {
+            return "상";
+        }
+        
+        // 중급/보통/일반 → 중
+        if (normalized.contains("중급") || normalized.contains("보통") || 
+            normalized.contains("일반") || normalized.contains("medium") ||
+            normalized.contains("중간")) {
+            return "중";
+        }
+        
+        // 기본값
+        return "중";
     }
 }

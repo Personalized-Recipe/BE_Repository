@@ -17,6 +17,16 @@ public class ChatHistoryController {
     
     private final ChatHistoryService chatHistoryService;
     
+    @PostMapping("/history")
+    public ResponseEntity<ChatHistoryDTO> sendMessage(@RequestBody ChatRequestDTO chatRequest) {
+        ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(
+                chatRequest.getUserId(),
+                chatRequest.getMessage(),
+                chatRequest.getRoomId()
+        );
+        return ResponseEntity.ok(response);
+    }
+    
     @PostMapping("/user/{userId}/room/{roomId}")
     public ResponseEntity<ChatHistoryDTO> startChat(
             @PathVariable Integer userId,

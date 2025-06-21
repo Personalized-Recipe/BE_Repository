@@ -1,0 +1,3278 @@
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :resolveMainClassName UP-TO-DATE
+
+> Task :bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.3)
+
+2025-06-21 14:51:45 [restartedMain] INFO  a.s.k.p.PromptTestApplication - Starting PromptTestApplication using Java 17.0.14 with PID 17877 (/Users/gyudeok0202/Workspace/BE_Repository/build/classes/java/main started by gyudeok0202 in /Users/gyudeok0202/Workspace/BE_Repository)
+2025-06-21 14:51:45 [restartedMain] DEBUG a.s.k.p.PromptTestApplication - Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-06-21 14:51:45 [restartedMain] INFO  a.s.k.p.PromptTestApplication - The following 1 profile is active: "secret"
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatHistoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatRoomRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.IngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeIngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorIngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserPromptRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRecipeRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 JDBC repository interfaces.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 36 ms. Found 10 JPA repository interfaces.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatRoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.IngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeIngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorIngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserPromptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRecipeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 0 Redis repository interfaces.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-21 14:51:45 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-21 14:51:45 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-06-21 14:51:45 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 506 ms
+2025-06-21 14:51:45 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-21 14:51:45 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ded4daf
+2025-06-21 14:51:45 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-21 14:51:45 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/recipedb?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8'
+2025-06-21 14:51:45 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-21 14:51:45 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-21 14:51:45 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-21 14:51:46 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-21 14:51:46 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-21 14:51:46 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-06-21 14:51:46 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-21 14:51:46 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table recipe (
+        recipe_id integer not null auto_increment,
+        category varchar(50),
+        cooking_time integer,
+        description TEXT,
+        difficulty varchar(5),
+        image tinyblob,
+        title varchar(15) not null,
+        primary key (recipe_id)
+    ) engine=InnoDB
+Hibernate: 
+    create table recipe (
+        recipe_id integer not null auto_increment,
+        category varchar(50),
+        cooking_time integer,
+        description TEXT,
+        difficulty varchar(5),
+        image tinyblob,
+        title varchar(15) not null,
+        primary key (recipe_id)
+    ) engine=InnoDB
+2025-06-21 14:51:46 [restartedMain] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    create table recipe (
+        recipe_id integer not null auto_increment,
+        category varchar(50),
+        cooking_time integer,
+        description TEXT,
+        difficulty varchar(5),
+        image tinyblob,
+        title varchar(15) not null,
+        primary key (recipe_id)
+    ) engine=InnoDB" via JDBC [Table 'recipe' already exists]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    create table recipe (
+        recipe_id integer not null auto_increment,
+        category varchar(50),
+        cooking_time integer,
+        description TEXT,
+        difficulty varchar(5),
+        image tinyblob,
+        title varchar(15) not null,
+        primary key (recipe_id)
+    ) engine=InnoDB" via JDBC [Table 'recipe' already exists]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315)
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:388)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:364)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1231)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:949)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at ac.su.kdt.prompttest.PromptTestApplication.main(PromptTestApplication.java:12)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'recipe' already exists
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:770)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:653)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 43 common frames omitted
+2025-06-21 14:51:46 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-21 14:51:46 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - JSqlParser is in classpath; If applicable, JSqlParser will be used
+2025-06-21 14:51:46 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-21 14:51:46 [restartedMain] INFO  a.s.k.p.service.PerplexityService - API URL: https://api.perplexity.ai/chat/completions
+2025-06-21 14:51:46 [restartedMain] INFO  a.s.k.p.service.PerplexityService - API Key length: 53
+2025-06-21 14:51:46 [restartedMain] INFO  a.s.k.p.service.PerplexityService - API Key value: pplx-Z5Dxx...
+2025-06-21 14:51:46 [restartedMain] INFO  a.s.k.p.service.PerplexityService - Full API Key: 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
+2025-06-21 14:51:46 [restartedMain] INFO  a.s.k.p.service.PerplexityService - API Key format is valid
+2025-06-21 14:51:46 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-21 14:51:46 [restartedMain] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2025-06-21 14:51:46 [restartedMain] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-06-21 14:51:46 [restartedMain] ERROR i.n.r.d.DnsServerAddressStreamProviders - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2025-06-21 14:51:47 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-21 14:51:47 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-21 14:51:47 [restartedMain] INFO  a.s.k.p.PromptTestApplication - Started PromptTestApplication in 1.854 seconds (process running for 1.988)
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Starting getResponse for userId: 1, prompt: 간단한 김치찌개 레시피를 알려줘
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Authorization header: Bearer pplx-Z5Dxx...
+2025-06-21 14:52:03 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:52:03 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-21 14:52:03 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - System prompt: 당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+간단한 김치찌개 레시피를 알려줘
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+
+2025-06-21 14:52:03 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Sending request to Perplexity API
+2025-06-21 14:52:03 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - Request headers: [Content-Type:"application/json", Authorization:"Bearer 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"]
+2025-06-21 14:52:03 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - Request body: {messages=[{role=system, content=당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+간단한 김치찌개 레시피를 알려줘
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+}, {role=user, content=간단한 김치찌개 레시피를 알려줘}], model=sonar-pro}
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Received response from Perplexity API
+2025-06-21 14:52:13 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - Response: {id=947efc9f-f506-4918-a92d-e4c80220253a, model=sonar-pro, created=1750485133, usage={prompt_tokens=411, completion_tokens=866, total_tokens=1277, search_context_size=low}, citations=[https://www.10000recipe.com/recipe/6762794, https://www.10000recipe.com/recipe/6870442, https://blog.naver.com/jh2y3/223465030257, https://www.youtube.com/watch?v=e4NnhT99fr0, https://blog.naver.com/sallee_jaeryun/223164892442], search_results=[{title=김치찌개 간단하고 맛있게 끓이는법 - 만개의레시피, url=https://www.10000recipe.com/recipe/6762794, date=null}, {title=돼지고기김치찌개 맛있게 끓이는법 초간단하게~ - 만개의레시피, url=https://www.10000recipe.com/recipe/6870442, date=null}, {title=돼지고기 김치찌개 맛있게 끓이는법 간단 김치찌개 레시피 저녁메뉴 ..., url=https://blog.naver.com/jh2y3/223465030257, date=2024-05-31}, {title=한국인 99%가 좋아하는 김치찌개 이 레시피는 널리 알려야합니다!, url=https://www.youtube.com/watch?v=e4NnhT99fr0, date=2024-01-09}, {title=돼지고기 김치찌개 맛있게 끓이는법 간단 삼겹살 김치찌개 레시피, url=https://blog.naver.com/sallee_jaeryun/223164892442, date=2023-07-24}], object=chat.completion, choices=[{index=0, finish_reason=stop, message={role=assistant, content=## 요리 이름  
+간단 돼지고기 김치찌개
+
+## 필요한 재료와 양  
+- 배추김치: 300g  
+- 돼지고기(앞다리살 또는 삼겹살): 200g  
+- 두부: 1/2모(약 150g)  
+- 양파: 1/2개(약 100g)  
+- 대파: 1/2대(약 15cm)  
+- 김치국물: 50ml  
+- 다진 마늘: 1큰술(15ml)  
+- 고춧가루: 1큰술(15ml)  
+- 쌀뜨물 또는 물: 500ml  
+- 참기름: 1큰술(15ml)  
+- 설탕: 1작은술(5ml)  
+- 소금, 후추: 약간  
+
+※ 땅콩/견과류는 전혀 들어가지 않으니 알레르기 걱정 없이 드실 수 있습니다.
+
+## 조리 시간  
+약 30~35분
+
+## 난이도  
+초보도 가능한 쉬운 단계
+
+## 상세한 조리 방법  
+1. **재료 손질**  
+   - 배추김치는 한 입 크기로 썰고, 양파와 두부는 두껍게, 대파는 송송 썰어 준비합니다.  
+   - 돼지고기는 먹기 좋은 크기로 썰어둡니다.
+
+2. **고기와 김치 볶기**  
+   - 중불로 달군 냄비에 참기름을 두르고 돼지고기와 다진 마늘을 넣어 약 1분간 볶아줍니다[1][2][3].  
+   - 고기가 겉면이 익으면 김치와 김치국물을 넣고 2~3분 더 볶아줍니다.  
+   - 고춧가루, 설탕도 넣어 함께 볶아주세요.
+
+3. **찌개 끓이기**  
+   - 쌀뜨물(또는 물) 500ml를 붓고 한소끔 끓입니다.  
+   - 끓어오르면 거품을 걷어내고, 약불로 줄여 15분 정도 푹 끓입니다.
+
+4. **마무리**  
+   - 두부와 양파, 대파를 넣고 5~10분 더 끓입니다.  
+   - 마지막에 소금, 후추로 간을 맞추면 완성입니다.
+
+## 요리 팁과 주의사항  
+- **돼지고기 부위**: 앞다리살은 담백하고, 삼겹살은 더 고소한 맛이 나니 취향에 맞게 선택하세요.  
+- **물 대신 쌀뜨물**: 쌀뜨물을 사용하면 찌개 국물이 한층 구수해집니다.  
+- **설탕**: 김치가 너무 시거나 매울 때, 설탕을 약간 넣으면 맛이 부드러워집니다.  
+- **알레르기 주의**: 땅콩, 견과류 등 알레르기 유발 재료가 전혀 들어가지 않으니 안심하고 드셔도 됩니다.  
+- **간 조절**: 김치의 염도에 따라 소금 간은 마지막에 조금씩 추가하세요.
+
+## 완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/09/06/b4a26d0bd5af8b4eade905a4c8c58b0b1.jpg
+
+---
+이 레시피는 기본 재료로 매콤하고 감칠맛 나는 김치찌개를 건강하게 즐길 수 있는 초보용 방법입니다. 자극적인 재료 없이도 깊은 맛을 낼 수 있으며, 간단하고 빠르게 만들 수 있습니다[1][2][3][5].}, delta={role=assistant, content=}}]}
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Parsing AI response content
+2025-06-21 14:52:13 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - Content: ## 요리 이름  
+간단 돼지고기 김치찌개
+
+## 필요한 재료와 양  
+- 배추김치: 300g  
+- 돼지고기(앞다리살 또는 삼겹살): 200g  
+- 두부: 1/2모(약 150g)  
+- 양파: 1/2개(약 100g)  
+- 대파: 1/2대(약 15cm)  
+- 김치국물: 50ml  
+- 다진 마늘: 1큰술(15ml)  
+- 고춧가루: 1큰술(15ml)  
+- 쌀뜨물 또는 물: 500ml  
+- 참기름: 1큰술(15ml)  
+- 설탕: 1작은술(5ml)  
+- 소금, 후추: 약간  
+
+※ 땅콩/견과류는 전혀 들어가지 않으니 알레르기 걱정 없이 드실 수 있습니다.
+
+## 조리 시간  
+약 30~35분
+
+## 난이도  
+초보도 가능한 쉬운 단계
+
+## 상세한 조리 방법  
+1. **재료 손질**  
+   - 배추김치는 한 입 크기로 썰고, 양파와 두부는 두껍게, 대파는 송송 썰어 준비합니다.  
+   - 돼지고기는 먹기 좋은 크기로 썰어둡니다.
+
+2. **고기와 김치 볶기**  
+   - 중불로 달군 냄비에 참기름을 두르고 돼지고기와 다진 마늘을 넣어 약 1분간 볶아줍니다[1][2][3].  
+   - 고기가 겉면이 익으면 김치와 김치국물을 넣고 2~3분 더 볶아줍니다.  
+   - 고춧가루, 설탕도 넣어 함께 볶아주세요.
+
+3. **찌개 끓이기**  
+   - 쌀뜨물(또는 물) 500ml를 붓고 한소끔 끓입니다.  
+   - 끓어오르면 거품을 걷어내고, 약불로 줄여 15분 정도 푹 끓입니다.
+
+4. **마무리**  
+   - 두부와 양파, 대파를 넣고 5~10분 더 끓입니다.  
+   - 마지막에 소금, 후추로 간을 맞추면 완성입니다.
+
+## 요리 팁과 주의사항  
+- **돼지고기 부위**: 앞다리살은 담백하고, 삼겹살은 더 고소한 맛이 나니 취향에 맞게 선택하세요.  
+- **물 대신 쌀뜨물**: 쌀뜨물을 사용하면 찌개 국물이 한층 구수해집니다.  
+- **설탕**: 김치가 너무 시거나 매울 때, 설탕을 약간 넣으면 맛이 부드러워집니다.  
+- **알레르기 주의**: 땅콩, 견과류 등 알레르기 유발 재료가 전혀 들어가지 않으니 안심하고 드셔도 됩니다.  
+- **간 조절**: 김치의 염도에 따라 소금 간은 마지막에 조금씩 추가하세요.
+
+## 완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/09/06/b4a26d0bd5af8b4eade905a4c8c58b0b1.jpg
+
+---
+이 레시피는 기본 재료로 매콤하고 감칠맛 나는 김치찌개를 건강하게 즐길 수 있는 초보용 방법입니다. 자극적인 재료 없이도 깊은 맛을 낼 수 있으며, 간단하고 빠르게 만들 수 있습니다[1][2][3][5].
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Starting to parse recipe response
+2025-06-21 14:52:13 [http-nio-8080-exec-1] DEBUG a.s.k.p.service.PerplexityService - Content to parse: ## 요리 이름  
+간단 돼지고기 김치찌개
+
+## 필요한 재료와 양  
+- 배추김치: 300g  
+- 돼지고기(앞다리살 또는 삼겹살): 200g  
+- 두부: 1/2모(약 150g)  
+- 양파: 1/2개(약 100g)  
+- 대파: 1/2대(약 15cm)  
+- 김치국물: 50ml  
+- 다진 마늘: 1큰술(15ml)  
+- 고춧가루: 1큰술(15ml)  
+- 쌀뜨물 또는 물: 500ml  
+- 참기름: 1큰술(15ml)  
+- 설탕: 1작은술(5ml)  
+- 소금, 후추: 약간  
+
+※ 땅콩/견과류는 전혀 들어가지 않으니 알레르기 걱정 없이 드실 수 있습니다.
+
+## 조리 시간  
+약 30~35분
+
+## 난이도  
+초보도 가능한 쉬운 단계
+
+## 상세한 조리 방법  
+1. **재료 손질**  
+   - 배추김치는 한 입 크기로 썰고, 양파와 두부는 두껍게, 대파는 송송 썰어 준비합니다.  
+   - 돼지고기는 먹기 좋은 크기로 썰어둡니다.
+
+2. **고기와 김치 볶기**  
+   - 중불로 달군 냄비에 참기름을 두르고 돼지고기와 다진 마늘을 넣어 약 1분간 볶아줍니다[1][2][3].  
+   - 고기가 겉면이 익으면 김치와 김치국물을 넣고 2~3분 더 볶아줍니다.  
+   - 고춧가루, 설탕도 넣어 함께 볶아주세요.
+
+3. **찌개 끓이기**  
+   - 쌀뜨물(또는 물) 500ml를 붓고 한소끔 끓입니다.  
+   - 끓어오르면 거품을 걷어내고, 약불로 줄여 15분 정도 푹 끓입니다.
+
+4. **마무리**  
+   - 두부와 양파, 대파를 넣고 5~10분 더 끓입니다.  
+   - 마지막에 소금, 후추로 간을 맞추면 완성입니다.
+
+## 요리 팁과 주의사항  
+- **돼지고기 부위**: 앞다리살은 담백하고, 삼겹살은 더 고소한 맛이 나니 취향에 맞게 선택하세요.  
+- **물 대신 쌀뜨물**: 쌀뜨물을 사용하면 찌개 국물이 한층 구수해집니다.  
+- **설탕**: 김치가 너무 시거나 매울 때, 설탕을 약간 넣으면 맛이 부드러워집니다.  
+- **알레르기 주의**: 땅콩, 견과류 등 알레르기 유발 재료가 전혀 들어가지 않으니 안심하고 드셔도 됩니다.  
+- **간 조절**: 김치의 염도에 따라 소금 간은 마지막에 조금씩 추가하세요.
+
+## 완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/09/06/b4a26d0bd5af8b4eade905a4c8c58b0b1.jpg
+
+---
+이 레시피는 기본 재료로 매콤하고 감칠맛 나는 김치찌개를 건강하게 즐길 수 있는 초보용 방법입니다. 자극적인 재료 없이도 깊은 맛을 낼 수 있으며, 간단하고 빠르게 만들 수 있습니다[1][2][3][5].
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Parsed recipe title: ## 요리 이름
+2025-06-21 14:52:13 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Successfully parsed and saved recipe: 5
+2025-06-21 14:52:13 [http-nio-8080-exec-1] INFO  a.s.k.p.service.PerplexityService - Successfully parsed recipe with ID: 5
+2025-06-21 14:52:13 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.ingredient_id,
+        ri1_0.recipe_id 
+    from
+        recipe_ingredient ri1_0 
+    where
+        ri1_0.recipe_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.ingredient_id,
+        ri1_0.recipe_id 
+    from
+        recipe_ingredient ri1_0 
+    where
+        ri1_0.recipe_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0
+Hibernate: 
+    /* <criteria> */ select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        ui1_0.ingredient_id,
+        ui1_0.id,
+        ui1_0.user_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.ingredient_id=?
+Hibernate: 
+    select
+        ui1_0.ingredient_id,
+        ui1_0.id,
+        ui1_0.user_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.ingredient_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.ingredient_id=?
+Hibernate: 
+    select
+        ri1_0.ingredient_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        ui1_0.user_id,
+        ui1_0.id,
+        ui1_0.ingredient_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.user_id=?
+Hibernate: 
+    select
+        ui1_0.user_id,
+        ui1_0.id,
+        ui1_0.ingredient_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.user_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.user_id,
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.user_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Infinite recursion (StackOverflowError)
+2025-06-21 14:53:28 [http-nio-8080-exec-2] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Infinite recursion (StackOverflowError)]
+2025-06-21 14:53:28 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Ingredient */insert 
+    into
+        ingredient (calories, name, nutrition_info, required_amount) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Ingredient */insert 
+    into
+        ingredient (calories, name, nutrition_info, required_amount) 
+    values
+        (?, ?, ?, ?)
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        ur1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        ur1_0.user_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.recipe_id,
+        r1_0.category,
+        r1_0.cooking_time,
+        r1_0.description,
+        r1_0.difficulty,
+        r1_0.image,
+        r1_0.title 
+    from
+        recipe r1_0 
+    where
+        r1_0.recipe_id=?
+Hibernate: 
+    select
+        r1_0.recipe_id,
+        r1_0.category,
+        r1_0.cooking_time,
+        r1_0.description,
+        r1_0.difficulty,
+        r1_0.image,
+        r1_0.title 
+    from
+        recipe r1_0 
+    where
+        r1_0.recipe_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        (
+            ur1_0.recipe_id, ur1_0.user_id
+        ) in ((?, ?))
+Hibernate: 
+    select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        (
+            ur1_0.recipe_id, ur1_0.user_id
+        ) in ((?, ?))
+2025-06-21 14:53:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.UserRecipe */insert 
+    into
+        user_recipe (recipe_id, user_id) 
+    values
+        (?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.UserRecipe */insert 
+    into
+        user_recipe (recipe_id, user_id) 
+    values
+        (?, ?)
+2025-06-21 14:53:28 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        (
+            ur1_0.recipe_id, ur1_0.user_id
+        ) in ((?, ?))
+Hibernate: 
+    select
+        ur1_0.recipe_id,
+        ur1_0.user_id 
+    from
+        user_recipe ur1_0 
+    where
+        (
+            ur1_0.recipe_id, ur1_0.user_id
+        ) in ((?, ?))
+2025-06-21 14:53:28 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    /* delete for ac.su.kdt.prompttest.entity.UserRecipe */delete 
+    from
+        user_recipe 
+    where
+        recipe_id=? 
+        and user_id=?
+Hibernate: 
+    /* delete for ac.su.kdt.prompttest.entity.UserRecipe */delete 
+    from
+        user_recipe 
+    where
+        recipe_id=? 
+        and user_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    /* <criteria> */ select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+Hibernate: 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+Hibernate: 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+Hibernate: 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+Hibernate: 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        r1_0.refrigerator_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=? 
+        and r1_0.name=? 
+    limit
+        ?
+Hibernate: 
+    /* <criteria> */ select
+        r1_0.refrigerator_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=? 
+        and r1_0.name=? 
+    limit
+        ?
+2025-06-21 14:53:28 [http-nio-8080-exec-10] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Refrigerator with name '새로운냉장고' already exists] with root cause
+java.lang.RuntimeException: Refrigerator with name '새로운냉장고' already exists
+	at ac.su.kdt.prompttest.service.RefrigeratorService.createRefrigerator(RefrigeratorService.java:43)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:351)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:385)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at ac.su.kdt.prompttest.service.RefrigeratorService$$SpringCGLIB$$0.createRefrigerator(<generated>)
+	at ac.su.kdt.prompttest.controller.RefrigeratorController.createRefrigerator(RefrigeratorController.java:35)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:259)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:192)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:920)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        r1_0.refrigerator_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=? 
+        and r1_0.name=? 
+    limit
+        ?
+Hibernate: 
+    /* <criteria> */ select
+        r1_0.refrigerator_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=? 
+        and r1_0.name=? 
+    limit
+        ?
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+Hibernate: 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:28 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    join
+        ingredient i1_0 
+            on i1_0.ingredient_id=ri1_0.ingredient_id 
+    where
+        r1_0.refrigerator_id=? 
+        and i1_0.ingredient_id=? 
+        and ri1_0.unit=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    join
+        ingredient i1_0 
+            on i1_0.ingredient_id=ri1_0.ingredient_id 
+    where
+        r1_0.refrigerator_id=? 
+        and i1_0.ingredient_id=? 
+        and ri1_0.unit=?
+2025-06-21 14:53:28 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.RefrigeratorIngredient */insert 
+    into
+        refrigerator_ingredient (created_at, expiry_date, freshness_status, ingredient_id, notes, purchase_date, quantity, refrigerator_id, storage_location, unit, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.RefrigeratorIngredient */insert 
+    into
+        refrigerator_ingredient (created_at, expiry_date, freshness_status, ingredient_id, notes, purchase_date, quantity, refrigerator_id, storage_location, unit, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-06-21 14:53:29 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    /* SELECT
+        ri 
+    FROM
+        RefrigeratorIngredient ri 
+    WHERE
+        ri.refrigerator.refrigeratorId = :refrigeratorId 
+        AND ri.expiryDate <= :expiryDate */ select
+            ri1_0.id,
+            ri1_0.created_at,
+            ri1_0.expiry_date,
+            ri1_0.freshness_status,
+            ri1_0.ingredient_id,
+            ri1_0.notes,
+            ri1_0.purchase_date,
+            ri1_0.quantity,
+            ri1_0.refrigerator_id,
+            ri1_0.storage_location,
+            ri1_0.unit,
+            ri1_0.updated_at 
+        from
+            refrigerator_ingredient ri1_0 
+        where
+            ri1_0.refrigerator_id=? 
+            and ri1_0.expiry_date<=?
+Hibernate: 
+    /* SELECT
+        ri 
+    FROM
+        RefrigeratorIngredient ri 
+    WHERE
+        ri.refrigerator.refrigeratorId = :refrigeratorId 
+        AND ri.expiryDate <= :expiryDate */ select
+            ri1_0.id,
+            ri1_0.created_at,
+            ri1_0.expiry_date,
+            ri1_0.freshness_status,
+            ri1_0.ingredient_id,
+            ri1_0.notes,
+            ri1_0.purchase_date,
+            ri1_0.quantity,
+            ri1_0.refrigerator_id,
+            ri1_0.storage_location,
+            ri1_0.unit,
+            ri1_0.updated_at 
+        from
+            refrigerator_ingredient ri1_0 
+        where
+            ri1_0.refrigerator_id=? 
+            and ri1_0.expiry_date<=?
+2025-06-21 14:53:29 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    /* SELECT
+        ri 
+    FROM
+        RefrigeratorIngredient ri 
+    WHERE
+        ri.refrigerator.refrigeratorId = :refrigeratorId 
+        AND ri.expiryDate < :today */ select
+            ri1_0.id,
+            ri1_0.created_at,
+            ri1_0.expiry_date,
+            ri1_0.freshness_status,
+            ri1_0.ingredient_id,
+            ri1_0.notes,
+            ri1_0.purchase_date,
+            ri1_0.quantity,
+            ri1_0.refrigerator_id,
+            ri1_0.storage_location,
+            ri1_0.unit,
+            ri1_0.updated_at 
+        from
+            refrigerator_ingredient ri1_0 
+        where
+            ri1_0.refrigerator_id=? 
+            and ri1_0.expiry_date<?
+Hibernate: 
+    /* SELECT
+        ri 
+    FROM
+        RefrigeratorIngredient ri 
+    WHERE
+        ri.refrigerator.refrigeratorId = :refrigeratorId 
+        AND ri.expiryDate < :today */ select
+            ri1_0.id,
+            ri1_0.created_at,
+            ri1_0.expiry_date,
+            ri1_0.freshness_status,
+            ri1_0.ingredient_id,
+            ri1_0.notes,
+            ri1_0.purchase_date,
+            ri1_0.quantity,
+            ri1_0.refrigerator_id,
+            ri1_0.storage_location,
+            ri1_0.unit,
+            ri1_0.updated_at 
+        from
+            refrigerator_ingredient ri1_0 
+        where
+            ri1_0.refrigerator_id=? 
+            and ri1_0.expiry_date<?
+2025-06-21 14:53:29 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=? 
+        and ri1_0.storage_location=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=? 
+        and ri1_0.storage_location=?
+2025-06-21 14:53:29 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-3] INFO  o.a.coyote.http11.Http11Processor - Error parsing HTTP request header
+ Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
+java.lang.IllegalArgumentException: Invalid character found in the request target [/api/refrigerators/1/ingredients/search?q=0xed0x850x8c0xec0x8a0xa40xed0x8a0xb8 ]. The valid characters are defined in RFC 7230 and RFC 3986
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:482)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:264)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2025-06-21 14:53:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0
+Hibernate: 
+    /* <criteria> */ select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0
+2025-06-21 14:53:29 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+Hibernate: 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.ChatRoom */insert 
+    into
+        chat_rooms (created_at, room_name, updated_at) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.ChatRoom */insert 
+    into
+        chat_rooms (created_at, room_name, updated_at) 
+    values
+        (?, ?, ?)
+2025-06-21 14:53:29 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ch1_0.chat_id,
+        ch1_0.room_id,
+        ch1_0.created_at,
+        ch1_0.is_user_message,
+        ch1_0.message,
+        ch1_0.recipe_id,
+        ch1_0.session_id,
+        ch1_0.user_id 
+    from
+        chat_history ch1_0 
+    where
+        ch1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ch1_0.chat_id,
+        ch1_0.room_id,
+        ch1_0.created_at,
+        ch1_0.is_user_message,
+        ch1_0.message,
+        ch1_0.recipe_id,
+        ch1_0.session_id,
+        ch1_0.user_id 
+    from
+        chat_history ch1_0 
+    where
+        ch1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+Hibernate: 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ch1_0.chat_id,
+        ch1_0.room_id,
+        ch1_0.created_at,
+        ch1_0.is_user_message,
+        ch1_0.message,
+        ch1_0.recipe_id,
+        ch1_0.session_id,
+        ch1_0.user_id 
+    from
+        chat_history ch1_0 
+    left join
+        chat_rooms cr1_0 
+            on cr1_0.room_id=ch1_0.room_id 
+    where
+        ch1_0.user_id=? 
+        and cr1_0.room_id=? 
+    order by
+        ch1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        ch1_0.chat_id,
+        ch1_0.room_id,
+        ch1_0.created_at,
+        ch1_0.is_user_message,
+        ch1_0.message,
+        ch1_0.recipe_id,
+        ch1_0.session_id,
+        ch1_0.user_id 
+    from
+        chat_history ch1_0 
+    left join
+        chat_rooms cr1_0 
+            on cr1_0.room_id=ch1_0.room_id 
+    where
+        ch1_0.user_id=? 
+        and cr1_0.room_id=? 
+    order by
+        ch1_0.created_at desc
+2025-06-21 14:53:29 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+Hibernate: 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        ui1_0.user_id,
+        ui1_0.id,
+        ui1_0.ingredient_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.user_id=?
+Hibernate: 
+    select
+        ui1_0.user_id,
+        ui1_0.id,
+        ui1_0.ingredient_id,
+        ui1_0.weight_in_grams 
+    from
+        user_ingredient ui1_0 
+    where
+        ui1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.user_id,
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-4] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Infinite recursion (StackOverflowError)
+2025-06-21 14:53:29 [http-nio-8080-exec-4] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Infinite recursion (StackOverflowError)]
+2025-06-21 14:53:29 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-6] ERROR a.s.k.p.c.UserPromptController - Error creating user prompt: User prompt already exists
+2025-06-21 14:53:29 [http-nio-8080-exec-8] INFO  a.s.k.p.c.RecipeRecommendationController - Recipe recommendation request - userId: 1, refrigeratorId: 1
+2025-06-21 14:53:29 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Starting recipe recommendation for userId: 1, refrigeratorId: 1
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+Hibernate: 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Starting getResponse for userId: 1, prompt: 현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.
+
+【냉장고 재료 목록】
+- 양파 500.0g (유통기한: 2025-12-31)
+- 테스트재료 300.0g (유통기한: 2025-12-31)
+- 테스트재료 400.0g (유통기한: 2025-12-31)
+- 테스트재료 200.0g (유통기한: 2025-12-31)
+
+
+위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. 유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, 재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.
+
+응답은 다음 형식으로 해주세요:
+1. 요리 이름: [요리명]
+2. 필요한 재료와 양:
+- [재료명] [양]
+3. 조리 시간: [시간]분
+4. 난이도: [난이도]
+5. 조리 방법과 팁: [상세한 조리 방법과 팁]
+
+2025-06-21 14:53:29 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Authorization header: Bearer pplx-Z5Dxx...
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - System prompt: 당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.
+
+【냉장고 재료 목록】
+- 양파 500.0g (유통기한: 2025-12-31)
+- 테스트재료 300.0g (유통기한: 2025-12-31)
+- 테스트재료 400.0g (유통기한: 2025-12-31)
+- 테스트재료 200.0g (유통기한: 2025-12-31)
+
+
+위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. 유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, 재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.
+
+응답은 다음 형식으로 해주세요:
+1. 요리 이름: [요리명]
+2. 필요한 재료와 양:
+- [재료명] [양]
+3. 조리 시간: [시간]분
+4. 난이도: [난이도]
+5. 조리 방법과 팁: [상세한 조리 방법과 팁]
+
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+
+2025-06-21 14:53:29 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Sending request to Perplexity API
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - Request headers: [Content-Type:"application/json", Authorization:"Bearer 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"]
+2025-06-21 14:53:29 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - Request body: {messages=[{role=system, content=당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.
+
+【냉장고 재료 목록】
+- 양파 500.0g (유통기한: 2025-12-31)
+- 테스트재료 300.0g (유통기한: 2025-12-31)
+- 테스트재료 400.0g (유통기한: 2025-12-31)
+- 테스트재료 200.0g (유통기한: 2025-12-31)
+
+
+위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. 유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, 재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.
+
+응답은 다음 형식으로 해주세요:
+1. 요리 이름: [요리명]
+2. 필요한 재료와 양:
+- [재료명] [양]
+3. 조리 시간: [시간]분
+4. 난이도: [난이도]
+5. 조리 방법과 팁: [상세한 조리 방법과 팁]
+
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+}, {role=user, content=현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.
+
+【냉장고 재료 목록】
+- 양파 500.0g (유통기한: 2025-12-31)
+- 테스트재료 300.0g (유통기한: 2025-12-31)
+- 테스트재료 400.0g (유통기한: 2025-12-31)
+- 테스트재료 200.0g (유통기한: 2025-12-31)
+
+
+위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. 유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, 재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.
+
+응답은 다음 형식으로 해주세요:
+1. 요리 이름: [요리명]
+2. 필요한 재료와 양:
+- [재료명] [양]
+3. 조리 시간: [시간]분
+4. 난이도: [난이도]
+5. 조리 방법과 팁: [상세한 조리 방법과 팁]
+}], model=sonar-pro}
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Received response from Perplexity API
+2025-06-21 14:53:40 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - Response: {id=9edaa231-875a-40d7-ae57-d8565f8ac71e, model=sonar-pro, created=1750485220, usage={prompt_tokens=953, completion_tokens=755, total_tokens=1708, search_context_size=low}, citations=[https://blog.naver.com/kies84/223829082071?recommendCode=2&recommendTrackingCode=2, https://www.10000recipe.com/recipe/6888303, https://blog.naver.com/sidae_in/221825945209, https://www.10000recipe.com/recipe/6913978, https://www.youtube.com/watch?v=YAmDrqA4BTg], search_results=[{title=해외에서 난리난 바로 그 양파요리 레시피 이거! - 네이버 블로그, url=https://blog.naver.com/kies84/223829082071?recommendCode=2&recommendTrackingCode=2, date=2025-04-11}, {title=백종원 양파덮밥 간단하고 맛있는 한그릇요리 - 만개의레시피, url=https://www.10000recipe.com/recipe/6888303, date=null}, {title=[신간] ONION : 양파로 만드는 40가지 레시피 : 네이버 블로그, url=https://blog.naver.com/sidae_in/221825945209, date=2020-02-26}, {title=양파볶음 - 만개의레시피, url=https://www.10000recipe.com/recipe/6913978, date=null}, {title=양파를 구워 간장속으로! 양파 이렇게 하면 밥 최소 3공기! 구운양파 ..., url=https://www.youtube.com/watch?v=YAmDrqA4BTg, date=2023-05-19}], object=chat.completion, choices=[{index=0, finish_reason=stop, message={role=assistant, content=1. 요리 이름: 매콤 치즈 양파칩
+
+2. 필요한 재료와 양:
+- 양파 500g
+- 모짜렐라 치즈 100g (멕시칸 치즈 혼합 가능)
+- 파프리카 파우더 1작은술 (없으면 라면스프 소량 대체 가능)
+- 갈릭 파우더 0.5작은술 (선택)
+- 고춧가루 1작은술 (매운 맛 선호 시)
+- 소금 약간
+- 후추 약간
+- 올리브유 2큰술
+
+3. 조리 시간: 25분
+
+4. 난이도: 쉬움
+
+5. 조리 방법과 팁:
+- 양파는 껍질을 벗기고 깨끗이 씻은 뒤 물기를 닦고, 최대한 얇게 슬라이스합니다[1].
+- 오븐 또는 에어프라이어를 180도로 예열합니다.
+- 슬라이스한 양파를 볼에 담고, 올리브유·소금·후추·파프리카 파우더·고춧가루·갈릭 파우더를 넣어 골고루 버무립니다.
+- 오븐 팬이나 에어프라이어 바스켓에 종이 호일을 깔고, 양파를 펴서 올립니다.
+- 모짜렐라 치즈를 위에 고루 흩뿌립니다.
+- 오븐이나 에어프라이어에서 180도에서 약 12~15분간, 치즈가 노릇하게 익고 양파가 바삭해질 때까지 구워줍니다(중간에 한 번 뒤집어주면 더 바삭함)[1].
+- 완성 후 취향에 따라 추가로 고춧가루나 파우더를 뿌려줍니다.
+
+요리 팁과 주의사항:
+- 양파를 최대한 얇게 슬라이스하면 바삭한 식감이 극대화됩니다.
+- 치즈 종류는 알레르기가 없으니, 모짜렐라 외에도 멕시칸 치즈(고추가 들어가 얼큰함)가 있으면 추가 사용하면 풍미가 더 좋아집니다.
+- 견과류와 땅콩은 절대 사용하지 마세요.
+- 오븐 대신 에어프라이어도 사용 가능합니다.
+- 남은 치즈는 다른 요리에 활용하거나, 없으면 생략해도 양파만으로도 충분히 맛있습니다.
+
+완성된 요리의 이미지 URL:
+https://blog.kakaocdn.net/dn/cKksET/btrCxllnqkI/6HcWwVtYJ1xvO7GkKQCyjk/img.jpg[1]
+
+---
+
+※ 테스트재료는 정체가 불분명하여 직접 활용이 어렵지만, 만약 일반적인 채소류(애호박, 당근, 파프리카 등)라면 함께 슬라이스해 같이 구워내면 더욱 다양한 맛과 영양을 즐길 수 있습니다. 그렇지 않다면 기본 레시피를 우선 활용하세요.
+
+이 레시피는 양파의 풍미와 치즈의 고소함, 그리고 매운 고춧가루 풍미까지 더해져 알레르기와 건강에 모두 안전하며, 영양도 풍부합니다.}, delta={role=assistant, content=}}]}
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Parsing AI response content
+2025-06-21 14:53:40 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - Content: 1. 요리 이름: 매콤 치즈 양파칩
+
+2. 필요한 재료와 양:
+- 양파 500g
+- 모짜렐라 치즈 100g (멕시칸 치즈 혼합 가능)
+- 파프리카 파우더 1작은술 (없으면 라면스프 소량 대체 가능)
+- 갈릭 파우더 0.5작은술 (선택)
+- 고춧가루 1작은술 (매운 맛 선호 시)
+- 소금 약간
+- 후추 약간
+- 올리브유 2큰술
+
+3. 조리 시간: 25분
+
+4. 난이도: 쉬움
+
+5. 조리 방법과 팁:
+- 양파는 껍질을 벗기고 깨끗이 씻은 뒤 물기를 닦고, 최대한 얇게 슬라이스합니다[1].
+- 오븐 또는 에어프라이어를 180도로 예열합니다.
+- 슬라이스한 양파를 볼에 담고, 올리브유·소금·후추·파프리카 파우더·고춧가루·갈릭 파우더를 넣어 골고루 버무립니다.
+- 오븐 팬이나 에어프라이어 바스켓에 종이 호일을 깔고, 양파를 펴서 올립니다.
+- 모짜렐라 치즈를 위에 고루 흩뿌립니다.
+- 오븐이나 에어프라이어에서 180도에서 약 12~15분간, 치즈가 노릇하게 익고 양파가 바삭해질 때까지 구워줍니다(중간에 한 번 뒤집어주면 더 바삭함)[1].
+- 완성 후 취향에 따라 추가로 고춧가루나 파우더를 뿌려줍니다.
+
+요리 팁과 주의사항:
+- 양파를 최대한 얇게 슬라이스하면 바삭한 식감이 극대화됩니다.
+- 치즈 종류는 알레르기가 없으니, 모짜렐라 외에도 멕시칸 치즈(고추가 들어가 얼큰함)가 있으면 추가 사용하면 풍미가 더 좋아집니다.
+- 견과류와 땅콩은 절대 사용하지 마세요.
+- 오븐 대신 에어프라이어도 사용 가능합니다.
+- 남은 치즈는 다른 요리에 활용하거나, 없으면 생략해도 양파만으로도 충분히 맛있습니다.
+
+완성된 요리의 이미지 URL:
+https://blog.kakaocdn.net/dn/cKksET/btrCxllnqkI/6HcWwVtYJ1xvO7GkKQCyjk/img.jpg[1]
+
+---
+
+※ 테스트재료는 정체가 불분명하여 직접 활용이 어렵지만, 만약 일반적인 채소류(애호박, 당근, 파프리카 등)라면 함께 슬라이스해 같이 구워내면 더욱 다양한 맛과 영양을 즐길 수 있습니다. 그렇지 않다면 기본 레시피를 우선 활용하세요.
+
+이 레시피는 양파의 풍미와 치즈의 고소함, 그리고 매운 고춧가루 풍미까지 더해져 알레르기와 건강에 모두 안전하며, 영양도 풍부합니다.
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Starting to parse recipe response
+2025-06-21 14:53:40 [http-nio-8080-exec-8] DEBUG a.s.k.p.service.PerplexityService - Content to parse: 1. 요리 이름: 매콤 치즈 양파칩
+
+2. 필요한 재료와 양:
+- 양파 500g
+- 모짜렐라 치즈 100g (멕시칸 치즈 혼합 가능)
+- 파프리카 파우더 1작은술 (없으면 라면스프 소량 대체 가능)
+- 갈릭 파우더 0.5작은술 (선택)
+- 고춧가루 1작은술 (매운 맛 선호 시)
+- 소금 약간
+- 후추 약간
+- 올리브유 2큰술
+
+3. 조리 시간: 25분
+
+4. 난이도: 쉬움
+
+5. 조리 방법과 팁:
+- 양파는 껍질을 벗기고 깨끗이 씻은 뒤 물기를 닦고, 최대한 얇게 슬라이스합니다[1].
+- 오븐 또는 에어프라이어를 180도로 예열합니다.
+- 슬라이스한 양파를 볼에 담고, 올리브유·소금·후추·파프리카 파우더·고춧가루·갈릭 파우더를 넣어 골고루 버무립니다.
+- 오븐 팬이나 에어프라이어 바스켓에 종이 호일을 깔고, 양파를 펴서 올립니다.
+- 모짜렐라 치즈를 위에 고루 흩뿌립니다.
+- 오븐이나 에어프라이어에서 180도에서 약 12~15분간, 치즈가 노릇하게 익고 양파가 바삭해질 때까지 구워줍니다(중간에 한 번 뒤집어주면 더 바삭함)[1].
+- 완성 후 취향에 따라 추가로 고춧가루나 파우더를 뿌려줍니다.
+
+요리 팁과 주의사항:
+- 양파를 최대한 얇게 슬라이스하면 바삭한 식감이 극대화됩니다.
+- 치즈 종류는 알레르기가 없으니, 모짜렐라 외에도 멕시칸 치즈(고추가 들어가 얼큰함)가 있으면 추가 사용하면 풍미가 더 좋아집니다.
+- 견과류와 땅콩은 절대 사용하지 마세요.
+- 오븐 대신 에어프라이어도 사용 가능합니다.
+- 남은 치즈는 다른 요리에 활용하거나, 없으면 생략해도 양파만으로도 충분히 맛있습니다.
+
+완성된 요리의 이미지 URL:
+https://blog.kakaocdn.net/dn/cKksET/btrCxllnqkI/6HcWwVtYJ1xvO7GkKQCyjk/img.jpg[1]
+
+---
+
+※ 테스트재료는 정체가 불분명하여 직접 활용이 어렵지만, 만약 일반적인 채소류(애호박, 당근, 파프리카 등)라면 함께 슬라이스해 같이 구워내면 더욱 다양한 맛과 영양을 즐길 수 있습니다. 그렇지 않다면 기본 레시피를 우선 활용하세요.
+
+이 레시피는 양파의 풍미와 치즈의 고소함, 그리고 매운 고춧가루 풍미까지 더해져 알레르기와 건강에 모두 안전하며, 영양도 풍부합니다.
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Parsed recipe title: 매콤 치즈 양파칩
+2025-06-21 14:53:40 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Successfully parsed and saved recipe: 6
+2025-06-21 14:53:40 [http-nio-8080-exec-8] INFO  a.s.k.p.service.PerplexityService - Successfully parsed recipe with ID: 6
+2025-06-21 14:53:40 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Starting getResponse for userId: 1, prompt: 간단한 김치찌개 레시피를 알려줘
+2025-06-21 14:53:40 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Authorization header: Bearer pplx-Z5Dxx...
+2025-06-21 14:53:40 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-21 14:53:40 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+Hibernate: 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-21 14:53:40 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - System prompt: 당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+간단한 김치찌개 레시피를 알려줘
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+
+2025-06-21 14:53:40 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Sending request to Perplexity API
+2025-06-21 14:53:40 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - Request headers: [Content-Type:"application/json", Authorization:"Bearer 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"]
+2025-06-21 14:53:40 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - Request body: {messages=[{role=system, content=당신은 레시피 추천 전문가입니다. 다음 사용자의 특성을 고려하여 레시피를 추천해주세요:
+
+- 이름: 홍길동
+- 나이: 30세
+- 성별: 남성
+- 건강 상태: 건강
+- 알레르기: 땅콩, 견과류
+- 선호하는 음식: 매운 음식
+
+
+건강 상태에 따른 특별 지시사항:
+현재 사용자는 건강 상태입니다. 해당 건강 상태에 맞는 적절한 식단을 추천해주세요.
+
+다음 사항을 고려하여 레시피를 추천해주세요:
+1. 해당 건강 상태에 맞는 영양소를 포함한 재료를 선택해주세요.
+2. 해당 건강 상태에 해로운 성분이 포함된 재료는 피해주세요.
+3. 건강 상태 개선에 도움이 되는 조리 방법을 선택해주세요.
+4. 필요한 경우, 특정 재료의 대체재를 제안해주세요.
+
+알레르기 주의사항:
+- 땅콩, 견과류 알레르기가 있으므로 해당 재료를 제외한 레시피를 추천해주세요.
+
+## 사용자 요청
+간단한 김치찌개 레시피를 알려줘
+
+레시피는 다음 형식으로 제공해주세요:
+- 요리 이름
+- 필요한 재료와 양
+- 조리 시간
+- 난이도
+- 상세한 조리 방법
+- 요리 팁과 주의사항
+- 완성된 요리의 이미지 URL
+
+주의사항:
+- 모든 재료의 양과 단위를 정확히 명시해주세요.
+- 조리 방법은 순서대로 상세히 설명해주세요.
+- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
+- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+}, {role=user, content=간단한 김치찌개 레시피를 알려줘}], model=sonar-pro}
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Received response from Perplexity API
+2025-06-21 14:53:47 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - Response: {id=92795f49-b9e7-46a1-aa19-994b0378250c, model=sonar-pro, created=1750485227, usage={prompt_tokens=411, completion_tokens=839, total_tokens=1250, search_context_size=low}, citations=[https://www.10000recipe.com/recipe/6762794, https://www.10000recipe.com/recipe/6870442, https://blog.naver.com/jh2y3/223465030257, https://www.youtube.com/watch?v=e4NnhT99fr0, https://blog.naver.com/sallee_jaeryun/223164892442], search_results=[{title=김치찌개 간단하고 맛있게 끓이는법 - 만개의레시피, url=https://www.10000recipe.com/recipe/6762794, date=null}, {title=돼지고기김치찌개 맛있게 끓이는법 초간단하게~ - 만개의레시피, url=https://www.10000recipe.com/recipe/6870442, date=null}, {title=돼지고기 김치찌개 맛있게 끓이는법 간단 김치찌개 레시피 저녁메뉴 ..., url=https://blog.naver.com/jh2y3/223465030257, date=2024-05-31}, {title=한국인 99%가 좋아하는 김치찌개 이 레시피는 널리 알려야합니다!, url=https://www.youtube.com/watch?v=e4NnhT99fr0, date=2024-01-09}, {title=돼지고기 김치찌개 맛있게 끓이는법 간단 삼겹살 김치찌개 레시피, url=https://blog.naver.com/sallee_jaeryun/223164892442, date=2023-07-24}], object=chat.completion, choices=[{index=0, finish_reason=stop, message={role=assistant, content=요리 이름  
+김치찌개
+
+필요한 재료와 양  
+- 신 김치: 300g  
+- 돼지고기(앞다리살 또는 목살): 150g  
+- 두부: 1/2모(150g, 찌개용)  
+- 양파: 1/2개  
+- 대파: 1/2대  
+- 김치국물: 100mL  
+- 다진 마늘: 1큰술  
+- 고춧가루: 1큰술  
+- 참기름: 1큰술  
+- 물: 500mL  
+- 간장: 1큰술 (또는 액젓 1큰술)  
+- 설탕: 1작은술 (김치가 많이 시면 선택적으로)  
+※ 땅콩·견과류 미포함
+
+조리 시간  
+약 30분
+
+난이도  
+초급
+
+상세한 조리 방법  
+1. 재료 손질  
+   - 김치는 한입 크기로 썬다.  
+   - 돼지고기는 한입 크기로 썬다.  
+   - 두부는 1.5cm 두께로 깍둑썬다.  
+   - 양파와 대파는 굵게 채 썬다[3][4].
+
+2. 볶기  
+   - 냄비에 참기름 1큰술을 두르고 중불에서 돼지고기를 2~3분 볶는다.  
+   - 다진 마늘과 양파를 넣고 1분간 추가로 볶는다.
+
+3. 김치 넣기  
+   - 손질한 김치와 김치국물을 넣고 2~3분 더 볶아준다[1][4].
+
+4. 끓이기  
+   - 물 500mL를 붓고 센불로 끓인다.  
+   - 끓기 시작하면 거품을 걷어낸다.
+
+5. 양념  
+   - 고춧가루, 간장(또는 액젓), 설탕(선택)을 넣고 중불로 줄여 뚜껑을 덮고 10분간 끓인다.
+
+6. 두부와 대파 넣기  
+   - 두부와 대파를 넣고 다시 약 5~10분간 끓인다.  
+   - 마지막 간을 보고 부족하면 소금 또는 국간장으로 맞춘다.
+
+7. 마무리  
+   - 불을 끄고 그릇에 담아낸다.
+
+요리 팁과 주의사항  
+- 김치는 최대한 신 배추김치를 사용하면 시원하고 깊은 맛이 나요.  
+- 김치국물을 넣으면 더욱 진한 맛을 낼 수 있습니다.  
+- 고기는 돼지고기가 가장 어울리지만, 기호에 따라 소고기나 참치통조림으로 대체 가능합니다.  
+- 두부는 찌개용으로 단단한 것을 사용하면 모양이 잘 유지됩니다.  
+- 땅콩, 견과류, 땅콩기름 등 알레르기 유발 재료는 반드시 피하세요.  
+- 설탕은 김치가 많이 시다면 약간만 넣어 새콤한 맛을 중화할 수 있습니다[3][4].
+
+완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/06/07/8a1c3272cfd6ef731d9baf37305a719c1.jpg
+
+이 레시피는 땅콩·견과류가 완전히 배제되어 있고, 매운맛을 충분히 즐길 수 있으며, 건강한 식단을 위한 재료와 조리법을 사용했습니다.}, delta={role=assistant, content=}}]}
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Parsing AI response content
+2025-06-21 14:53:47 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - Content: 요리 이름  
+김치찌개
+
+필요한 재료와 양  
+- 신 김치: 300g  
+- 돼지고기(앞다리살 또는 목살): 150g  
+- 두부: 1/2모(150g, 찌개용)  
+- 양파: 1/2개  
+- 대파: 1/2대  
+- 김치국물: 100mL  
+- 다진 마늘: 1큰술  
+- 고춧가루: 1큰술  
+- 참기름: 1큰술  
+- 물: 500mL  
+- 간장: 1큰술 (또는 액젓 1큰술)  
+- 설탕: 1작은술 (김치가 많이 시면 선택적으로)  
+※ 땅콩·견과류 미포함
+
+조리 시간  
+약 30분
+
+난이도  
+초급
+
+상세한 조리 방법  
+1. 재료 손질  
+   - 김치는 한입 크기로 썬다.  
+   - 돼지고기는 한입 크기로 썬다.  
+   - 두부는 1.5cm 두께로 깍둑썬다.  
+   - 양파와 대파는 굵게 채 썬다[3][4].
+
+2. 볶기  
+   - 냄비에 참기름 1큰술을 두르고 중불에서 돼지고기를 2~3분 볶는다.  
+   - 다진 마늘과 양파를 넣고 1분간 추가로 볶는다.
+
+3. 김치 넣기  
+   - 손질한 김치와 김치국물을 넣고 2~3분 더 볶아준다[1][4].
+
+4. 끓이기  
+   - 물 500mL를 붓고 센불로 끓인다.  
+   - 끓기 시작하면 거품을 걷어낸다.
+
+5. 양념  
+   - 고춧가루, 간장(또는 액젓), 설탕(선택)을 넣고 중불로 줄여 뚜껑을 덮고 10분간 끓인다.
+
+6. 두부와 대파 넣기  
+   - 두부와 대파를 넣고 다시 약 5~10분간 끓인다.  
+   - 마지막 간을 보고 부족하면 소금 또는 국간장으로 맞춘다.
+
+7. 마무리  
+   - 불을 끄고 그릇에 담아낸다.
+
+요리 팁과 주의사항  
+- 김치는 최대한 신 배추김치를 사용하면 시원하고 깊은 맛이 나요.  
+- 김치국물을 넣으면 더욱 진한 맛을 낼 수 있습니다.  
+- 고기는 돼지고기가 가장 어울리지만, 기호에 따라 소고기나 참치통조림으로 대체 가능합니다.  
+- 두부는 찌개용으로 단단한 것을 사용하면 모양이 잘 유지됩니다.  
+- 땅콩, 견과류, 땅콩기름 등 알레르기 유발 재료는 반드시 피하세요.  
+- 설탕은 김치가 많이 시다면 약간만 넣어 새콤한 맛을 중화할 수 있습니다[3][4].
+
+완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/06/07/8a1c3272cfd6ef731d9baf37305a719c1.jpg
+
+이 레시피는 땅콩·견과류가 완전히 배제되어 있고, 매운맛을 충분히 즐길 수 있으며, 건강한 식단을 위한 재료와 조리법을 사용했습니다.
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Starting to parse recipe response
+2025-06-21 14:53:47 [http-nio-8080-exec-10] DEBUG a.s.k.p.service.PerplexityService - Content to parse: 요리 이름  
+김치찌개
+
+필요한 재료와 양  
+- 신 김치: 300g  
+- 돼지고기(앞다리살 또는 목살): 150g  
+- 두부: 1/2모(150g, 찌개용)  
+- 양파: 1/2개  
+- 대파: 1/2대  
+- 김치국물: 100mL  
+- 다진 마늘: 1큰술  
+- 고춧가루: 1큰술  
+- 참기름: 1큰술  
+- 물: 500mL  
+- 간장: 1큰술 (또는 액젓 1큰술)  
+- 설탕: 1작은술 (김치가 많이 시면 선택적으로)  
+※ 땅콩·견과류 미포함
+
+조리 시간  
+약 30분
+
+난이도  
+초급
+
+상세한 조리 방법  
+1. 재료 손질  
+   - 김치는 한입 크기로 썬다.  
+   - 돼지고기는 한입 크기로 썬다.  
+   - 두부는 1.5cm 두께로 깍둑썬다.  
+   - 양파와 대파는 굵게 채 썬다[3][4].
+
+2. 볶기  
+   - 냄비에 참기름 1큰술을 두르고 중불에서 돼지고기를 2~3분 볶는다.  
+   - 다진 마늘과 양파를 넣고 1분간 추가로 볶는다.
+
+3. 김치 넣기  
+   - 손질한 김치와 김치국물을 넣고 2~3분 더 볶아준다[1][4].
+
+4. 끓이기  
+   - 물 500mL를 붓고 센불로 끓인다.  
+   - 끓기 시작하면 거품을 걷어낸다.
+
+5. 양념  
+   - 고춧가루, 간장(또는 액젓), 설탕(선택)을 넣고 중불로 줄여 뚜껑을 덮고 10분간 끓인다.
+
+6. 두부와 대파 넣기  
+   - 두부와 대파를 넣고 다시 약 5~10분간 끓인다.  
+   - 마지막 간을 보고 부족하면 소금 또는 국간장으로 맞춘다.
+
+7. 마무리  
+   - 불을 끄고 그릇에 담아낸다.
+
+요리 팁과 주의사항  
+- 김치는 최대한 신 배추김치를 사용하면 시원하고 깊은 맛이 나요.  
+- 김치국물을 넣으면 더욱 진한 맛을 낼 수 있습니다.  
+- 고기는 돼지고기가 가장 어울리지만, 기호에 따라 소고기나 참치통조림으로 대체 가능합니다.  
+- 두부는 찌개용으로 단단한 것을 사용하면 모양이 잘 유지됩니다.  
+- 땅콩, 견과류, 땅콩기름 등 알레르기 유발 재료는 반드시 피하세요.  
+- 설탕은 김치가 많이 시다면 약간만 넣어 새콤한 맛을 중화할 수 있습니다[3][4].
+
+완성된 요리의 이미지 URL  
+https://recipe1.ezmember.co.kr/cache/recipe/2018/06/07/8a1c3272cfd6ef731d9baf37305a719c1.jpg
+
+이 레시피는 땅콩·견과류가 완전히 배제되어 있고, 매운맛을 충분히 즐길 수 있으며, 건강한 식단을 위한 재료와 조리법을 사용했습니다.
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Parsed recipe title: 요리 이름
+2025-06-21 14:53:47 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Successfully parsed and saved recipe: 7
+2025-06-21 14:53:47 [http-nio-8080-exec-10] INFO  a.s.k.p.service.PerplexityService - Successfully parsed recipe with ID: 7
+2025-06-21 14:53:47 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        ri1_0.ingredient_id,
+        ri1_0.recipe_id 
+    from
+        recipe_ingredient ri1_0 
+    where
+        ri1_0.recipe_id=?
+Hibernate: 
+    /* <criteria> */ select
+        ri1_0.ingredient_id,
+        ri1_0.recipe_id 
+    from
+        recipe_ingredient ri1_0 
+    where
+        ri1_0.recipe_id=?

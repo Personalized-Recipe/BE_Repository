@@ -4,6 +4,7 @@ import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.UserRecipe;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
 import ac.su.kdt.prompttest.repository.UserRecipeRepository;
+import ac.su.kdt.prompttest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class RecipeService {
     private final PromptService promptService;
     private final PerplexityService perplexityService;
     private final RecipeIngredientService recipeIngredientService;
+    private final UserRepository userRepository;
 
     @Transactional
     public Recipe requestRecipe(Integer userId, String request) {
@@ -77,6 +80,10 @@ public class RecipeService {
     public Recipe getRecipeById(Integer recipeId) { // 레시피 상세 조회
         return recipeRepository.findById(recipeId)
             .orElseThrow(() -> new RuntimeException("Recipe not found"));
+    }
+
+    public List<Recipe> searchRecipes(String query) {
+        return recipeRepository.findByTitleContaining(query);
     }
 
     // Helper methods
