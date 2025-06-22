@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +34,35 @@ public class UserPromptService {
     /**
      * 사용자의 프롬프트 정보를 조회합니다.
      * @param userId 사용자 ID
-     * @return List of UserPrompt objects
+     * @return List of UserPrompt objects as Map
      */
     @Transactional(readOnly = true)
-    public List<UserPrompt> getUserPrompts(Integer userId) {
-        return userPromptRepository.findByUserId(userId);
+    public List<Map<String, Object>> getUserPrompts(Integer userId) {
+        List<UserPrompt> userPrompts = userPromptRepository.findByUserId(userId);
+        return userPrompts.stream()
+                .map(this::convertToMap)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * UserPrompt를 Map으로 변환합니다.
+     * @param userPrompt UserPrompt 객체
+     * @return Map representation
+     */
+    private Map<String, Object> convertToMap(UserPrompt userPrompt) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", userPrompt.getId());
+        map.put("name", userPrompt.getName());
+        map.put("age", userPrompt.getAge());
+        map.put("gender", userPrompt.getGender());
+        map.put("isPregnant", userPrompt.getIsPregnant());
+        map.put("healthStatus", userPrompt.getHealthStatus());
+        map.put("allergy", userPrompt.getAllergy());
+        map.put("preference", userPrompt.getPreference());
+        map.put("nickname", userPrompt.getNickname());
+        map.put("createdAt", userPrompt.getCreatedAt() != null ? userPrompt.getCreatedAt().toString() : null);
+        map.put("updatedAt", userPrompt.getUpdatedAt() != null ? userPrompt.getUpdatedAt().toString() : null);
+        return map;
     }
 
     /**

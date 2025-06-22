@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -22,6 +23,7 @@ public class UserPrompt {
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
+    @JsonIgnore
     private User user;
     
     @Column(nullable = false, length = 10)

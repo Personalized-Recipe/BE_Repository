@@ -101,7 +101,7 @@ class RefrigeratorIngredientServiceTest {
     void getRefrigeratorIngredients_ShouldReturnIngredients() {
         // given
         List<RefrigeratorIngredient> ingredients = Arrays.asList(testRefrigeratorIngredient);
-        when(refrigeratorIngredientRepository.findByRefrigeratorId(1)).thenReturn(ingredients);
+        when(refrigeratorIngredientRepository.findByRefrigeratorRefrigeratorId(1)).thenReturn(ingredients);
 
         // when
         List<RefrigeratorIngredientDTO> result = refrigeratorIngredientService.getRefrigeratorIngredients(1);
@@ -110,7 +110,7 @@ class RefrigeratorIngredientServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getIngredientName()).isEqualTo("양파");
         assertThat(result.get(0).getQuantity()).isEqualTo(2.0f);
-        verify(refrigeratorIngredientRepository).findByRefrigeratorId(1);
+        verify(refrigeratorIngredientRepository).findByRefrigeratorRefrigeratorId(1);
     }
 
     @Test
@@ -143,7 +143,7 @@ class RefrigeratorIngredientServiceTest {
         // given
         when(refrigeratorService.getRefrigeratorEntity(1)).thenReturn(testRefrigerator);
         when(ingredientRepository.findById(1)).thenReturn(Optional.of(testIngredient));
-        when(refrigeratorIngredientRepository.findByRefrigeratorIdAndIngredientIdAndUnit(1, 1, "개"))
+        when(refrigeratorIngredientRepository.findByRefrigeratorRefrigeratorIdAndIngredientIngredientIdAndUnit(1, 1, "개"))
                 .thenReturn(Optional.empty());
         when(refrigeratorIngredientRepository.save(any(RefrigeratorIngredient.class)))
                 .thenReturn(testRefrigeratorIngredient);
@@ -180,7 +180,7 @@ class RefrigeratorIngredientServiceTest {
         // given
         when(refrigeratorService.getRefrigeratorEntity(1)).thenReturn(testRefrigerator);
         when(ingredientRepository.findById(1)).thenReturn(Optional.of(testIngredient));
-        when(refrigeratorIngredientRepository.findByRefrigeratorIdAndIngredientIdAndUnit(1, 1, "개"))
+        when(refrigeratorIngredientRepository.findByRefrigeratorRefrigeratorIdAndIngredientIngredientIdAndUnit(1, 1, "개"))
                 .thenReturn(Optional.of(testRefrigeratorIngredient));
 
         // when & then
@@ -254,7 +254,7 @@ class RefrigeratorIngredientServiceTest {
     void searchIngredients_ShouldReturnMatchingIngredients() {
         // given
         List<RefrigeratorIngredient> ingredients = Arrays.asList(testRefrigeratorIngredient);
-        when(refrigeratorIngredientRepository.findByRefrigeratorIdAndIngredientNameContaining(1, "양파"))
+        when(refrigeratorIngredientRepository.findByRefrigeratorRefrigeratorIdAndIngredientNameContaining(1, "양파"))
                 .thenReturn(ingredients);
 
         // when
@@ -263,6 +263,6 @@ class RefrigeratorIngredientServiceTest {
         // then
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getIngredientName()).isEqualTo("양파");
-        verify(refrigeratorIngredientRepository).findByRefrigeratorIdAndIngredientNameContaining(1, "양파");
+        verify(refrigeratorIngredientRepository).findByRefrigeratorRefrigeratorIdAndIngredientNameContaining(1, "양파");
     }
 } 

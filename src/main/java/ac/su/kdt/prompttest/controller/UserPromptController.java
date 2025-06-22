@@ -27,7 +27,7 @@ public class UserPromptController {
     @GetMapping("/{userId}/prompts")
     public ResponseEntity<?> getUserPrompts(@PathVariable Integer userId) {
         try {
-            List<UserPrompt> userPrompts = userPromptService.getUserPrompts(userId);
+            List<Map<String, Object>> userPrompts = userPromptService.getUserPrompts(userId);
             return ResponseEntity.ok(userPrompts);
         } catch (RuntimeException e) {
             log.error("Error getting user prompt: {}", e.getMessage());
