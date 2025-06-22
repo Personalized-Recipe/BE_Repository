@@ -7327,3 +7327,900 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'recipe' already exists
         ingredient i1_0 
     where
         i1_0.ingredient_id=?
+2025-06-22T13:12:04.220+09:00  INFO 41062 --- [prompt-test] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22T13:12:04.221+09:00  INFO 41062 --- [prompt-test] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-06-22T13:12:04.224+09:00  INFO 41062 --- [prompt-test] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-06-22T13:12:50.275+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.prompttest.PromptTestApplication   : Starting PromptTestApplication using Java 17.0.14 with PID 42535 (/Users/gyudeok0202/Workspace/BE_Repository/build/classes/java/main started by gyudeok0202 in /Users/gyudeok0202/Workspace/BE_Repository)
+2025-06-22T13:12:50.275+09:00 DEBUG 42535 --- [prompt-test] [main] a.s.k.prompttest.PromptTestApplication   : Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-06-22T13:12:50.275+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.prompttest.PromptTestApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-06-22T13:12:50.502+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-22T13:12:50.502+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2025-06-22T13:12:50.513+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatHistoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.514+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatRoomRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.514+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.IngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.515+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeIngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.515+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.515+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorIngredientRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.516+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.516+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserPromptRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.516+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRecipeRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.517+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-06-22T13:12:50.517+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 0 JDBC repository interfaces.
+2025-06-22T13:12:50.520+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-22T13:12:50.520+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22T13:12:50.565+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 10 JPA repository interfaces.
+2025-06-22T13:12:50.571+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-22T13:12:50.571+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-06-22T13:12:50.575+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.ChatRoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.IngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeIngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RecipeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorIngredientRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.RefrigeratorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserPromptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRecipeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ac.su.kdt.prompttest.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-06-22T13:12:50.576+09:00  INFO 42535 --- [prompt-test] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 2 ms. Found 0 Redis repository interfaces.
+2025-06-22T13:12:50.755+09:00  INFO 42535 --- [prompt-test] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-06-22T13:12:50.759+09:00  INFO 42535 --- [prompt-test] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-22T13:12:50.759+09:00  INFO 42535 --- [prompt-test] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-06-22T13:12:50.780+09:00  INFO 42535 --- [prompt-test] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-06-22T13:12:50.780+09:00  INFO 42535 --- [prompt-test] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 490 ms
+2025-06-22T13:12:50.791+09:00  INFO 42535 --- [prompt-test] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-06-22T13:12:50.841+09:00  INFO 42535 --- [prompt-test] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4525e9e8
+2025-06-22T13:12:50.841+09:00  INFO 42535 --- [prompt-test] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-06-22T13:12:50.845+09:00  INFO 42535 --- [prompt-test] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/recipedb?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8'
+2025-06-22T13:12:50.886+09:00  INFO 42535 --- [prompt-test] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22T13:12:50.905+09:00  INFO 42535 --- [prompt-test] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-22T13:12:50.914+09:00  INFO 42535 --- [prompt-test] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-22T13:12:50.981+09:00  INFO 42535 --- [prompt-test] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22T13:12:51.003+09:00  WARN 42535 --- [prompt-test] [main] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22T13:12:51.003+09:00  WARN 42535 --- [prompt-test] [main] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-06-22T13:12:51.380+09:00  INFO 42535 --- [prompt-test] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22T13:12:51.385+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table chat_history 
+       drop 
+       foreign key FKt5rj0otg5l5tws29w2vpp1xyf
+2025-06-22T13:12:51.391+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator 
+       drop 
+       foreign key FKjfnleq0pw3oucogdm6ig9vv77
+2025-06-22T13:12:51.403+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator_ingredient 
+       drop 
+       foreign key FKovbtl72c7mygc40p7eyjjna2w
+2025-06-22T13:12:51.408+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator_ingredient 
+       drop 
+       foreign key FKa2tqo6oiekb78tjdr420vy679
+2025-06-22T13:12:51.415+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_ingredient 
+       drop 
+       foreign key FKn11dc3tqlht2bd2mj89l0r9dk
+2025-06-22T13:12:51.420+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_ingredient 
+       drop 
+       foreign key FK8aprx9w14o38ck64pwtso3hqi
+2025-06-22T13:12:51.425+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_prompt 
+       drop 
+       foreign key FKf6w2nh54ef2gkb62kkhy0hbvf
+2025-06-22T13:12:51.431+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists chat_history
+2025-06-22T13:12:51.434+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists chat_rooms
+2025-06-22T13:12:51.437+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists ingredient
+2025-06-22T13:12:51.439+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists recipe
+2025-06-22T13:12:51.441+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists recipe_ingredient
+2025-06-22T13:12:51.442+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists refrigerator
+2025-06-22T13:12:51.444+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists refrigerator_ingredient
+2025-06-22T13:12:51.446+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists user_ingredient
+2025-06-22T13:12:51.450+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists user_recipe
+2025-06-22T13:12:51.452+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists user_prompt
+2025-06-22T13:12:51.454+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    drop table if exists users
+2025-06-22T13:12:51.458+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table chat_history (
+        chat_id integer not null auto_increment,
+        is_user_message bit not null,
+        recipe_id integer,
+        room_id integer,
+        user_id integer not null,
+        created_at datetime(6) not null,
+        session_id varchar(50) not null,
+        message TEXT not null,
+        primary key (chat_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.462+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table chat_rooms (
+        room_id integer not null auto_increment,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        room_name varchar(255) not null,
+        primary key (room_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.463+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table ingredient (
+        calories integer,
+        ingredient_id integer not null auto_increment,
+        required_amount float(23),
+        name varchar(50) not null,
+        nutrition_info TEXT,
+        primary key (ingredient_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.466+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table recipe (
+        cooking_time integer,
+        recipe_id integer not null auto_increment,
+        difficulty varchar(5),
+        title varchar(15) not null,
+        category varchar(50),
+        description TEXT,
+        image tinyblob,
+        primary key (recipe_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.468+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table recipe_ingredient (
+        ingredient_id integer not null,
+        recipe_id integer not null,
+        primary key (ingredient_id, recipe_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.470+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table refrigerator (
+        refrigerator_id integer not null auto_increment,
+        user_id integer not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        name varchar(100) not null,
+        description varchar(255),
+        primary key (refrigerator_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.473+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table refrigerator_ingredient (
+        expiry_date date,
+        id integer not null auto_increment,
+        ingredient_id integer not null,
+        purchase_date date,
+        quantity float(23) not null,
+        refrigerator_id integer not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        unit varchar(20),
+        notes varchar(500),
+        freshness_status enum ('EXCELLENT','GOOD','FAIR','POOR','EXPIRED'),
+        storage_location enum ('FREEZER','REFRIGERATOR','DOOR','CRISPER','MEAT_DRAWER'),
+        primary key (id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.476+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table user_ingredient (
+        id integer not null auto_increment,
+        ingredient_id integer not null,
+        user_id integer not null,
+        weight_in_grams float(23),
+        primary key (id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.477+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table user_recipe (
+        recipe_id integer not null,
+        user_id integer not null,
+        primary key (recipe_id, user_id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.479+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table user_prompt (
+        age integer,
+        gender varchar(2),
+        id integer not null auto_increment,
+        is_pregnant bit,
+        user_id integer,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        name varchar(10) not null,
+        nickname varchar(10),
+        allergy varchar(50),
+        health_status varchar(50),
+        preference varchar(100),
+        primary key (id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.483+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create table users (
+        age integer,
+        id integer not null auto_increment,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        provider varchar(20),
+        provider_id varchar(50),
+        email varchar(100),
+        allergies varchar(255),
+        gender varchar(255),
+        health_conditions varchar(255),
+        name varchar(255),
+        password varchar(255) not null,
+        preferences varchar(255),
+        profile_image varchar(255),
+        username varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+2025-06-22T13:12:51.489+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create index idx_user_session 
+       on chat_history (user_id, session_id)
+2025-06-22T13:12:51.492+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    create index idx_created_at 
+       on chat_history (created_at)
+2025-06-22T13:12:51.498+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator_ingredient 
+       add constraint UKhd8123y7g7go338cbmc2lk7td unique (refrigerator_id, ingredient_id, unit)
+2025-06-22T13:12:51.502+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_ingredient 
+       add constraint UKlq9ojstaogmq4thiqd5pjco3a unique (user_id, ingredient_id)
+2025-06-22T13:12:51.506+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_prompt 
+       add constraint UK_talr9bw5uwj1cmhctfjlklmf4 unique (user_id)
+2025-06-22T13:12:51.510+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table users 
+       add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username)
+2025-06-22T13:12:51.514+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table chat_history 
+       add constraint FKt5rj0otg5l5tws29w2vpp1xyf 
+       foreign key (room_id) 
+       references chat_rooms (room_id)
+2025-06-22T13:12:51.523+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator 
+       add constraint FKjfnleq0pw3oucogdm6ig9vv77 
+       foreign key (user_id) 
+       references users (id)
+2025-06-22T13:12:51.532+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator_ingredient 
+       add constraint FKovbtl72c7mygc40p7eyjjna2w 
+       foreign key (ingredient_id) 
+       references ingredient (ingredient_id)
+2025-06-22T13:12:51.542+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table refrigerator_ingredient 
+       add constraint FKa2tqo6oiekb78tjdr420vy679 
+       foreign key (refrigerator_id) 
+       references refrigerator (refrigerator_id)
+2025-06-22T13:12:51.552+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_ingredient 
+       add constraint FKn11dc3tqlht2bd2mj89l0r9dk 
+       foreign key (ingredient_id) 
+       references ingredient (ingredient_id)
+2025-06-22T13:12:51.559+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_ingredient 
+       add constraint FK8aprx9w14o38ck64pwtso3hqi 
+       foreign key (user_id) 
+       references users (id)
+2025-06-22T13:12:51.565+09:00 DEBUG 42535 --- [prompt-test] [main] org.hibernate.SQL                        : 
+    alter table user_prompt 
+       add constraint FKf6w2nh54ef2gkb62kkhy0hbvf 
+       foreign key (user_id) 
+       references users (id)
+2025-06-22T13:12:51.574+09:00  INFO 42535 --- [prompt-test] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22T13:12:51.686+09:00  INFO 42535 --- [prompt-test] [main] o.s.d.j.r.query.QueryEnhancerFactory     : JSqlParser is in classpath; If applicable, JSqlParser will be used
+2025-06-22T13:12:51.686+09:00  INFO 42535 --- [prompt-test] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-22T13:12:51.915+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.p.service.PerplexityService        : API URL: https://api.perplexity.ai/chat/completions
+2025-06-22T13:12:51.915+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.p.service.PerplexityService        : API Key length: 24
+2025-06-22T13:12:51.915+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.p.service.PerplexityService        : API Key value: your-actua...
+2025-06-22T13:12:51.915+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.p.service.PerplexityService        : Full API Key: your-actual-api-key-here
+2025-06-22T13:12:51.915+09:00 ERROR 42535 --- [prompt-test] [main] a.s.k.p.service.PerplexityService        : API Key format is invalid! Should start with 'pplx-' but got: your-actua
+2025-06-22T13:12:51.964+09:00  WARN 42535 --- [prompt-test] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-22T13:12:51.971+09:00  INFO 42535 --- [prompt-test] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2025-06-22T13:12:52.041+09:00  WARN 42535 --- [prompt-test] [main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-06-22T13:12:52.264+09:00  INFO 42535 --- [prompt-test] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2025-06-22T13:12:52.268+09:00  INFO 42535 --- [prompt-test] [main] a.s.k.prompttest.PromptTestApplication   : Started PromptTestApplication in 2.121 seconds (process running for 2.226)
+2025-06-22T13:13:02.702+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-22T13:13:02.702+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-06-22T13:13:02.703+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-06-22T13:13:11.955+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-10] o.apache.coyote.http11.Http11Processor   : Error parsing HTTP request header
+ Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
+
+java.lang.IllegalArgumentException: Invalid character found in the request target [/ingredients/search?query=0xea0xb00x900xec0x9e0x90 ]. The valid characters are defined in RFC 7230 and RFC 3986
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:482) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:264) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.19.jar:10.1.19]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2025-06-22T13:13:19.501+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-5] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
+2025-06-22T13:13:31.402+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unrecognized field "email" (class ac.su.kdt.prompttest.dto.UserDTO), not marked as ignorable]
+2025-06-22T13:13:46.999+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.User */insert 
+    into
+        users (age, allergies, created_at, email, gender, health_conditions, name, password, preferences, profile_image, provider, provider_id, updated_at, username) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:13:56.815+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-22T13:13:56.850+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        r1_0.refrigerator_id 
+    from
+        refrigerator r1_0 
+    join
+        users u1_0 
+            on u1_0.id=r1_0.user_id 
+    where
+        u1_0.id=? 
+        and r1_0.name=? 
+    limit
+        ?
+2025-06-22T13:13:56.854+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Refrigerator */insert 
+    into
+        refrigerator (created_at, description, name, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+2025-06-22T13:14:07.897+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.lang.Float` from String "1개": not a valid `Float` value]
+2025-06-22T13:14:18.042+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Ingredient */insert 
+    into
+        ingredient (calories, name, nutrition_info, required_amount) 
+    values
+        (?, ?, ?, ?)
+2025-06-22T13:14:24.361+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Ingredient */insert 
+    into
+        ingredient (calories, name, nutrition_info, required_amount) 
+    values
+        (?, ?, ?, ?)
+2025-06-22T13:14:30.450+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Ingredient */insert 
+    into
+        ingredient (calories, name, nutrition_info, required_amount) 
+    values
+        (?, ?, ?, ?)
+2025-06-22T13:14:47.590+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-22T13:14:47.593+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:14:47.599+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    join
+        ingredient i1_0 
+            on i1_0.ingredient_id=ri1_0.ingredient_id 
+    where
+        r1_0.refrigerator_id=? 
+        and i1_0.ingredient_id=? 
+        and ri1_0.unit=?
+2025-06-22T13:14:47.604+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.RefrigeratorIngredient */insert 
+    into
+        refrigerator_ingredient (created_at, expiry_date, freshness_status, ingredient_id, notes, purchase_date, quantity, refrigerator_id, storage_location, unit, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:15:05.673+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0 
+    where
+        r1_0.refrigerator_id=?
+2025-06-22T13:15:05.674+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:15:05.676+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    join
+        ingredient i1_0 
+            on i1_0.ingredient_id=ri1_0.ingredient_id 
+    where
+        r1_0.refrigerator_id=? 
+        and i1_0.ingredient_id=? 
+        and ri1_0.unit=?
+2025-06-22T13:15:05.680+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.RefrigeratorIngredient */insert 
+    into
+        refrigerator_ingredient (created_at, expiry_date, freshness_status, ingredient_id, notes, purchase_date, quantity, refrigerator_id, storage_location, unit, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:15:41.713+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0
+2025-06-22T13:16:25.028+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-22T13:17:18.838+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.name like ? escape '\\'
+2025-06-22T13:17:30.019+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:17:36.501+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        r1_0.refrigerator_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.user_id 
+    from
+        refrigerator r1_0
+2025-06-22T13:17:36.505+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        ri1_0.refrigerator_id,
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    where
+        ri1_0.refrigerator_id=?
+2025-06-22T13:17:36.507+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:17:36.508+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:17:56.335+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+2025-06-22T13:17:56.337+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:17:56.338+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:18:05.907+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'userId' for method parameter type Integer is not present]
+2025-06-22T13:18:22.483+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-2] a.s.k.p.c.RecipeRecommendationController : Recipe recommendation request - userId: 1, refrigeratorId: 1
+2025-06-22T13:18:22.483+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-2] a.s.k.p.service.PerplexityService        : Starting recipe recommendation for userId: 1, refrigeratorId: 1
+2025-06-22T13:18:22.492+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        ri1_0.id,
+        ri1_0.created_at,
+        ri1_0.expiry_date,
+        ri1_0.freshness_status,
+        ri1_0.ingredient_id,
+        ri1_0.notes,
+        ri1_0.purchase_date,
+        ri1_0.quantity,
+        ri1_0.refrigerator_id,
+        ri1_0.storage_location,
+        ri1_0.unit,
+        ri1_0.updated_at 
+    from
+        refrigerator_ingredient ri1_0 
+    join
+        refrigerator r1_0 
+            on r1_0.refrigerator_id=ri1_0.refrigerator_id 
+    where
+        r1_0.refrigerator_id=?
+2025-06-22T13:18:22.494+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:18:22.495+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:18:22.496+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-2] a.s.k.p.service.PerplexityService        : Getting response for userId: 1, prompt: 현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.
+
+【냉장고 재료 목록】
+- 양파 2.5개 (유통기한: 2024-12-31)
+- 감자 3.0개 (유통기한: 2024-12-25)
+
+
+위의 냉장고 재료들을 최대한 활용하면서, 추가 요구사항에 맞는 맛있는 레시피를 추천해주세요. 유통기한이 임박한 재료를 우선적으로 사용하는 방향으로 추천해주시고, 재료의 양을 고려해서 적절한 인분 수의 레시피를 제안해주세요.
+
+응답은 다음 형식으로 해주세요:
+1. 요리 이름: [요리명]
+2. 필요한 재료와 양:
+- [재료명] [양]
+3. 조리 시간: [시간]분
+4. 난이도: [난이도]
+5. 조리 방법과 팁: [상세한 조리 방법과 팁]
+
+2025-06-22T13:18:22.496+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-2] a.s.k.p.service.PerplexityService        : Invalid or missing Perplexity API key. Returning test response.
+2025-06-22T13:18:22.497+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2025-06-22T13:18:22.500+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-2] a.s.k.p.service.PerplexityService        : Created test recipe with ID: 1
+2025-06-22T13:19:07.133+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-22T13:19:07.135+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.UserPrompt */insert 
+    into
+        user_prompt (age, allergy, created_at, gender, health_status, is_pregnant, name, nickname, preference, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:19:14.270+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    left join
+        users u1_0 
+            on u1_0.id=up1_0.user_id 
+    where
+        u1_0.id=?
+2025-06-22T13:19:26.327+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.ChatRoom */insert 
+    into
+        chat_rooms (created_at, room_name, updated_at) 
+    values
+        (?, ?, ?)
+2025-06-22T13:19:38.444+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.allergies,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.gender,
+        u1_0.health_conditions,
+        u1_0.name,
+        u1_0.password,
+        u1_0.preferences,
+        u1_0.profile_image,
+        u1_0.provider,
+        u1_0.provider_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-06-22T13:19:38.448+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        up1_0.id,
+        up1_0.age,
+        up1_0.allergy,
+        up1_0.created_at,
+        up1_0.gender,
+        up1_0.health_status,
+        up1_0.is_pregnant,
+        up1_0.name,
+        up1_0.nickname,
+        up1_0.preference,
+        up1_0.updated_at,
+        up1_0.user_id 
+    from
+        user_prompt up1_0 
+    where
+        up1_0.user_id=?
+2025-06-22T13:19:38.449+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-8] a.s.k.p.service.PerplexityService        : Getting response for userId: 1, prompt: 양파로 만들 수 있는 요리 추천해줘
+2025-06-22T13:19:38.449+09:00  WARN 42535 --- [prompt-test] [http-nio-8080-exec-8] a.s.k.p.service.PerplexityService        : Invalid or missing Perplexity API key. Returning test response.
+2025-06-22T13:19:38.449+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.Recipe */insert 
+    into
+        recipe (category, cooking_time, description, difficulty, image, title) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2025-06-22T13:19:38.450+09:00  INFO 42535 --- [prompt-test] [http-nio-8080-exec-8] a.s.k.p.service.PerplexityService        : Created test recipe with ID: 2
+2025-06-22T13:19:38.451+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        cr1_0.room_id,
+        cr1_0.created_at,
+        cr1_0.room_name,
+        cr1_0.updated_at 
+    from
+        chat_rooms cr1_0 
+    where
+        cr1_0.room_id=?
+2025-06-22T13:19:38.455+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        ri1_0.ingredient_id,
+        ri1_0.recipe_id 
+    from
+        recipe_ingredient ri1_0 
+    where
+        ri1_0.recipe_id=?
+2025-06-22T13:19:38.457+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.ChatHistory */insert 
+    into
+        chat_history (room_id, created_at, is_user_message, message, recipe_id, session_id, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:19:38.458+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    /* insert for
+        ac.su.kdt.prompttest.entity.ChatHistory */insert 
+    into
+        chat_history (room_id, created_at, is_user_message, message, recipe_id, session_id, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+2025-06-22T13:19:45.326+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    /* SELECT
+        ri 
+    FROM
+        RefrigeratorIngredient ri 
+    WHERE
+        ri.refrigerator.refrigeratorId = :refrigeratorId 
+        AND ri.ingredient.name LIKE :ingredientName */ select
+            ri1_0.id,
+            ri1_0.created_at,
+            ri1_0.expiry_date,
+            ri1_0.freshness_status,
+            ri1_0.ingredient_id,
+            ri1_0.notes,
+            ri1_0.purchase_date,
+            ri1_0.quantity,
+            ri1_0.refrigerator_id,
+            ri1_0.storage_location,
+            ri1_0.unit,
+            ri1_0.updated_at 
+        from
+            refrigerator_ingredient ri1_0 
+        join
+            ingredient i1_0 
+                on i1_0.ingredient_id=ri1_0.ingredient_id 
+        where
+            ri1_0.refrigerator_id=? 
+            and i1_0.name like replace(?, '\\', '\\\\')
+2025-06-22T13:19:45.328+09:00 DEBUG 42535 --- [prompt-test] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.ingredient_id,
+        i1_0.calories,
+        i1_0.name,
+        i1_0.nutrition_info,
+        i1_0.required_amount 
+    from
+        ingredient i1_0 
+    where
+        i1_0.ingredient_id=?
+2025-06-22T13:30:25.703+09:00  WARN 42535 --- [prompt-test] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m4s711ms).
+2025-06-22T13:41:58.573+09:00  INFO 42535 --- [prompt-test] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22T13:41:58.574+09:00  INFO 42535 --- [prompt-test] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-06-22T13:41:58.576+09:00  INFO 42535 --- [prompt-test] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

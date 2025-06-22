@@ -22,7 +22,8 @@ public class ChatHistoryController {
         ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(
                 chatRequest.getUserId(),
                 chatRequest.getMessage(),
-                chatRequest.getRoomId()
+                chatRequest.getRoomId(),
+                chatRequest.getRefrigeratorId()
         );
         return ResponseEntity.ok(response);
     }
@@ -32,7 +33,7 @@ public class ChatHistoryController {
             @PathVariable Integer userId,
             @PathVariable Integer roomId,
             @RequestBody ChatRequestDTO chatRequest) {
-        ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(userId, chatRequest.getMessage(), roomId);
+        ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(userId, chatRequest.getMessage(), roomId, chatRequest.getRefrigeratorId());
         return ResponseEntity.ok(response);
     }
     
@@ -41,7 +42,7 @@ public class ChatHistoryController {
             @PathVariable Integer userId,
             @PathVariable Integer roomId,
             @RequestBody ChatRequestDTO chatRequest) {
-        ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(userId, chatRequest.getMessage(), roomId);
+        ChatHistoryDTO response = chatHistoryService.processRecipeRequestDTO(userId, chatRequest.getMessage(), roomId, chatRequest.getRefrigeratorId());
         return ResponseEntity.ok(response);
     }
     

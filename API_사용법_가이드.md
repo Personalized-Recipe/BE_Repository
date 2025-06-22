@@ -304,13 +304,33 @@ curl -X GET "http://localhost:8080/api/chat/history?roomId=1"
 
 ### POST `/api/chat/history`
 **설명**: 채팅 메시지 전송
+
+> **냉장고 재료 기반 레시피 추천**
+>
+> `refrigeratorId`를 함께 전달하면 해당 냉장고의 재료를 우선적으로 활용한 레시피를 추천합니다.
+> - 냉장고에 재료가 없으면 안내 메시지가 반환됩니다.
+> - `refrigeratorId`를 생략하면 기존 방식(재료 미반영)으로 동작합니다.
+
+**예시: 냉장고 재료 기반 추천**
 ```bash
 curl -X POST http://localhost:8080/api/chat/history \
   -H "Content-Type: application/json" \
   -d '{
     "userId": 1,
     "roomId": 1,
-    "message": "양파로 만들 수 있는 요리 추천해줘"
+    "refrigeratorId": 5,
+    "message": "오늘 저녁 뭐 먹을까?"
+  }'
+```
+
+**예시: 기존 방식(냉장고 미지정)**
+```bash
+curl -X POST http://localhost:8080/api/chat/history \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": 1,
+    "roomId": 1,
+    "message": "오늘 저녁 뭐 먹을까?"
   }'
 ```
 
@@ -319,6 +339,7 @@ curl -X POST http://localhost:8080/api/chat/history \
 {
   "userId": "number",
   "roomId": "number",
+  "refrigeratorId": "number (optional)",
   "message": "string"
 }
 ```
@@ -517,7 +538,7 @@ curl -X POST "http://localhost:8080/api/recipe-recommendations/refrigerator?user
 # 6. 채팅 메시지 전송
 curl -X POST http://localhost:8080/api/chat/history \
   -H "Content-Type: application/json" \
-  -d '{"userId":1,"roomId":1,"message":"양파로 만들 수 있는 요리 추천해줘"}'
+  -d '{"userId":1,"roomId":1,"refrigeratorId":5,"message":"오늘 저녁 뭐 먹을까?"}'
 ```
 
 ---

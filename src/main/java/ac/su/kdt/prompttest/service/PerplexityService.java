@@ -199,7 +199,7 @@ public class PerplexityService {
     /**
      * 냉장고 재료 기반 레시피 추천 프롬프트 생성
      */
-    private String buildRefrigeratorBasedPrompt(List<RefrigeratorIngredientDTO> refrigeratorIngredients, RecipeRecommendationRequestDTO requestDTO) {
+    public static String buildRefrigeratorBasedPrompt(List<RefrigeratorIngredientDTO> refrigeratorIngredients, RecipeRecommendationRequestDTO requestDTO) {
         StringBuilder prompt = new StringBuilder();
         
         prompt.append("현재 냉장고에 있는 재료들을 기반으로 레시피를 추천해주세요.\n\n");

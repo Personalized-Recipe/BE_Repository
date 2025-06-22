@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import ac.su.kdt.prompttest.dto.ChatHistoryDTO;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
+import ac.su.kdt.prompttest.service.RefrigeratorIngredientService;
 
 @Service
 @RequiredArgsConstructor
@@ -26,22 +27,24 @@ public class ChatHistoryService {
     private final PromptService promptService;
     private final ChatRoomService chatRoomService;
     private final RecipeRepository recipeRepository;
+    private final RefrigeratorIngredientService refrigeratorIngredientService;
     
     @Transactional
-    public ChatHistory processRecipeRequest(Integer userId, String message, Integer roomId) {
-        // 세션 ID 생성
+    public ChatHistory processRecipeRequest(Integer userId, String message, Integer roomId, Integer refrigeratorId) {
         String sessionId = UUID.randomUUID().toString();
-        
-        // 프롬프트 생성
-        String prompt = promptService.generatePrompt(userId, message);
-        
-        // Perplexity API 호출하여 이미 저장된 Recipe 객체 반환
-        Recipe recipe = perplexityService.getResponse(userId, message);
-        
-        // 채팅방 조회
+        String prompt;
+        if (refrigeratorId != null) {
+            // 냉장고 재료 기반 프롬프트 생성
+            var refrigeratorIngredients = refrigeratorIngredientService.getRefrigeratorIngredients(refrigeratorId);
+            var requestDTO = ac.su.kdt.prompttest.dto.RecipeRecommendationRequestDTO.builder()
+                .refrigeratorId(refrigeratorId)
+                .build();
+            prompt = ac.su.kdt.prompttest.service.PerplexityService.buildRefrigeratorBasedPrompt(refrigeratorIngredients, requestDTO);
+        } else {
+            prompt = promptService.generatePrompt(userId, message);
+        }
+        Recipe recipe = perplexityService.getResponse(userId, prompt);
         ChatRoom chatRoom = chatRoomService.getChatRoomById(roomId);
-        
-        // 채팅 기록 생성
         ChatHistory chatHistory = ChatHistory.builder()
                 .userId(userId)
                 .message(message)
@@ -49,8 +52,6 @@ public class ChatHistoryService {
                 .sessionId(sessionId)
                 .chatRoom(chatRoom)
                 .build();
-        
-        // 시스템 응답 저장
         ChatHistory systemResponse = ChatHistory.builder()
                 .userId(userId)
                 .message(perplexityService.formatRecipeAsString(recipe))
@@ -59,11 +60,8 @@ public class ChatHistoryService {
                 .chatRoom(chatRoom)
                 .recipeId(recipe.getRecipeId())
                 .build();
-        
-        // DB에 저장
         chatHistoryRepository.save(chatHistory);
         chatHistoryRepository.save(systemResponse);
-        
         return systemResponse;
     }
     
@@ -127,8 +125,8 @@ public class ChatHistoryService {
     }
 
     @Transactional
-    public ChatHistoryDTO processRecipeRequestDTO(Integer userId, String message, Integer roomId) {
-        ChatHistory systemResponse = processRecipeRequest(userId, message, roomId);
+    public ChatHistoryDTO processRecipeRequestDTO(Integer userId, String message, Integer roomId, Integer refrigeratorId) {
+        ChatHistory systemResponse = processRecipeRequest(userId, message, roomId, refrigeratorId);
         return toDTO(systemResponse);
     }
 
