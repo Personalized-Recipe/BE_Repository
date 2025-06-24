@@ -14,4 +14,7 @@ public class TokenResponseDTO {
     private String type;
     private Integer userId;
     private String username;
+    private String nickname;
+    private String profileImage;
+    private String provider;
 } 

@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.config;
 
+import ac.su.kdt.prompttest.security.JwtAuthenticationFilter;
 import ac.su.kdt.prompttest.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationFilter jwtAuthFilter;
 
     // 1. AuthenticationProvider 빈 생성 (필드 주입 제거)
     @Bean
@@ -38,19 +40,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                // .authorizeHttpRequests(auth -> auth
-                //         .requestMatchers("/api/recipes/request", "/api/v1/**", "/api/auth/**", 
-                //                        "/api/auth/google/callback", "/api/auth/kakao/callback").permitAll()
-                //         .anyRequest().authenticated()
-                // )
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/recipes/request", "/api/v1/**", "/api/users/me", "/api/test/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authenticationProvider(authenticationProvider());  // 빈 메서드 직접 호출
-                // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

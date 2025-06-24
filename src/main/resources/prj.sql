@@ -21,11 +21,12 @@ CREATE TABLE Ingredient (
 
 CREATE TABLE User (
     user_id INT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE COMMENT '사용자 이름',
+    username VARCHAR(50) NOT NULL COMMENT '사용자 이름',
     password VARCHAR(100) NOT NULL COMMENT '비밀번호',
     provider VARCHAR(20) COMMENT '소셜 플랫폼(KAKAO, GOOGLE, NAVER 등)',
     provider_id VARCHAR(50) COMMENT '소셜 플랫폼 고유 ID',
     email VARCHAR(100) COMMENT '소셜에서 받아온 이메일',
+    nickname VARCHAR(50) COMMENT '사용자 닉네임',
     profile_image VARCHAR(255) COMMENT '프로필 이미지 URL',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가입일',
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '정보 수정일',

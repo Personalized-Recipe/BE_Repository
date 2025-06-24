@@ -18,6 +18,7 @@ public class UserDTO {
     private Integer userId;
     private String username;
     private String email;
+    private String nickname;
     private String provider;
     private String providerId;
     private String profileImage;
@@ -35,6 +36,7 @@ public class UserDTO {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .nickname(user.getNickname())
                 .provider(user.getProvider())
                 .providerId(user.getProviderId())
                 .profileImage(user.getProfileImage())

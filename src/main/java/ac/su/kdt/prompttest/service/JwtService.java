@@ -38,6 +38,15 @@ public class JwtService {
     }
 
     /**
+     * JWT 토큰에서 사용자 ID를 추출
+     * @param token JWT 토큰
+     * @return 토큰에 포함된 사용자 ID
+     */
+    public Integer extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Integer.class));
+    }
+
+    /**
      * JWT 토큰에서 특정 클레임을 추출
      * @param token JWT 토큰
      * @param claimsResolver 클레임 추출 함수

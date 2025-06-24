@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
 
@@ -33,15 +36,8 @@ public class UserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-        
-        // UserDetails 객체 생성
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                "",  // 소셜 로그인의 경우 비밀번호가 없으므로 빈 문자열
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))  // 기본 권한 설정
-        );
     }
     
     public User createUser(UserDTO userDTO) {
@@ -68,6 +64,9 @@ public class UserService implements UserDetailsService {
         if (userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail());
         }
+        if (userDTO.getNickname() != null) {
+            user.setNickname(userDTO.getNickname());
+        }
         if (userDTO.getProfileImage() != null) {
             user.setProfileImage(userDTO.getProfileImage());
         }
@@ -75,9 +74,54 @@ public class UserService implements UserDetailsService {
     }
     
     public User getCurrentUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal instanceof User) {
+                // JWT 필터에서 설정한 User 객체 반환
+                return (User) principal;
+            } else {
+                // JWT 토큰에서 userId를 추출하여 사용자 조회 (username 중복 문제 해결)
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                if (username == null || "anonymousUser".equals(username)) {
+                    throw new RuntimeException("User not authenticated");
+                }
+                
+                // JWT 토큰에서 userId 추출 시도
+                try {
+                    // 현재 요청에서 JWT 토큰 추출
+                    String authHeader = getCurrentRequest().getHeader("Authorization");
+                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                        String jwt = authHeader.substring(7);
+                        Integer userId = jwtService.extractUserId(jwt);
+                        if (userId != null) {
+                            return getUserById(userId);
+                        }
+                    }
+                } catch (Exception e) {
+                    log.warn("JWT 토큰에서 userId 추출 실패, username으로 조회 시도: {}", e.getMessage());
+                }
+                
+                // 마지막 fallback: username으로 조회 (중복 가능성 있음)
+                log.warn("username으로 사용자 조회 (중복 가능성 있음): {}", username);
+                return userRepository.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeException("Current user not found"));
+            }
+        } catch (Exception e) {
+            log.error("Error getting current user: {}", e.getMessage());
+            throw new RuntimeException("Current user not found: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 현재 HTTP 요청을 가져오는 헬퍼 메서드
+     */
+    private HttpServletRequest getCurrentRequest() {
+        try {
+            return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        } catch (Exception e) {
+            log.warn("현재 요청을 가져올 수 없음: {}", e.getMessage());
+            return null;
+        }
     }
     
     @Transactional

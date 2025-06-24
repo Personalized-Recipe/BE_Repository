@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.security;
 
+import ac.su.kdt.prompttest.entity.User;
 import ac.su.kdt.prompttest.service.JwtService;
 import ac.su.kdt.prompttest.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -61,21 +62,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             
             // username이 있고 현재 인증된 사용자가 없는 경우에만 인증 처리
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // 사용자 정보 조회
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                // JWT 토큰에서 userId 추출
+                Integer userId = jwtService.extractUserId(jwt);
+                
+                // userId로 사용자 정보 조회 (username 중복 문제 해결)
+                User user = userService.getUserById(userId);
                 
                 // 토큰이 유효한 경우 인증 처리
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    // 인증 토큰 생성
+                if (jwtService.isTokenValid(jwt, user)) {
+                    // 인증 토큰 생성 (User 객체를 직접 principal로 사용)
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
+                            user,  // User 객체를 직접 저장
                             null,
-                            userDetails.getAuthorities()
+                            user.getAuthorities()
                     );
                     // 요청 상세 정보 설정
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     // SecurityContext에 인증 정보 저장
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    logger.debug("JWT 인증 성공: userId=" + userId + ", username=" + username);
                 }
             }
         } catch (Exception e) {

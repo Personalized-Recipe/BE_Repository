@@ -3,18 +3,18 @@ package ac.su.kdt.prompttest.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
 import ac.su.kdt.prompttest.service.AuthService;
-import ac.su.kdt.prompttest.service.JwtService;
-import ac.su.kdt.prompttest.entity.User;
+import ac.su.kdt.prompttest.dto.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtService jwtService;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
@@ -26,7 +26,7 @@ public class AuthController {
     @GetMapping("/api/oauth/kakao/url")
     public ResponseEntity<?> getKakaoOAuthUrl() {
         String reqUrl = "https://kauth.kakao.com/oauth/authorize?client_id=" + kakaoClientId 
-        + "&redirect_uri=http://localhost:3000/oauth/callback/kakao"
+        + "&redirect_uri=http://localhost:5173/oauth/callback/kakao"
         + "&response_type=code&scope=profile_nickname,profile_image";
         return ResponseEntity.ok(Map.of("oauth_url", reqUrl));
     }
@@ -34,116 +34,122 @@ public class AuthController {
     @GetMapping("/api/oauth/google/url")
     public ResponseEntity<?> getGoogleOAuthUrl() {
         String reqUrl = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + googleClientId 
-        + "&redirect_uri=http://localhost:3000/oauth/callback/google"
+        + "&redirect_uri=http://localhost:5173/oauth/callback/google"
         + "&response_type=code&scope=email profile";
         return ResponseEntity.ok(Map.of("oauth_url", reqUrl));
     }
 
     // 프론트엔드에서 인가코드를 받아서 처리하는 엔드포인트들
     @PostMapping("/api/oauth/kakao/callback")
-    public ResponseEntity<?> kakaoCallback(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> kakaoCallback(@RequestBody Map<String, Object> request) {
         try {
-            String code = request.get("code");
             System.out.println("=== 카카오 콜백 요청 수신 ===");
-            System.out.println("받은 인가코드: " + code);
-            
+            System.out.println("요청 본문 전체: " + request);
+            System.out.println("요청 본문 타입: " + request.getClass().getName());
+            // 다양한 키로 코드 찾기
+            String code = null;
+            if (request.get("code") != null) {
+                code = request.get("code").toString();
+            } else if (request.get("authorization_code") != null) {
+                code = request.get("authorization_code").toString();
+            }
+            System.out.println("추출된 인가코드: " + code);
             if (code == null || code.isEmpty()) {
                 System.out.println("에러: 인가코드가 없음");
+                System.out.println("사용 가능한 키들: " + request.keySet());
                 return ResponseEntity.badRequest().body(Map.of("error", "Authorization code is required"));
             }
-            
-            System.out.println("AuthService 호출 시작...");
-            String result = authService.handleKakaoCallback(code);
+            System.out.println("AuthService.handleKakaoCallback() 호출 시작...");
+            TokenResponseDTO result = authService.handleKakaoCallback(code);
+            System.out.println("AuthService.handleKakaoCallback() 호출 완료");
             System.out.println("AuthService 결과: " + result);
+            System.out.println("로그인 성공: JWT 토큰 및 사용자 정보 생성 완료");
             
-            if (result.startsWith("Error: Authorization code is invalid or expired")) {
-                System.out.println("에러: 인가코드 만료 또는 무효");
+            // 프로필 이미지 정보 상세 로깅
+            System.out.println("=== 프로필 이미지 정보 ===");
+            System.out.println("result.getProfileImage(): " + result.getProfileImage());
+            System.out.println("result.getUsername(): " + result.getUsername());
+            System.out.println("result.getUserId(): " + result.getUserId());
+            
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userId", result.getUserId());
+            userInfo.put("username", result.getUsername());
+            userInfo.put("profileImage", result.getProfileImage());
+            userInfo.put("provider", result.getProvider());
+            
+            System.out.println("userInfo Map: " + userInfo);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", result.getToken());
+            response.put("type", result.getType());
+            response.put("user", userInfo);
+            response.put("message", "Kakao login successful");
+            response.put("action", "redirect_to_dashboard");
+            
+            System.out.println("최종 response: " + response);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            System.out.println("RuntimeException 발생: " + e.getMessage());
+            e.printStackTrace();
+            if (e.getMessage() != null && e.getMessage().contains("Authorization code is invalid or expired")) {
                 return ResponseEntity.badRequest().body(Map.of(
                     "error", "Authorization code has already been used or expired",
                     "message", "Please try logging in again",
                     "action", "redirect_to_login"
                 ));
-            } else if (result.startsWith("Error:")) {
-                System.out.println("에러: " + result);
-                return ResponseEntity.badRequest().body(Map.of("error", result));
-            } else {
-                System.out.println("로그인 성공: JWT 토큰 생성 완료");
-                return ResponseEntity.ok(Map.of(
-                    "token", result, 
-                    "message", "Kakao login successful",
-                    "action", "redirect_to_dashboard"
-                ));
             }
+            return ResponseEntity.status(500).body(Map.of("error", String.valueOf(e.getMessage()), "stack", Arrays.toString(e.getStackTrace())));
         } catch (Exception e) {
-            System.out.println("예외 발생: " + e.getMessage());
+            System.out.println("Exception 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("error", String.valueOf(e.getMessage()), "stack", Arrays.toString(e.getStackTrace())));
         }
     }
 
     @PostMapping("/api/oauth/google/callback")
-    public ResponseEntity<?> googleCallback(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> googleCallback(@RequestBody Map<String, Object> request) {
         try {
-            String code = request.get("code");
             System.out.println("=== 구글 콜백 요청 수신 ===");
-            System.out.println("받은 인가코드: " + code);
-            
+            System.out.println("요청 본문 전체: " + request);
+            System.out.println("요청 본문 타입: " + request.getClass().getName());
+            // 다양한 키로 코드 찾기
+            String code = null;
+            if (request.get("code") != null) {
+                code = request.get("code").toString();
+            } else if (request.get("authorization_code") != null) {
+                code = request.get("authorization_code").toString();
+            }
+            System.out.println("추출된 인가코드: " + code);
             if (code == null || code.isEmpty()) {
                 System.out.println("에러: 인가코드가 없음");
+                System.out.println("사용 가능한 키들: " + request.keySet());
                 return ResponseEntity.badRequest().body(Map.of("error", "Authorization code is required"));
             }
-            
             System.out.println("AuthService 호출 시작...");
-            String result = authService.handleGoogleCallback(code);
+            TokenResponseDTO result = authService.handleGoogleCallback(code);
             System.out.println("AuthService 결과: " + result);
+            System.out.println("로그인 성공: JWT 토큰 및 사용자 정보 생성 완료");
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userId", result.getUserId());
+            userInfo.put("username", result.getUsername());
+            userInfo.put("profileImage", result.getProfileImage());
+            userInfo.put("provider", result.getProvider());
             
-            if (result.startsWith("Error:")) {
-                System.out.println("에러: " + result);
-                return ResponseEntity.badRequest().body(Map.of("error", result));
-            } else {
-                System.out.println("로그인 성공: JWT 토큰 생성 완료");
-                return ResponseEntity.ok(Map.of(
-                    "token", result, 
-                    "message", "Google login successful",
-                    "action", "redirect_to_dashboard"
-                ));
-            }
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", result.getToken());
+            response.put("type", result.getType());
+            response.put("user", userInfo);
+            response.put("message", "Google login successful");
+            response.put("action", "redirect_to_dashboard");
+            
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            System.out.println("에러: " + e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", String.valueOf(e.getMessage()), "stack", Arrays.toString(e.getStackTrace())));
         } catch (Exception e) {
             System.out.println("예외 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    // 기타 유틸리티 엔드포인트들
-    @PostMapping("/api/auth/kakao/token")
-    public ResponseEntity<?> getKakaoAccessToken(@RequestBody Map<String, String> request) {
-        try {
-            String code = request.get("code");
-            String accessToken = authService.getKakaoAccessToken(code);
-            return ResponseEntity.ok(Map.of("access_token", accessToken));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @GetMapping("/api/auth/kakao/userinfo")
-    public ResponseEntity<?> getKakaoUserInfo(@RequestHeader("Authorization") String authHeader) {
-        try {
-            String accessToken = authHeader.replace("Bearer ", "");
-            User user = authService.getUserFromKakaoAccessToken(accessToken);
-            String jwtToken = jwtService.generateToken(user.getUserId(), user.getUsername());
-            return ResponseEntity.ok(Map.of(
-                "token", jwtToken,
-                "user", Map.of(
-                    "userId", user.getUserId(),
-                    "username", user.getUsername(),
-                    "email", user.getEmail(),
-                    "profileImage", user.getProfileImage()
-                )
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("error", String.valueOf(e.getMessage()), "stack", Arrays.toString(e.getStackTrace())));
         }
     }
 }
