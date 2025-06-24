@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "UserPrompt")
+@Table(name = "user_prompt")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class UserPrompt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "prompt_id")
+    private Integer promptId;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)

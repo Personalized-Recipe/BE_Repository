@@ -2,10 +2,8 @@ package ac.su.kdt.prompttest.service;
 
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.Ingredient;
-import ac.su.kdt.prompttest.entity.RecipeIngredient;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
 import ac.su.kdt.prompttest.repository.IngredientRepository;
-import ac.su.kdt.prompttest.repository.RecipeIngredientRepository;
 import ac.su.kdt.prompttest.repository.UserPromptRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -16,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import ac.su.kdt.prompttest.entity.User;
+import ac.su.kdt.prompttest.service.UserService;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -37,7 +37,7 @@ public class PerplexityService {
     private final UserPromptRepository userPromptRepository;
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final UserService userService;
     
     @PostConstruct
     public void init() {
@@ -85,9 +85,10 @@ public class PerplexityService {
                 String content = (String) messageResponse.get("content");
                 log.info("Parsing AI response content");
                 log.debug("Content: {}", content);
+                log.info("AI 응답 원본:\n{}", content);
                 
                 // AI 응답을 파싱하여 Recipe 객체로 변환
-                Recipe recipe = parseRecipeResponse(content);
+                Recipe recipe = parseRecipeResponse(content, userId);
                 log.info("Successfully parsed recipe with ID: {}", recipe.getRecipeId());
                 return recipe;
             } else {
@@ -111,12 +112,18 @@ public class PerplexityService {
         
         // 재료 정보 추가
         sb.append("2. 필요한 재료와 양:\n");
-        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findByRecipeId(recipe.getRecipeId());
-        for (RecipeIngredient ri : recipeIngredients) {
-            Ingredient ingredient = ingredientRepository.findById(ri.getIngredientId()).orElse(null);
-            if (ingredient != null) {
-                sb.append("   - ").append(ingredient.getName()).append("\n");
-            }
+        try {
+            // 재료 정보를 불러오는 로직을 주석처리 또는 간단한 안내 로그로 대체
+            // List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findByRecipeId(recipe.getRecipeId());
+            // for (RecipeIngredient ri : recipeIngredients) {
+            //     Ingredient ingredient = ingredientRepository.findById(ri.getIngredientId()).orElse(null);
+            //     if (ingredient != null) {
+            //         sb.append("   - ").append(ingredient.getName()).append("\n");
+            //     }
+            // }
+        } catch (Exception e) {
+            log.warn("Error fetching recipe ingredients: {}", e.getMessage());
+            sb.append("   - 재료 정보를 불러올 수 없습니다.\n");
         }
         sb.append("\n");
         
@@ -132,13 +139,43 @@ public class PerplexityService {
         return sb.toString();
     }
 
-    private Recipe parseRecipeResponse(String content) {
+    private Recipe parseRecipeResponse(String content, Integer userId) {
         log.info("Starting to parse recipe response");
         log.debug("Content to parse: {}", content);
         
+        // 1. 유저 알러지 정보 조회
+        String userAllergy = null;
+        try {
+            User user = userService.getUserById(userId);
+            var userPromptOpt = userPromptRepository.findByUser(user);
+            if (userPromptOpt != null && userPromptOpt.getAllergy() != null) {
+                userAllergy = userPromptOpt.getAllergy();
+            }
+        } catch (Exception e) {
+            log.warn("알러지 정보 조회 실패: {}", e.getMessage());
+        }
+
         Recipe recipe = new Recipe();
-        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+        List<String> ingredientNamesForAllergyCheck = new ArrayList<>(); // 알러지 체크용
         
+        // 2. 알러지 키워드가 재료명에 포함되어 있는지 검사 (content 전체가 아니라 재료명 기준)
+        if (userAllergy != null && !userAllergy.isBlank()) {
+            String[] allergyKeywords = userAllergy.split(",");
+            for (String ingredientName : ingredientNamesForAllergyCheck) {
+                String ingredientNorm = ingredientName.replaceAll("\\s+", "").toLowerCase();
+                for (String allergy : allergyKeywords) {
+                    String allergyNorm = allergy.replaceAll("\\s+", "").toLowerCase();
+                    if (ingredientNorm.contains(allergyNorm)) {
+                        log.warn("알러지 재료({})가 포함된 레시피. 안내문구만 반환.", allergy);
+                        Recipe allergyRecipe = new Recipe();
+                        allergyRecipe.setTitle("알러지 주의");
+                        allergyRecipe.setDescription("알러지 재료가 포함된 요리는 추천할 수 없습니다. (" + allergy + ")");
+                        return allergyRecipe;
+                    }
+                }
+            }
+        }
+
         // 요리 이름 파싱 - 여러 패턴 시도
         String title = null;
         
@@ -166,13 +203,21 @@ public class PerplexityService {
             }
         }
         
+        // 마크다운 헤더(## 등) 제거
+        if (title != null) {
+            title = title.replaceAll("^#+\\s*", "").trim();
+        }
+        
         // 제목이 여전히 null이면 기본값 설정
         if (title == null || title.isEmpty()) {
             log.warn("Failed to parse recipe title from content: {}", content);
             title = "레시피 제목";
         }
         
-        log.info("Parsed recipe title: {}", title);
+        // title 파싱 후 255자 제한 보장
+        if (title != null && title.length() > 255) {
+            title = title.substring(0, 255);
+        }
         recipe.setTitle(title);
         
         // 재료와 양 파싱 - 여러 패턴 시도
@@ -185,35 +230,43 @@ public class PerplexityService {
             ingredientsText = ingredientMatcher1.group(1).trim();
         }
         
-        // 패턴 2: "재료: ..."
+        // 패턴 2: "**필요한 재료와 양**" (마크다운 형식) - 간단한 버전
         if (ingredientsText == null) {
-            Pattern ingredientPattern2 = Pattern.compile("재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-            Matcher ingredientMatcher2 = ingredientPattern2.matcher(content);
-            if (ingredientMatcher2.find()) {
-                ingredientsText = ingredientMatcher2.group(1).trim();
+            int startIndex = content.indexOf("**필요한 재료와 양**");
+            if (startIndex != -1) {
+                startIndex = content.indexOf("\n", startIndex);
+                if (startIndex != -1) {
+                    int endIndex = content.indexOf("**", startIndex);
+                    if (endIndex != -1) {
+                        ingredientsText = content.substring(startIndex, endIndex).trim();
+                    }
+                }
+            }
+        }
+        
+        // 패턴 3: "재료: ..."
+        if (ingredientsText == null) {
+            Pattern ingredientPattern3 = Pattern.compile("재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
+            Matcher ingredientMatcher3 = ingredientPattern3.matcher(content);
+            if (ingredientMatcher3.find()) {
+                ingredientsText = ingredientMatcher3.group(1).trim();
             }
         }
         
         if (ingredientsText != null) {
             log.info("Found ingredients text: {}", ingredientsText);
-            // 재료 라인별로 처리
             String[] ingredientLines = ingredientsText.split("\\n");
             log.info("Number of ingredient lines: {}", ingredientLines.length);
-            
             for (String line : ingredientLines) {
                 line = line.trim();
-                if (line.isEmpty() || line.startsWith("-")) {
-                    log.debug("Skipping empty or bullet line: {}", line);
+                if (line.isEmpty() || !line.startsWith("-")) {
+                    log.debug("Skipping non-ingredient line: {}", line);
                     continue;
                 }
-                
+                line = line.substring(2).trim();
                 log.info("Processing ingredient line: {}", line);
-                
-                // 재료명과 양을 분리 (여러 패턴 시도)
                 String ingredientName = null;
                 String amount = null;
-                
-                // 패턴 1: "재료명: 양 단위"
                 Pattern pattern1 = Pattern.compile("([^:]+):\\s*(.+)");
                 Matcher matcher1 = pattern1.matcher(line);
                 if (matcher1.find()) {
@@ -221,8 +274,6 @@ public class PerplexityService {
                     amount = matcher1.group(2).trim();
                     log.info("Pattern 1 matched - Name: {}, Amount: {}", ingredientName, amount);
                 }
-                
-                // 패턴 2: "재료명 양 단위"
                 if (ingredientName == null) {
                     Pattern pattern2 = Pattern.compile("([가-힣a-zA-Z]+)\\s*(\\d+[가-힣a-zA-Z]+)");
                     Matcher matcher2 = pattern2.matcher(line);
@@ -232,7 +283,9 @@ public class PerplexityService {
                         log.info("Pattern 2 matched - Name: {}, Amount: {}", ingredientName, amount);
                     }
                 }
-                
+                if (ingredientName != null) {
+                    ingredientNamesForAllergyCheck.add(ingredientName);
+                }
                 if (ingredientName != null && amount != null) {
                     log.info("Found valid ingredient - Name: {}, Amount: {}", ingredientName, amount);
                     
@@ -240,41 +293,13 @@ public class PerplexityService {
                         // 재료 찾기 또는 생성
                         String finalAmount = amount;
                         String finalIngredientName = ingredientName;
-                        Ingredient ingredient = ingredientRepository.findByName(ingredientName)
-                            .orElseGet(() -> {
-                                log.info("Creating new ingredient: {}", finalIngredientName);
-                                Ingredient newIngredient = new Ingredient();
-                                newIngredient.setName(finalIngredientName);
-                                
-                                // 양과 단위 추출 및 변환
-                                String[] amountParts = finalAmount.split("\\s+");
-                                if (amountParts.length >= 2) {
-                                    try {
-                                        float value = Float.parseFloat(amountParts[0]);
-                                        String unit = amountParts[1];
-                                        // 단위를 g 또는 ml로 변환
-                                        float convertedAmount = convertToStandardUnit(value, unit);
-                                        newIngredient.setRequiredAmount(convertedAmount);
-                                        log.info("Converted amount for {}: {} {} -> {} g/ml", 
-                                            finalIngredientName, value, unit, convertedAmount);
-                                    } catch (NumberFormatException e) {
-                                        log.warn("Invalid amount format for ingredient {}: {}", 
-                                            finalIngredientName, finalAmount);
-                                    }
-                                }
-                                Ingredient savedIngredient = ingredientRepository.save(newIngredient);
-                                log.info("Saved new ingredient with ID: {}", savedIngredient.getIngredientId());
-                                return savedIngredient;
-                            });
-                        
-                        log.info("Found existing ingredient with ID: {}", ingredient.getIngredientId());
-                        
-                        // RecipeIngredient 생성
-                        RecipeIngredient recipeIngredient = new RecipeIngredient();
-                        recipeIngredient.setRecipeId(recipe.getRecipeId());
-                        recipeIngredient.setIngredientId(ingredient.getIngredientId());
-                        recipeIngredients.add(recipeIngredient);
-                        log.info("Created recipe ingredient relationship");
+                        Optional<Ingredient> ingredientOpt = ingredientRepository.findByName(ingredientName);
+                        if (ingredientOpt.isPresent()) {
+                            Ingredient ingredient = ingredientOpt.get();
+                            log.info("Found existing ingredient with ID: {}", ingredient.getIngredientId());
+                        } else {
+                            log.warn("Ingredient '{}' not found in DB. Skipping.", ingredientName);
+                        }
                     } catch (Exception e) {
                         log.error("Error processing ingredient: {}", ingredientName, e);
                     }
@@ -292,16 +317,32 @@ public class PerplexityService {
         if (timeMatcher.find()) {
             recipe.setCookingTime(Integer.parseInt(timeMatcher.group(1)));
         } else {
-            recipe.setCookingTime(30); // 기본값
+            // 마크다운 형식 조리 시간 파싱
+            Pattern timePattern2 = Pattern.compile("\\*\\*조리 시간\\*\\*\\s*\\n-\\s*(\\d+)\\s*분");
+            Matcher timeMatcher2 = timePattern2.matcher(content);
+            if (timeMatcher2.find()) {
+                recipe.setCookingTime(Integer.parseInt(timeMatcher2.group(1)));
+            } else {
+                recipe.setCookingTime(30); // 기본값
+            }
         }
         
         // 난이도 파싱
         Pattern difficultyPattern = Pattern.compile("4\\.\\s*난이도\\s*:\\s*(.+?)(?=\\n|$)");
         Matcher difficultyMatcher = difficultyPattern.matcher(content);
         if (difficultyMatcher.find()) {
-            recipe.setDifficulty(difficultyMatcher.group(1).trim());
+            String difficulty = difficultyMatcher.group(1).trim();
+            recipe.setDifficulty(normalizeDifficulty(difficulty));
         } else {
-            recipe.setDifficulty("중"); // 기본값
+            // 마크다운 형식 난이도 파싱
+            Pattern difficultyPattern2 = Pattern.compile("\\*\\*난이도\\*\\*\\s*\\n-\\s*(.+?)(?=\\n|$)");
+            Matcher difficultyMatcher2 = difficultyPattern2.matcher(content);
+            if (difficultyMatcher2.find()) {
+                String difficulty = difficultyMatcher2.group(1).trim();
+                recipe.setDifficulty(normalizeDifficulty(difficulty));
+            } else {
+                recipe.setDifficulty("중"); // 기본값
+            }
         }
         
         // 조리 방법과 팁을 description에 통합
@@ -322,12 +363,38 @@ public class PerplexityService {
             descriptionBuilder.append("조리 방법:\n").append(method).append("\n\n");
         }
         
+        // 마크다운 형식 조리 방법 파싱
+        if (descriptionBuilder.toString().contains("조리 방법:")) {
+            // 이미 파싱됨
+        } else {
+            Pattern methodPattern2 = Pattern.compile("\\*\\*상세한 조리 방법\\*\\*\\s*\\n(.+?)(?=\\n\\*\\*|$)", Pattern.DOTALL);
+            Matcher methodMatcher2 = methodPattern2.matcher(content);
+            if (methodMatcher2.find()) {
+                String method = methodMatcher2.group(1).trim();
+                descriptionBuilder.append("조리 방법:\n").append(method).append("\n\n");
+            } else {
+                descriptionBuilder.append("조리 방법 정보를 찾을 수 없습니다.\n\n");
+            }
+        }
+        
         // 요리 팁과 주의사항 파싱
         Pattern tipsPattern = Pattern.compile("6\\.\\s*요리 팁과 주의사항\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
         Matcher tipsMatcher = tipsPattern.matcher(content);
         if (tipsMatcher.find()) {
             String tips = tipsMatcher.group(1).trim();
             descriptionBuilder.append("요리 팁과 주의사항:\n").append(tips);
+        }
+        
+        // 마크다운 형식 요리 팁 파싱
+        if (descriptionBuilder.toString().contains("요리 팁과 주의사항:")) {
+            // 이미 파싱됨
+        } else {
+            Pattern tipsPattern2 = Pattern.compile("\\*\\*요리 팁과 주의사항\\*\\*\\s*\\n(.+?)(?=\\n\\*\\*|$)");
+            Matcher tipsMatcher2 = tipsPattern2.matcher(content);
+            if (tipsMatcher2.find()) {
+                String tips = tipsMatcher2.group(1).trim();
+                descriptionBuilder.append("요리 팁과 주의사항:\n").append(tips);
+            }
         }
         
         String description = descriptionBuilder.toString().trim();
@@ -339,15 +406,6 @@ public class PerplexityService {
             log.info("Saving recipe with title: {}", recipe.getTitle());
             recipe = recipeRepository.save(recipe);
             log.info("Saved recipe with ID: {}", recipe.getRecipeId());
-            
-            // RecipeIngredient 저장
-            for (RecipeIngredient ri : recipeIngredients) {
-                ri.setRecipeId(recipe.getRecipeId());
-                log.info("Saving recipe ingredient relationship - Recipe ID: {}, Ingredient ID: {}", 
-                    ri.getRecipeId(), ri.getIngredientId());
-                RecipeIngredient savedRI = recipeIngredientRepository.save(ri);
-                log.info("Saved recipe ingredient relationship with ID: {}", savedRI.getRecipeId());
-            }
             
             return recipe;
         } catch (Exception e) {
@@ -375,5 +433,69 @@ public class PerplexityService {
             default:
                 return value;
         }
+    }
+
+    private String normalizeDifficulty(String difficulty) {
+        if (difficulty == null) return "중";
+        
+        switch (difficulty.toLowerCase().trim()) {
+            case "쉬움":
+            case "하":
+            case "easy":
+                return "하";
+            case "중간":
+            case "중":
+            case "medium":
+                return "중";
+            case "어려움":
+            case "상":
+            case "hard":
+                return "상";
+            default:
+                return "중"; // 기본값
+        }
+    }
+
+    public String getAIContentRaw(Integer userId, String userPrompt) {
+        int maxTries = 3;
+        for (int i = 0; i < maxTries; i++) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + apiKey);
+
+            String systemPrompt = promptService.generatePrompt(userId, userPrompt);
+            Map<String, String> systemMessage = new HashMap<>();
+            systemMessage.put("role", "system");
+            systemMessage.put("content", systemPrompt);
+
+            Map<String, String> userMessage = new HashMap<>();
+            userMessage.put("role", "user");
+            userMessage.put("content", userPrompt);
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("model", "sonar-pro");
+            requestBody.put("messages", Arrays.asList(systemMessage, userMessage));
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+            try {
+                Map<String, Object> response = restTemplate.postForObject(apiUrl, request, Map.class);
+                if (response != null && response.containsKey("choices")
+                    && !((List)response.get("choices")).isEmpty()) {
+                    Map<String, Object> choice = (Map<String, Object>)((List)response.get("choices")).get(0);
+                    Map<String, Object> messageResponse = (Map<String, Object>)choice.get("message");
+                    String content = (String) messageResponse.get("content");
+                    if (content != null && content.contains("상세한 조리 방법")) {
+                        return content;
+                    }
+                    // 아니면 재시도
+                } else {
+                    return "No valid response received from Perplexity API";
+                }
+            } catch (Exception e) {
+                return "Error calling Perplexity API: " + e.getMessage();
+            }
+        }
+        return "상세한 조리 방법 섹션이 포함된 답변을 받지 못했습니다.";
     }
 }

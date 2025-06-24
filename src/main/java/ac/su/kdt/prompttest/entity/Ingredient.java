@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Ingredient")
+@Table(name = "Ingredient", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "creator_user_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,4 +30,11 @@ public class Ingredient {
     
     @Column(columnDefinition = "TEXT")
     private String nutritionInfo;  // 영양 정보 (단백질, 지방, 탄수화물 등)
+
+    /**
+     * 이 재료를 등록한 사용자의 userId
+     * 이름+등록자 조합이 unique하도록 DB와 JPA에 제약을 둡니다.
+     */
+    @Column(name = "creator_user_id", nullable = false)
+    private Integer creatorUserId;
 } 

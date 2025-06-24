@@ -20,7 +20,6 @@ public class RecipeService {
     private final UserRecipeRepository userRecipeRepository;
     private final PromptService promptService;
     private final PerplexityService perplexityService;
-    private final RecipeIngredientService recipeIngredientService;
 
     @Transactional
     public Recipe requestRecipe(Integer userId, String request) {
@@ -41,12 +40,6 @@ public class RecipeService {
                 .build();
         
         Recipe savedRecipe = recipeRepository.save(recipe);
-        
-        // 재료 정보 추출 및 저장
-        String ingredients = extractIngredients(response);
-        if (ingredients != null && !ingredients.isEmpty()) {
-            recipeIngredientService.saveRecipeIngredients(savedRecipe.getRecipeId(), ingredients);
-        }
         
         return savedRecipe;
     }
