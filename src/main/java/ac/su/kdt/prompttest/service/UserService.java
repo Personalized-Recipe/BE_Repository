@@ -80,13 +80,13 @@ public class UserService implements UserDetailsService {
                 // JWT 필터에서 설정한 User 객체 반환
                 return (User) principal;
             } else {
-                // JWT 토큰에서 userId를 추출하여 사용자 조회 (username 중복 문제 해결)
+                // JWT 필터에서 User 객체가 설정되지 않은 경우
                 String username = SecurityContextHolder.getContext().getAuthentication().getName();
                 if (username == null || "anonymousUser".equals(username)) {
                     throw new RuntimeException("User not authenticated");
                 }
                 
-                // JWT 토큰에서 userId 추출 시도
+                // JWT 토큰에서 userId를 추출하여 사용자 조회 (username 중복 문제 해결)
                 try {
                     // 현재 요청에서 JWT 토큰 추출
                     String authHeader = getCurrentRequest().getHeader("Authorization");
@@ -94,14 +94,16 @@ public class UserService implements UserDetailsService {
                         String jwt = authHeader.substring(7);
                         Integer userId = jwtService.extractUserId(jwt);
                         if (userId != null) {
-                            return getUserById(userId);
+                            User user = getUserById(userId);
+                            log.info("JWT 토큰에서 userId로 사용자 조회 성공: userId={}, username={}", userId, user.getUsername());
+                            return user;
                         }
                     }
                 } catch (Exception e) {
-                    log.warn("JWT 토큰에서 userId 추출 실패, username으로 조회 시도: {}", e.getMessage());
+                    log.warn("JWT 토큰에서 userId 추출 실패: {}", e.getMessage());
                 }
                 
-                // 마지막 fallback: username으로 조회 (중복 가능성 있음)
+                // username으로 조회는 중복 가능성이 있으므로 경고 로그와 함께 사용
                 log.warn("username으로 사용자 조회 (중복 가능성 있음): {}", username);
                 return userRepository.findByUsername(username)
                         .orElseThrow(() -> new RuntimeException("Current user not found"));

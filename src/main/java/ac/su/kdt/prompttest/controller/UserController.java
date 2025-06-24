@@ -6,6 +6,7 @@ import ac.su.kdt.prompttest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,8 +36,21 @@ public class UserController {
     public ResponseEntity<UserDTO> getCurrentUser() {
         log.info("=== /api/users/me GET 요청 수신 ===");
         try {
+            // SecurityContext에서 현재 인증 정보 확인
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            log.info("SecurityContext principal 타입: {}", principal.getClass().getSimpleName());
+            
+            if (principal instanceof User) {
+                User user = (User) principal;
+                log.info("SecurityContext에서 User 객체 직접 조회: userId={}, username={}, provider={}", 
+                        user.getUserId(), user.getUsername(), user.getProvider());
+            } else {
+                log.info("SecurityContext principal이 User 객체가 아님: {}", principal);
+            }
+            
             User user = userService.getCurrentUser();
-            log.info("현재 사용자 조회 성공: userId={}, username={}", user.getUserId(), user.getUsername());
+            log.info("현재 사용자 조회 성공: userId={}, username={}, provider={}, profileImage={}", 
+                    user.getUserId(), user.getUsername(), user.getProvider(), user.getProfileImage());
             return ResponseEntity.ok(UserDTO.from(user));
         } catch (Exception e) {
             log.error("현재 사용자 조회 실패: {}", e.getMessage(), e);

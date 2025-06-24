@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -64,9 +63,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // JWT 토큰에서 userId 추출
                 Integer userId = jwtService.extractUserId(jwt);
+                logger.debug("JWT 토큰에서 추출된 정보: userId=" + userId + ", username=" + username);
                 
                 // userId로 사용자 정보 조회 (username 중복 문제 해결)
                 User user = userService.getUserById(userId);
+                logger.debug("DB에서 조회된 사용자: userId=" + user.getUserId() + ", username=" + user.getUsername() + ", provider=" + user.getProvider());
                 
                 // 토큰이 유효한 경우 인증 처리
                 if (jwtService.isTokenValid(jwt, user)) {
@@ -80,12 +81,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     // SecurityContext에 인증 정보 저장
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    logger.debug("JWT 인증 성공: userId=" + userId + ", username=" + username);
+                    logger.info("JWT 인증 성공: userId=" + userId + ", username=" + username + ", provider=" + user.getProvider());
+                } else {
+                    logger.warn("JWT 토큰이 유효하지 않음: userId=" + userId + ", username=" + username);
+                }
+            } else {
+                if (username == null) {
+                    logger.debug("JWT 토큰에서 username 추출 실패");
+                } else {
+                    logger.debug("이미 인증된 사용자가 있음: " + username);
                 }
             }
         } catch (Exception e) {
             // 토큰 검증 실패 시 로그 기록
-            logger.error("JWT 토큰 검증 실패: " + e.getMessage());
+            logger.error("JWT 토큰 검증 실패: " + e.getMessage(), e);
         }
         
         // 다음 필터로 요청 전달
