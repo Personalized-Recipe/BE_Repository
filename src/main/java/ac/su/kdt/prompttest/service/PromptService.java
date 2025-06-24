@@ -6,6 +6,7 @@ import ac.su.kdt.prompttest.repository.UserPromptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,16 @@ public class PromptService {
             
             // 1. 기본 시스템 프롬프트
             promptBuilder.append("당신은 레시피 추천 전문가입니다. ");
+            
+            // 1-1. 유저가 가진 재료 목록 추가
+            List<String> userIngredients = userService.getUserIngredientNames(userId);
+            if (userIngredients != null && !userIngredients.isEmpty()) {
+                promptBuilder.append("사용자가 가지고 있는 재료는 다음과 같습니다:\n");
+                for (String ingredient : userIngredients) {
+                    promptBuilder.append("- ").append(ingredient).append("\n");
+                }
+                promptBuilder.append("아래 보유재료를 반드시 1개 이상 포함해서 레시피를 추천해주세요. 보유재료가 하나도 포함되지 않으면 답변하지 마세요. 보유재료를 최대한 많이 활용한 레시피를 우선 추천하고, 불가피할 경우 1개 이상만이라도 반드시 포함해서 추천해주세요.  \n\n");
+            }
             
             // 2. 사용자 개인화 정보 추가
             if (userPrompt != null) {
@@ -91,20 +102,65 @@ public class PromptService {
             
             // 4. 레시피 형식 지정
             promptBuilder.append("레시피는 다음 형식으로 제공해주세요:\n");
-            promptBuilder.append("- 요리 이름\n");
-            promptBuilder.append("- 필요한 재료와 양\n");
-            promptBuilder.append("- 조리 시간\n");
-            promptBuilder.append("- 난이도\n");
-            promptBuilder.append("- 상세한 조리 방법\n");
-            promptBuilder.append("- 요리 팁과 주의사항\n");
-            promptBuilder.append("- 완성된 요리의 이미지 URL\n\n");
+            promptBuilder.append("## 요리 이름\n");
+            promptBuilder.append("\n**필요한 재료**\n");
+            promptBuilder.append("- 재료명\n");
+            promptBuilder.append("- 재료명\n");
+            promptBuilder.append("...\n\n");
+            promptBuilder.append("**조리 시간**\n");
+            promptBuilder.append("- 시간분\n\n");
+            promptBuilder.append("**난이도**\n");
+            promptBuilder.append("- 난이도 (상/중/하 중 하나)\n\n");
+            promptBuilder.append("**상세한 조리 방법**\n");
+            promptBuilder.append("1. 첫 번째 단계\n");
+            promptBuilder.append("2. 두 번째 단계\n");
+            promptBuilder.append("...\n\n");
+            promptBuilder.append("**요리 팁과 주의사항**\n");
+            promptBuilder.append("- 팁 또는 주의사항\n");
+            promptBuilder.append("- 팁 또는 주의사항\n\n");
+            promptBuilder.append("**완성된 요리의 이미지 URL**\n");
+            promptBuilder.append("- 실제 이미지 URL\n\n");
             
             // 5. 주의사항 추가
             promptBuilder.append("주의사항:\n");
             promptBuilder.append("- 모든 재료의 양과 단위를 정확히 명시해주세요.\n");
-            promptBuilder.append("- 조리 방법은 순서대로 상세히 설명해주세요.\n");
+            promptBuilder.append("- 조리 방법은 반드시 포함해야 하며, 순서대로 상세히 설명해주세요.\n");
             promptBuilder.append("- 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.\n");
             promptBuilder.append("- 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.\n");
+            promptBuilder.append("- 난이도는 반드시 '상', '중', '하' 중 하나로만 표기해주세요.\n");
+            promptBuilder.append("- 각 섹션은 정확히 위의 형식을 따라주세요.\n");
+            promptBuilder.append("- 조리 방법 섹션을 절대 생략하지 마세요. 반드시 포함해주세요.\n");
+            promptBuilder.append("- '상세한 조리 방법' 섹션이 누락되면 답변하지 마세요. 반드시 포함하세요.\n");
+            promptBuilder.append("- 아래 예시처럼 모든 섹션이 빠짐없이 포함된 답변만 작성하세요.\n");
+            
+            promptBuilder.append("아래는 예시입니다. 반드시 이 형식을 따라 답변하세요.\n\n");
+            promptBuilder.append("## 닭가슴살 감자볶음\n\n");
+            promptBuilder.append("**필요한 재료**\n");
+            promptBuilder.append("- 닭가슴살\n");
+            promptBuilder.append("- 감자\n");
+            promptBuilder.append("- 양파\n");
+            promptBuilder.append("- 대파\n");
+            promptBuilder.append("- 다진 마늘\n");
+            promptBuilder.append("- 식용유\n");
+            promptBuilder.append("- 간장\n");
+            promptBuilder.append("- 소금\n");
+            promptBuilder.append("- 후추\n\n");
+            promptBuilder.append("**조리 시간**\n");
+            promptBuilder.append("- 20분\n\n");
+            promptBuilder.append("**난이도**\n");
+            promptBuilder.append("- 중\n\n");
+            promptBuilder.append("**상세한 조리 방법**\n");
+            promptBuilder.append("1. 감자는 껍질을 벗기고 깍둑썰기 해주세요.\n");
+            promptBuilder.append("2. 닭가슴살은 한 입 크기로 썰어 소금, 후추로 밑간합니다.\n");
+            promptBuilder.append("3. 팬에 식용유를 두르고 다진 마늘, 대파를 볶아 향을 냅니다.\n");
+            promptBuilder.append("4. 닭가슴살을 넣고 익을 때까지 볶습니다.\n");
+            promptBuilder.append("5. 감자, 양파를 넣고 5분간 볶은 뒤 간장으로 간을 맞춥니다.\n");
+            promptBuilder.append("6. 감자가 익을 때까지 중불에서 볶아 완성합니다.\n\n");
+            promptBuilder.append("**요리 팁과 주의사항**\n");
+            promptBuilder.append("- 감자는 미리 전자레인지에 3분간 돌리면 더 빨리 익힙니다.\n");
+            promptBuilder.append("- 닭가슴살 대신 돼지고기나 소고기를 사용해도 좋습니다.\n\n");
+            promptBuilder.append("**완성된 요리의 이미지 URL**\n");
+            promptBuilder.append("- https://example.com/sample.jpg\n\n");
             
             return promptBuilder.toString();
             
@@ -121,20 +177,42 @@ public class PromptService {
             ## 사용자 요청
             %s
 
-            레시피를 알려주세요. 다음 정보를 포함해주세요:
-            - 요리 이름
-            - 필요한 재료와 양
-            - 조리 시간
-            - 난이도
-            - 상세한 조리 방법
-            - 요리 팁과 주의사항
-            - 완성된 요리의 이미지 URL
+            레시피는 다음 형식으로 제공해주세요:
+            ## 요리 이름
+
+            **필요한 재료**
+            - 재료명
+            - 재료명
+            ...
+
+            **조리 시간**
+            - 시간분
+
+            **난이도**
+            - 난이도 (상/중/하 중 하나)
+
+            **상세한 조리 방법**
+            1. 첫 번째 단계
+            2. 두 번째 단계
+            ...
+
+            **요리 팁과 주의사항**
+            - 팁 또는 주의사항
+            - 팁 또는 주의사항
+
+            **완성된 요리의 이미지 URL**
+            - 실제 이미지 URL
 
             주의사항:
             - 모든 재료의 양과 단위를 정확히 명시해주세요.
-            - 조리 방법은 순서대로 상세히 설명해주세요.
+            - 조리 방법은 반드시 포함해야 하며, 순서대로 상세히 설명해주세요.
             - 요리 팁과 주의사항은 실제 조리 시 도움이 될 수 있는 내용을 포함해주세요.
             - 요리 이미지 URL은 실제 존재하는 이미지의 URL을 제공해주세요.
+            - 난이도는 반드시 '상', '중', '하' 중 하나로만 표기해주세요.
+            - 각 섹션은 정확히 위의 형식을 따라주세요.
+            - 조리 방법 섹션을 절대 생략하지 마세요. 반드시 포함해주세요.
+            - '상세한 조리 방법' 섹션이 누락되면 답변하지 마세요. 반드시 포함하세요.
+            - 아래 예시처럼 모든 섹션이 빠짐없이 포함된 답변만 작성하세요.
             """, request);
     }
 } 

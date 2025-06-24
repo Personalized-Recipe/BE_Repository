@@ -21,14 +21,15 @@ import lombok.NoArgsConstructor;
 public class UserIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "ingredient_id")
+    private Integer ingredientId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ingredient_id", nullable = false)
+    @JoinColumn(name = "ingredient_id", nullable = false, insertable = false, updatable = false)
     private Ingredient ingredient;
 
     @Positive(message = "무게는 양수여야 합니다")

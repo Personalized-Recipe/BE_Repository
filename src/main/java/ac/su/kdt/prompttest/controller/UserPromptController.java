@@ -2,10 +2,11 @@ package ac.su.kdt.prompttest.controller;
 
 import ac.su.kdt.prompttest.entity.UserPrompt;
 import ac.su.kdt.prompttest.service.UserPromptService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ac.su.kdt.prompttest.dto.UserPromptDTO;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +22,25 @@ public class UserPromptController {
     /**
      * 사용자의 프롬프트 정보를 조회합니다.
      * @param userId 사용자 ID
-     * @return UserPrompt 객체
+     * @return UserPromptDTO 객체
      */
     @GetMapping("/{userId}/prompt")
     public ResponseEntity<?> getUserPrompt(@PathVariable Integer userId) {
         try {
             UserPrompt userPrompt = userPromptService.getUserPrompt(userId);
-            return ResponseEntity.ok(userPrompt);
+            if (userPrompt == null) {
+                return ResponseEntity.notFound().build();
+            }
+            UserPromptDTO dto = new UserPromptDTO();
+            dto.setName(userPrompt.getName());
+            dto.setAge(userPrompt.getAge());
+            dto.setGender(userPrompt.getGender());
+            dto.setIsPregnant(userPrompt.getIsPregnant());
+            dto.setHealthStatus(userPrompt.getHealthStatus());
+            dto.setAllergy(userPrompt.getAllergy());
+            dto.setPreference(userPrompt.getPreference());
+            dto.setNickname(userPrompt.getNickname());
+            return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             log.error("Error getting user prompt: {}", e.getMessage());
             return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));

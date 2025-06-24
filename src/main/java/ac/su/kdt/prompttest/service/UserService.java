@@ -3,6 +3,9 @@ package ac.su.kdt.prompttest.service;
 import ac.su.kdt.prompttest.dto.UserDTO;
 import ac.su.kdt.prompttest.entity.User;
 import ac.su.kdt.prompttest.repository.UserRepository;
+import ac.su.kdt.prompttest.repository.UserIngredientRepository;
+import ac.su.kdt.prompttest.entity.UserIngredient;
+import ac.su.kdt.prompttest.entity.Ingredient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +21,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class UserService implements UserDetailsService {
     
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final UserIngredientRepository userIngredientRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     
     /**
@@ -163,5 +169,12 @@ public class UserService implements UserDetailsService {
         user.setProfileImage(profileImage);
 
         return userRepository.save(user);
+    }
+
+    public List<String> getUserIngredientNames(Integer userId) {
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUser_UserId(userId);
+        return userIngredients.stream()
+                .map(ui -> ui.getIngredient().getName())
+                .collect(Collectors.toList());
     }
 } 
