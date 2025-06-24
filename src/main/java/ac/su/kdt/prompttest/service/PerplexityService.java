@@ -109,33 +109,13 @@ public class PerplexityService {
     private String formatRecipeAsString(Recipe recipe) {
         StringBuilder sb = new StringBuilder();
         sb.append("1. 요리 이름: ").append(recipe.getTitle()).append("\n\n");
-        
-        // 재료 정보 추가
-        sb.append("2. 필요한 재료와 양:\n");
-        try {
-            // 재료 정보를 불러오는 로직을 주석처리 또는 간단한 안내 로그로 대체
-            // List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findByRecipeId(recipe.getRecipeId());
-            // for (RecipeIngredient ri : recipeIngredients) {
-            //     Ingredient ingredient = ingredientRepository.findById(ri.getIngredientId()).orElse(null);
-            //     if (ingredient != null) {
-            //         sb.append("   - ").append(ingredient.getName()).append("\n");
-            //     }
-            // }
-        } catch (Exception e) {
-            log.warn("Error fetching recipe ingredients: {}", e.getMessage());
-            sb.append("   - 재료 정보를 불러올 수 없습니다.\n");
-        }
-        sb.append("\n");
-        
+        // 2번(필요한 재료와 양) 항목 삭제
         // 조리 시간
-        sb.append("3. 조리 시간: ").append(recipe.getCookingTime()).append("분\n\n");
-        
+        sb.append("2. 조리 시간: ").append(recipe.getCookingTime()).append("분\n\n");
         // 난이도
-        sb.append("4. 난이도: ").append(recipe.getDifficulty()).append("\n\n");
-        
+        sb.append("3. 난이도: ").append(recipe.getDifficulty()).append("\n\n");
         // 조리 방법과 팁
-        sb.append("5. ").append(recipe.getDescription());
-        
+        sb.append("4. ").append(recipe.getDescription());
         return sb.toString();
     }
 
@@ -161,11 +141,18 @@ public class PerplexityService {
         // 2. 알러지 키워드가 재료명에 포함되어 있는지 검사 (content 전체가 아니라 재료명 기준)
         if (userAllergy != null && !userAllergy.isBlank()) {
             String[] allergyKeywords = userAllergy.split(",");
-            for (String ingredientName : ingredientNamesForAllergyCheck) {
-                String ingredientNorm = ingredientName.replaceAll("\\s+", "").toLowerCase();
+            // '필요한 재료' 섹션만 추출
+            String ingredientsSection = null;
+            Pattern ingredientsPattern = Pattern.compile("\\*\\*필요한 재료.*?\\*\\*(.+?)(?=\\*\\*|$)", Pattern.DOTALL);
+            Matcher matcher = ingredientsPattern.matcher(content);
+            if (matcher.find()) {
+                ingredientsSection = matcher.group(1);
+            }
+            if (ingredientsSection != null) {
+                String lowerIngredients = ingredientsSection.toLowerCase();
                 for (String allergy : allergyKeywords) {
                     String allergyNorm = allergy.replaceAll("\\s+", "").toLowerCase();
-                    if (ingredientNorm.contains(allergyNorm)) {
+                    if (lowerIngredients.contains(allergyNorm)) {
                         log.warn("알러지 재료({})가 포함된 레시피. 안내문구만 반환.", allergy);
                         Recipe allergyRecipe = new Recipe();
                         allergyRecipe.setTitle("알러지 주의");
@@ -224,7 +211,7 @@ public class PerplexityService {
         String ingredientsText = null;
         
         // 패턴 1: "2. 필요한 재료와 양: ..."
-        Pattern ingredientPattern1 = Pattern.compile("2\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
+        Pattern ingredientPattern1 = Pattern.compile("2\\.\\s*필요한 재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
         Matcher ingredientMatcher1 = ingredientPattern1.matcher(content);
         if (ingredientMatcher1.find()) {
             ingredientsText = ingredientMatcher1.group(1).trim();
@@ -232,7 +219,7 @@ public class PerplexityService {
         
         // 패턴 2: "**필요한 재료와 양**" (마크다운 형식) - 간단한 버전
         if (ingredientsText == null) {
-            int startIndex = content.indexOf("**필요한 재료와 양**");
+            int startIndex = content.indexOf("**필요한 재료**");
             if (startIndex != -1) {
                 startIndex = content.indexOf("\n", startIndex);
                 if (startIndex != -1) {

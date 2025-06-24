@@ -103,9 +103,9 @@ public class PromptService {
             // 4. 레시피 형식 지정
             promptBuilder.append("레시피는 다음 형식으로 제공해주세요:\n");
             promptBuilder.append("## 요리 이름\n");
-            promptBuilder.append("\n**필요한 재료와 양**\n");
-            promptBuilder.append("- 재료명: 양 단위\n");
-            promptBuilder.append("- 재료명: 양 단위\n");
+            promptBuilder.append("\n**필요한 재료**\n");
+            promptBuilder.append("- 재료명\n");
+            promptBuilder.append("- 재료명\n");
             promptBuilder.append("...\n\n");
             promptBuilder.append("**조리 시간**\n");
             promptBuilder.append("- 시간분\n\n");
@@ -135,16 +135,16 @@ public class PromptService {
             
             promptBuilder.append("아래는 예시입니다. 반드시 이 형식을 따라 답변하세요.\n\n");
             promptBuilder.append("## 닭가슴살 감자볶음\n\n");
-            promptBuilder.append("**필요한 재료와 양**\n");
-            promptBuilder.append("- 닭가슴살: 200g\n");
-            promptBuilder.append("- 감자: 2개(약 300g)\n");
-            promptBuilder.append("- 양파: 1/2개\n");
-            promptBuilder.append("- 대파: 1대\n");
-            promptBuilder.append("- 다진 마늘: 1큰술\n");
-            promptBuilder.append("- 식용유: 2큰술\n");
-            promptBuilder.append("- 간장: 2큰술\n");
-            promptBuilder.append("- 소금: 약간\n");
-            promptBuilder.append("- 후추: 약간\n\n");
+            promptBuilder.append("**필요한 재료**\n");
+            promptBuilder.append("- 닭가슴살\n");
+            promptBuilder.append("- 감자\n");
+            promptBuilder.append("- 양파\n");
+            promptBuilder.append("- 대파\n");
+            promptBuilder.append("- 다진 마늘\n");
+            promptBuilder.append("- 식용유\n");
+            promptBuilder.append("- 간장\n");
+            promptBuilder.append("- 소금\n");
+            promptBuilder.append("- 후추\n\n");
             promptBuilder.append("**조리 시간**\n");
             promptBuilder.append("- 20분\n\n");
             promptBuilder.append("**난이도**\n");
@@ -180,9 +180,9 @@ public class PromptService {
             레시피는 다음 형식으로 제공해주세요:
             ## 요리 이름
 
-            **필요한 재료와 양**
-            - 재료명: 양 단위
-            - 재료명: 양 단위
+            **필요한 재료**
+            - 재료명
+            - 재료명
             ...
 
             **조리 시간**
