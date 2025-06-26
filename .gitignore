@@ -43,3 +43,4 @@ application.properties
 
 
 logs/*.gz
+logs/*.log
