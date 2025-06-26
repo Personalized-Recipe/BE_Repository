@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class UserPrompt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prompt_id")
+    @Column(name = "id")
     private Integer promptId;
     
     @OneToOne(fetch = FetchType.LAZY)

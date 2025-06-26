@@ -41,7 +41,20 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/recipes/request", "/api/v1/**", "/api/users/me", "/api/test/**").permitAll()
+                        // 공개 엔드포인트 (인증 불필요)
+                        .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/recipes/request", "/api/v1/**", "/api/test/**").permitAll()
+                        
+                        // 사용자 관련 엔드포인트 (인증 필요)
+                        .requestMatchers("/api/users/me").permitAll() // 임시로 허용 (개발 중)
+                        .requestMatchers("/api/users/{userId}/profile").authenticated()
+                        .requestMatchers("/api/users/{userId}").authenticated()
+                        .requestMatchers("/api/users/me/profile-image").authenticated()
+                        
+                        // 프롬프트 관련 엔드포인트 (인증 필요)
+                        .requestMatchers("/api/users/{userId}/prompt").authenticated()
+                        .requestMatchers("/api/users/{userId}/fields/{field}").authenticated()
+                        
+                        // 기타 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

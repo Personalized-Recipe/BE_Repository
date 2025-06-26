@@ -4,8 +4,11 @@ import ac.su.kdt.prompttest.entity.UserPrompt;
 import ac.su.kdt.prompttest.service.UserPromptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ac.su.kdt.prompttest.dto.UserPromptDTO;
+import ac.su.kdt.prompttest.entity.User;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
@@ -27,6 +30,12 @@ public class UserPromptController {
     @GetMapping("/{userId}/prompt")
     public ResponseEntity<?> getUserPrompt(@PathVariable Integer userId) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.getUserId().equals(userId)) {
+                return ResponseEntity.badRequest().body(createErrorResponse("Permission denied"));
+            }
+
             UserPrompt userPrompt = userPromptService.getUserPrompt(userId);
             if (userPrompt == null) {
                 return ResponseEntity.notFound().build();
@@ -50,15 +59,70 @@ public class UserPromptController {
     /**
      * 새로운 사용자 프롬프트 정보를 생성합니다.
      * @param userId 사용자 ID
-     * @param userPrompt 생성할 프롬프트 정보
+     * @param promptData 프롬프트 데이터 (Map 형태)
      * @return 생성된 UserPrompt 객체
      */
     @PostMapping("/{userId}/prompt")
     public ResponseEntity<?> createUserPrompt(
             @PathVariable Integer userId,
-            @RequestBody UserPrompt userPrompt) {
+            @RequestBody Map<String, Object> promptData) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.getUserId().equals(userId)) {
+                return ResponseEntity.badRequest().body(createErrorResponse("Permission denied"));
+            }
+
+            log.info("프롬프트 생성 요청 - userId: {}, data: {}", userId, promptData);
+            
+            // Map을 UserPrompt 엔티티로 변환
+            UserPrompt userPrompt = new UserPrompt();
+            userPrompt.setName((String) promptData.get("name"));
+            userPrompt.setNickname((String) promptData.get("nickname"));
+            
+            // age 필드 안전한 타입 변환
+            Object ageObj = promptData.get("age");
+            if (ageObj != null) {
+                if (ageObj instanceof Integer) {
+                    userPrompt.setAge((Integer) ageObj);
+                } else if (ageObj instanceof String) {
+                    try {
+                        userPrompt.setAge(Integer.parseInt((String) ageObj));
+                    } catch (NumberFormatException e) {
+                        throw new RuntimeException("Invalid age format: " + ageObj);
+                    }
+                } else {
+                    throw new RuntimeException("Invalid age type: " + ageObj.getClass().getSimpleName());
+                }
+            }
+            
+            userPrompt.setGender((String) promptData.get("gender"));
+            
+            // pregnant 필드 안전한 타입 변환
+            Object pregnantObj = promptData.get("pregnant");
+            if (pregnantObj != null) {
+                if (pregnantObj instanceof Boolean) {
+                    userPrompt.setIsPregnant((Boolean) pregnantObj);
+                } else if (pregnantObj instanceof String) {
+                    String pregnantStr = (String) pregnantObj;
+                    if ("true".equalsIgnoreCase(pregnantStr) || "yes".equalsIgnoreCase(pregnantStr)) {
+                        userPrompt.setIsPregnant(true);
+                    } else if ("false".equalsIgnoreCase(pregnantStr) || "no".equalsIgnoreCase(pregnantStr) || "none".equalsIgnoreCase(pregnantStr)) {
+                        userPrompt.setIsPregnant(false);
+                    } else {
+                        userPrompt.setIsPregnant(false); // 기본값
+                    }
+                } else {
+                    userPrompt.setIsPregnant(false); // 기본값
+                }
+            }
+            
+            userPrompt.setAllergy((String) promptData.get("allergy"));
+            userPrompt.setHealthStatus((String) promptData.get("health"));
+            userPrompt.setPreference((String) promptData.get("preference"));
+            
             UserPrompt createdPrompt = userPromptService.createUserPrompt(userId, userPrompt);
+            log.info("프롬프트 생성 성공 - promptId: {}", createdPrompt.getPromptId());
             return ResponseEntity.ok(createdPrompt);
         } catch (RuntimeException e) {
             log.error("Error creating user prompt: {}", e.getMessage());
@@ -77,6 +141,12 @@ public class UserPromptController {
             @PathVariable Integer userId,
             @RequestBody UserPrompt userPrompt) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.getUserId().equals(userId)) {
+                return ResponseEntity.badRequest().body(createErrorResponse("Permission denied"));
+            }
+
             UserPrompt updatedPrompt = userPromptService.updateUserPrompt(userId, userPrompt);
             return ResponseEntity.ok(updatedPrompt);
         } catch (RuntimeException e) {
@@ -93,6 +163,12 @@ public class UserPromptController {
     @DeleteMapping("/{userId}/prompt")
     public ResponseEntity<?> deleteUserPrompt(@PathVariable Integer userId) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.getUserId().equals(userId)) {
+                return ResponseEntity.badRequest().body(createErrorResponse("Permission denied"));
+            }
+
             userPromptService.deleteUserPrompt(userId);
             return ResponseEntity.ok(createSuccessResponse("User prompt deleted successfully"));
         } catch (RuntimeException e) {
@@ -114,6 +190,12 @@ public class UserPromptController {
             @PathVariable String field,
             @RequestBody Object value) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.getUserId().equals(userId)) {
+                return ResponseEntity.badRequest().body(createErrorResponse("Permission denied"));
+            }
+
             UserPrompt updatedPrompt = userPromptService.updateUserPromptField(userId, field, value);
             return ResponseEntity.ok(updatedPrompt);
         } catch (RuntimeException e) {

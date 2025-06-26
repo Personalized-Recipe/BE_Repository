@@ -41,9 +41,6 @@ public class User implements UserDetails {
     @Column(length = 100)
     private String email;
 
-    @Column(length = 50)
-    private String nickname;
-
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 

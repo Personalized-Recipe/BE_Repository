@@ -30,10 +30,10 @@ public class UserPromptService {
     }
 
     /**
-     * 새로운 사용자 프롬프트 정보를 생성합니다.
+     * 새로운 사용자 프롬프트 정보를 생성하거나 업데이트합니다.
      * @param userId 사용자 ID
      * @param userPrompt 생성할 프롬프트 정보
-     * @return 생성된 UserPrompt 객체
+     * @return 생성되거나 업데이트된 UserPrompt 객체
      */
     @Transactional
     public UserPrompt createUserPrompt(Integer userId, UserPrompt userPrompt) {
@@ -43,10 +43,21 @@ public class UserPromptService {
         }
 
         // 이미 존재하는 프롬프트가 있는지 확인
-        if (userPromptRepository.findByUser(user) != null) {
-            throw new RuntimeException("User prompt already exists");
+        UserPrompt existingPrompt = userPromptRepository.findByUser(user);
+        if (existingPrompt != null) {
+            log.info("기존 프롬프트 발견 - 업데이트 수행: promptId={}", existingPrompt.getPromptId());
+            // 기존 프롬프트 업데이트
+            existingPrompt.setNickname(userPrompt.getNickname());
+            existingPrompt.setAge(userPrompt.getAge());
+            existingPrompt.setGender(userPrompt.getGender());
+            existingPrompt.setIsPregnant(userPrompt.getIsPregnant());
+            existingPrompt.setHealthStatus(userPrompt.getHealthStatus());
+            existingPrompt.setAllergy(userPrompt.getAllergy());
+            existingPrompt.setPreference(userPrompt.getPreference());
+            return userPromptRepository.save(existingPrompt);
         }
 
+        log.info("새로운 프롬프트 생성: userId={}", userId);
         userPrompt.setUser(user);
         return userPromptRepository.save(userPrompt);
     }
