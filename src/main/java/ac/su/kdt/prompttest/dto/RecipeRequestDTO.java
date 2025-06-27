@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RecipeRequestDTO {
     private Integer userId;
+    private String chatRoomId;
     private String request;
+    private Boolean useRefrigerator;
+    private Boolean isSpecificRecipe;
 } 

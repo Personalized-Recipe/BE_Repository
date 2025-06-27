@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.service;
 
+import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.Ingredient;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
@@ -45,15 +46,37 @@ public class PerplexityService {
         log.info("API Key length: {}", apiKey != null ? apiKey.length() : "null");
     }
     
-    public Recipe getResponse(Integer userId, String userPrompt) {
-        log.info("Starting getResponse for userId: {}, prompt: {}", userId, userPrompt);
+    public RecipeResponseDTO getResponse(Integer userId, String userPrompt, Boolean useRefrigerator) {
+        return getResponse(userId, userPrompt, useRefrigerator, false);
+    }
+    
+    public RecipeResponseDTO getResponse(Integer userId, String userPrompt, Boolean useRefrigerator, Boolean isSpecificRecipe) {
+        return getResponseWithRetry(userId, userPrompt, useRefrigerator, isSpecificRecipe, 0);
+    }
+    
+    private RecipeResponseDTO getResponseWithRetry(Integer userId, String userPrompt, Boolean useRefrigerator, Boolean isSpecificRecipe, int retryCount) {
+        log.info("Starting getResponse for userId: {}, prompt: {}, useRefrigerator: {}, isSpecificRecipe: {}, retry: {}",
+                userId, userPrompt, useRefrigerator, isSpecificRecipe, retryCount);
         
+        try {
+            // 1. 유저 정보 조회
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
+            
+            // 2. AI 응답 생성
+            String systemPrompt;
+            if (isSpecificRecipe) {
+                systemPrompt = promptService.generatePrompt(userId, userPrompt, useRefrigerator, true);
+            } else {
+                systemPrompt = promptService.generatePrompt(userId, userPrompt, useRefrigerator, false);
+            }
+            
+            // 3. Perplexity API 호출
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);
-        
-        String systemPrompt = promptService.generatePrompt(userId, userPrompt);
-        log.debug("System prompt: {}", systemPrompt);
         
         Map<String, String> systemMessage = new HashMap<>();
         systemMessage.put("role", "system");
@@ -68,29 +91,26 @@ public class PerplexityService {
         requestBody.put("messages", Arrays.asList(systemMessage, userMessage));
         
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-        
-        try {
-            log.info("Sending request to Perplexity API");
-            log.debug("Request headers: {}", headers);
-            log.debug("Request body: {}", requestBody);
             
             Map<String, Object> response = restTemplate.postForObject(apiUrl, request, Map.class);
-            log.info("Received response from Perplexity API");
-            log.debug("Response: {}", response);
             
             if (response != null && response.containsKey("choices") 
                 && !((List)response.get("choices")).isEmpty()) {
+                
                 Map<String, Object> choice = (Map<String, Object>)((List)response.get("choices")).get(0);
                 Map<String, Object> messageResponse = (Map<String, Object>)choice.get("message");
                 String content = (String) messageResponse.get("content");
-                log.info("Parsing AI response content");
-                log.debug("Content: {}", content);
-                log.info("AI 응답 원본:\n{}", content);
+                
+                log.info("=== AI 응답 파싱 완료 ===");
                 
                 // AI 응답을 파싱하여 Recipe 객체로 변환
+                if (isSpecificRecipe) {
                 Recipe recipe = parseRecipeResponse(content, userId);
-                log.info("Successfully parsed recipe with ID: {}", recipe.getRecipeId());
-                return recipe;
+                    return RecipeResponseDTO.createRecipeDetail(recipe);
+                } else {
+                    List<Recipe> recipes = parseMenuRecommendationResponse(content, userId);
+                    return RecipeResponseDTO.createMenuRecommendation(recipes);
+                }
             } else {
                 log.error("No valid response received from Perplexity API");
                 throw new RuntimeException("No response received from Perplexity API");
@@ -98,6 +118,28 @@ public class PerplexityService {
         } catch (Exception e) {
             log.error("Error calling Perplexity API", e);
             throw new RuntimeException("Error calling Perplexity API: " + e.getMessage());
+        }
+    }
+
+    
+    // 이전 메서드들 - 타입 충돌로 인해 주석 처리
+    public Recipe getResponse(Integer userId, String userPrompt) {
+        RecipeResponseDTO response = getResponse(userId, userPrompt, false, true);
+        if (response.getType().equals("recipe-detail")) {
+            return response.getRecipe();
+        } else {
+            // 메뉴 추천인 경우 첫 번째 레시피 반환
+            if (response.getRecipes() != null && !response.getRecipes().isEmpty()) {
+                return response.getRecipes().get(0);
+            } else {
+                // 기본 레시피 반환
+                Recipe defaultRecipe = new Recipe();
+                defaultRecipe.setTitle("레시피 정보 없음");
+                defaultRecipe.setDescription("레시피 정보를 찾을 수 없습니다.");
+                defaultRecipe.setCookingTime(0);
+                defaultRecipe.setDifficulty("중");
+                return defaultRecipe;
+            }
         }
     }
 
@@ -118,10 +160,26 @@ public class PerplexityService {
         sb.append("4. ").append(recipe.getDescription());
         return sb.toString();
     }
+    
 
     private Recipe parseRecipeResponse(String content, Integer userId) {
-        log.info("Starting to parse recipe response");
+        return parseRecipeResponse(content, userId, 0);
+    }
+    
+    private Recipe parseRecipeResponse(String content, Integer userId, int retryCount) {
+        log.info("Starting to parse recipe response (retry: {})", retryCount);
         log.debug("Content to parse: {}", content);
+        
+        // 최대 3번까지 재시도
+        if (retryCount >= 3) {
+            log.error("최대 재시도 횟수 초과. 기본 레시피를 반환합니다.");
+            Recipe errorRecipe = new Recipe();
+            errorRecipe.setTitle("레시피 정보 부족");
+            errorRecipe.setDescription("조리 방법 정보를 찾을 수 없어 레시피를 제공할 수 없습니다. 다시 요청해주세요.");
+            errorRecipe.setCookingTime(0);
+            errorRecipe.setDifficulty("중");
+            return errorRecipe;
+        }
         
         // 1. 유저 알러지 정보 조회
         String userAllergy = null;
@@ -207,17 +265,66 @@ public class PerplexityService {
         }
         recipe.setTitle(title);
         
+        // 카테고리 파싱 - AI 응답에서 직접 받기
+        String category = parseCategoryFromResponse(content);
+        recipe.setCategory(category);
+        
+        // 이미지 URL 파싱 - AI 응답에서 직접 받기
+        String imageUrl = parseImageUrlFromResponse(content);
+        if (imageUrl != null) {
+            log.info("Found image URL: {}", imageUrl);
+            recipe.setImageUrl(imageUrl);
+        } else {
+            recipe.setImageUrl(null);
+        }
+        
         // 재료와 양 파싱 - 여러 패턴 시도
         String ingredientsText = null;
         
-        // 패턴 1: "2. 필요한 재료와 양: ..."
-        Pattern ingredientPattern1 = Pattern.compile("2\\.\\s*필요한 재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
+        // 패턴 1: "5. 필요한 재료와 양: ..." (수정된 형식)
+        Pattern ingredientPattern1 = Pattern.compile("5\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n조리 방법|$)", Pattern.DOTALL);
         Matcher ingredientMatcher1 = ingredientPattern1.matcher(content);
         if (ingredientMatcher1.find()) {
             ingredientsText = ingredientMatcher1.group(1).trim();
         }
         
-        // 패턴 2: "**필요한 재료와 양**" (마크다운 형식) - 간단한 버전
+        // 패턴 2: "4. 필요한 재료와 양: ..." (현재 AI 응답 형식)
+        if (ingredientsText == null) {
+            Pattern ingredientPattern2 = Pattern.compile("4\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n조리 방법|$)", Pattern.DOTALL);
+            Matcher ingredientMatcher2 = ingredientPattern2.matcher(content);
+            if (ingredientMatcher2.find()) {
+                ingredientsText = ingredientMatcher2.group(1).trim();
+            }
+        }
+        
+        // 패턴 3: "6. 필요한 재료와 양: ..." (기존 형식)
+        if (ingredientsText == null) {
+            Pattern ingredientPattern3 = Pattern.compile("6\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n조리 방법|$)", Pattern.DOTALL);
+            Matcher ingredientMatcher3 = ingredientPattern3.matcher(content);
+            if (ingredientMatcher3.find()) {
+                ingredientsText = ingredientMatcher3.group(1).trim();
+            }
+        }
+        
+        // 패턴 4: "2. 필요한 재료와 양: ..." (기존 형식)
+        if (ingredientsText == null) {
+            Pattern ingredientPattern4 = Pattern.compile("2\\.\\s*필요한 재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
+            Matcher ingredientMatcher4 = ingredientPattern4.matcher(content);
+            if (ingredientMatcher4.find()) {
+                ingredientsText = ingredientMatcher4.group(1).trim();
+            }
+        }
+        
+        // 패턴 5: AI 응답 형식 "준비 재료(2인분 기준): ..."
+        if (ingredientsText == null) {
+            Pattern ingredientPattern5 = Pattern.compile("준비 재료\\([^)]+\\)\\s*:\\s*(.+?)(?=\\n-\\s*조리 방법|$)", Pattern.DOTALL);
+            Matcher ingredientMatcher5 = ingredientPattern5.matcher(content);
+            if (ingredientMatcher5.find()) {
+                ingredientsText = ingredientMatcher5.group(1).trim();
+            }
+        }
+        
+        // 패턴 6: "**필요한 재료**" (마크다운 형식)
         if (ingredientsText == null) {
             int startIndex = content.indexOf("**필요한 재료**");
             if (startIndex != -1) {
@@ -231,13 +338,18 @@ public class PerplexityService {
             }
         }
         
-        // 패턴 3: "재료: ..."
+        // 패턴 7: "재료: ..."
         if (ingredientsText == null) {
-            Pattern ingredientPattern3 = Pattern.compile("재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-            Matcher ingredientMatcher3 = ingredientPattern3.matcher(content);
-            if (ingredientMatcher3.find()) {
-                ingredientsText = ingredientMatcher3.group(1).trim();
+            Pattern ingredientPattern7 = Pattern.compile("재료\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
+            Matcher ingredientMatcher7 = ingredientPattern7.matcher(content);
+            if (ingredientMatcher7.find()) {
+                ingredientsText = ingredientMatcher7.group(1).trim();
             }
+        }
+        
+        // 패턴 8: 조리 방법에서 재료 추출 (마지막 수단)
+        if (ingredientsText == null) {
+            ingredientsText = extractIngredientsFromCookingMethod(content);
         }
         
         if (ingredientsText != null) {
@@ -340,86 +452,137 @@ public class PerplexityService {
             descriptionBuilder.append("필요한 재료와 양:\n").append(ingredientsText.trim()).append("\n\n");
         }
         
-        // 조리 방법 파싱
-        Pattern methodPattern = Pattern.compile("5\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-        Matcher methodMatcher = methodPattern.matcher(content);
-        if (methodMatcher.find()) {
-            String method = methodMatcher.group(1).trim();
-            // 조리 방법에서 번호 제거
-            method = method.replaceAll("\\d+\\)", "").trim();
-            descriptionBuilder.append("조리 방법:\n").append(method).append("\n\n");
-        }
-        
-        // 마크다운 형식 조리 방법 파싱
-        if (descriptionBuilder.toString().contains("조리 방법:")) {
-            // 이미 파싱됨
+        // 새로운 AI 응답 형식에 맞는 조리 방법 파싱 (7. 조리 방법:)
+        String cookingMethod = parseCookingMethod(content);
+        if (cookingMethod != null) {
+            descriptionBuilder.append(cookingMethod);
+            log.info("Successfully parsed cooking method");
         } else {
-            Pattern methodPattern2 = Pattern.compile("\\*\\*상세한 조리 방법\\*\\*\\s*\\n(.+?)(?=\\n\\*\\*|$)", Pattern.DOTALL);
-            Matcher methodMatcher2 = methodPattern2.matcher(content);
-            if (methodMatcher2.find()) {
-                String method = methodMatcher2.group(1).trim();
-                descriptionBuilder.append("조리 방법:\n").append(method).append("\n\n");
-            } else {
+            log.warn("조리 방법을 찾을 수 없습니다");
                 descriptionBuilder.append("조리 방법 정보를 찾을 수 없습니다.\n\n");
-            }
-        }
-        
-        // 요리 팁과 주의사항 파싱
-        Pattern tipsPattern = Pattern.compile("6\\.\\s*요리 팁과 주의사항\\s*:\\s*(.+?)(?=\\n\\d\\.|$)");
-        Matcher tipsMatcher = tipsPattern.matcher(content);
-        if (tipsMatcher.find()) {
-            String tips = tipsMatcher.group(1).trim();
-            descriptionBuilder.append("요리 팁과 주의사항:\n").append(tips);
-        }
-        
-        // 마크다운 형식 요리 팁 파싱
-        if (descriptionBuilder.toString().contains("요리 팁과 주의사항:")) {
-            // 이미 파싱됨
-        } else {
-            Pattern tipsPattern2 = Pattern.compile("\\*\\*요리 팁과 주의사항\\*\\*\\s*\\n(.+?)(?=\\n\\*\\*|$)");
-            Matcher tipsMatcher2 = tipsPattern2.matcher(content);
-            if (tipsMatcher2.find()) {
-                String tips = tipsMatcher2.group(1).trim();
-                descriptionBuilder.append("요리 팁과 주의사항:\n").append(tips);
-            }
         }
         
         String description = descriptionBuilder.toString().trim();
         log.info("Final description: {}", description);
+        
+        // 조리 방법 정보가 없으면 null 반환 (상위에서 재시도)
+        if (!description.contains("조리 방법:") || description.contains("조리 방법 정보를 찾을 수 없습니다")) {
+            log.warn("조리 방법 정보가 없어서 null을 반환합니다.");
+            return null;
+        }
+        
         recipe.setDescription(description);
         
+        // 특정 레시피 요청의 경우에만 DB 저장 (캐싱 효과)
         try {
-            // Recipe 저장
-            log.info("Saving recipe with title: {}", recipe.getTitle());
+            // 제목으로 기존 레시피가 있는지 확인
+            Recipe existingRecipe = recipeRepository.findByTitle(recipe.getTitle());
+            if (existingRecipe != null) {
+                log.info("Found existing recipe with same title: {}", recipe.getTitle());
+                return existingRecipe;
+            }
+            
+            // 새로운 레시피 저장
+            log.info("Saving new recipe with title: {}", recipe.getTitle());
             recipe = recipeRepository.save(recipe);
             log.info("Saved recipe with ID: {}", recipe.getRecipeId());
             
             return recipe;
         } catch (Exception e) {
-            log.error("Error saving recipe or recipe ingredients", e);
-            throw new RuntimeException("Failed to save recipe: " + e.getMessage(), e);
+            log.error("Error saving recipe", e);
+            // 저장 실패해도 레시피는 반환
+            return recipe;
         }
     }
 
-    private float convertToStandardUnit(float value, String unit) {
-        if (unit == null) return value;
+    private String parseCookingMethod(String content) {
+        // 현재 AI 응답 형식 (4. 조리 방법:) 먼저 시도
+        Pattern methodPattern = Pattern.compile("4\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n요리 팁|$)", Pattern.DOTALL);
+        Matcher methodMatcher = methodPattern.matcher(content);
         
-        // 단위 변환 로직
-        switch (unit.trim()) {
-            case "g":
-            case "ml":
-                return value;
-            case "kg":
-                return value * 1000;
-            case "L":
-                return value * 1000;
-            case "개":
-            case "장":
-            case "쪽":
-                return value; // 기본 단위로 변환하지 않음
-            default:
-                return value;
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Pattern 4): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
         }
+        
+        // 새로운 형식 (7. 조리 방법:) 시도
+        methodPattern = Pattern.compile("7\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n요리 팁|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Pattern 7): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 현재 AI 응답 형식 (조리 방법:) 시도
+        methodPattern = Pattern.compile("조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n요리 팁|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Pattern cooking method): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 새로운 형식 (6. 상세한 조리 방법과 팁) 시도
+        methodPattern = Pattern.compile("6\\.\\s*상세한 조리 방법과 팁\\s*:\\s*(.+?)(?=\\n\\d\\.|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Pattern 6): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 기존 형식 (4. 상세한 조리 방법과 팁) 시도
+        methodPattern = Pattern.compile("4\\.\\s*상세한 조리 방법과 팁\\s*\\n(.+?)(?=\\n\\d\\.|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Pattern 4 detailed): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 기존 형식 (5. 조리 방법) 시도
+        methodPattern = Pattern.compile("5\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            // 조리 방법에서 번호 제거
+            method = method.replaceAll("\\d+\\)", "").trim();
+            log.info("Found cooking method (Pattern 5): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 마크다운 형식 조리 방법 파싱
+        methodPattern = Pattern.compile("\\*\\*상세한 조리 방법\\*\\*\\s*\\n(.+?)(?=\\n\\*\\*|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(1).trim();
+            log.info("Found cooking method (Markdown pattern): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        // 유연한 패턴 시도 (마지막 수단)
+        methodPattern = Pattern.compile("(조리|만드는|요리|요리법|레시피|방법|단계|순서).*?\\n(.+?)(?=\\n\\n|$)", Pattern.DOTALL);
+        methodMatcher = methodPattern.matcher(content);
+        
+        if (methodMatcher.find()) {
+            String method = methodMatcher.group(2).trim();
+            log.info("Found cooking method (Flexible pattern): {}", method.substring(0, Math.min(100, method.length())));
+            return "조리 방법:\n" + method + "\n\n";
+        }
+        
+        log.warn("=== 전체 AI 응답 내용 ===");
+        log.warn(content);
+        log.warn("=== AI 응답 내용 끝 ===");
+        
+        return null;
     }
 
     private String normalizeDifficulty(String difficulty) {
@@ -450,7 +613,7 @@ public class PerplexityService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + apiKey);
 
-            String systemPrompt = promptService.generatePrompt(userId, userPrompt);
+            String systemPrompt = promptService.generatePrompt(userId, userPrompt, false, false);
             Map<String, String> systemMessage = new HashMap<>();
             systemMessage.put("role", "system");
             systemMessage.put("content", systemPrompt);
@@ -484,5 +647,159 @@ public class PerplexityService {
             }
         }
         return "상세한 조리 방법 섹션이 포함된 답변을 받지 못했습니다.";
+    }
+
+    private String parseCategoryFromResponse(String content) {
+        Pattern categoryPattern = Pattern.compile("2\\.\\s*카테고리\\s*:\\s*(.+?)(?=\\n|$)");
+        Matcher categoryMatcher = categoryPattern.matcher(content);
+        if (categoryMatcher.find()) {
+            String category = categoryMatcher.group(1).trim();
+            log.info("Found category from AI response: {}", category);
+            return category;
+        }
+        return "한식"; // 기본값
+    }
+
+    private String parseImageUrlFromResponse(String content) {
+        // 수정된 형식 (7. 이미지 URL:) 먼저 시도
+        Pattern imageUrlPattern = Pattern.compile("7\\.\\s*이미지 URL\\s*:\\s*(.+?)(?=\\n|$)");
+        Matcher imageUrlMatcher = imageUrlPattern.matcher(content);
+        if (imageUrlMatcher.find()) {
+            String imageUrl = imageUrlMatcher.group(1).trim();
+            log.info("Found image URL from AI response (Pattern 7): {}", imageUrl);
+            return imageUrl;
+        }
+        
+        // 기존 형식 (5. 이미지 URL:) 시도
+        imageUrlPattern = Pattern.compile("5\\.\\s*이미지 URL\\s*:\\s*(.+?)(?=\\n|$)");
+        imageUrlMatcher = imageUrlPattern.matcher(content);
+        if (imageUrlMatcher.find()) {
+            String imageUrl = imageUrlMatcher.group(1).trim();
+            log.info("Found image URL from AI response (Pattern 5): {}", imageUrl);
+            return imageUrl;
+        }
+        
+        // 일반적인 이미지 URL 패턴 시도
+        imageUrlPattern = Pattern.compile("(https?://[^\\s]+\\.[^\\s]+(?:png|jpg|jpeg|gif|webp))");
+        imageUrlMatcher = imageUrlPattern.matcher(content);
+        if (imageUrlMatcher.find()) {
+            String imageUrl = imageUrlMatcher.group(1).trim();
+            log.info("Found image URL from general pattern: {}", imageUrl);
+            return imageUrl;
+        }
+        
+        log.warn("No image URL found in AI response");
+        return null;
+    }
+
+    private String extractIngredientsFromCookingMethod(String content) {
+        // 조리 방법 섹션 찾기
+        Pattern methodPattern = Pattern.compile("4\\.\\s*조리 방법\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n요리 팁|$)", Pattern.DOTALL);
+        Matcher methodMatcher = methodPattern.matcher(content);
+        
+        if (!methodMatcher.find()) {
+            return null;
+        }
+        
+        String cookingMethod = methodMatcher.group(1);
+        
+        // 일반적인 요리 재료 패턴들
+        Set<String> ingredients = new HashSet<>();
+        
+        // 돼지고기, 소고기, 닭고기 등 고기류
+        Pattern meatPattern = Pattern.compile("(돼지고기|소고기|닭고기|돈까스|삼겹살|목살|등심|안심|갈비|갈비살|양고기|오리고기|돈육|소주|미림|간장|고추장|고춧가루|설탕|굴소스|후추|식용유|다진 마늘|양파|대파|채 썰어|팬|중불|볶아|향을 낸다|익을 때까지|양념장|고루 섞어|수분을 날리면서|국물이 거의 없어질 때까지|완성된|밥 위에|덮밥 형태)");
+        Matcher meatMatcher = meatPattern.matcher(cookingMethod);
+        while (meatMatcher.find()) {
+            String ingredient = meatMatcher.group(1);
+            if (ingredient.length() > 1) { // 한 글자 제외
+                ingredients.add(ingredient);
+            }
+        }
+        
+        // 채소류
+        Pattern vegPattern = Pattern.compile("(양파|대파|마늘|고추|당근|감자|고구마|버섯|상추|깻잎|쌈채소|김치|무|배추|시금치|부추|파|쪽파|청양고추|홍고추)");
+        Matcher vegMatcher = vegPattern.matcher(cookingMethod);
+        while (vegMatcher.find()) {
+            ingredients.add(vegMatcher.group(1));
+        }
+        
+        // 양념류
+        Pattern seasoningPattern = Pattern.compile("(소금|후추|간장|고추장|고춧가루|설탕|굴소스|미림|소주|식용유|참기름|들기름|겨자|와사비|마요네즈|케찹|머스타드|올리브오일|식초|레몬즙|다진 마늘|다진 생강|다진 파|다진 양파)");
+        Matcher seasoningMatcher = seasoningPattern.matcher(cookingMethod);
+        while (seasoningMatcher.find()) {
+            ingredients.add(seasoningMatcher.group(1));
+        }
+        
+        // 기타 재료
+        Pattern otherPattern = Pattern.compile("(밥|국수|라면|떡|만두|김치|된장|고추장|두부|계란|달걀|치즈|버터|우유|생크림|밀가루|부침가루|빵가루|깨|들깨|참깨|흑임자|견과류|아몬드|호두|땅콩)");
+        Matcher otherMatcher = otherPattern.matcher(cookingMethod);
+        while (otherMatcher.find()) {
+            ingredients.add(otherMatcher.group(1));
+        }
+        
+        if (ingredients.isEmpty()) {
+            return null;
+        }
+        
+        // 재료 목록 생성
+        StringBuilder result = new StringBuilder();
+        for (String ingredient : ingredients) {
+            result.append("- ").append(ingredient).append("\n");
+        }
+        
+        log.info("Extracted ingredients from cooking method: {}", ingredients);
+        return result.toString();
+    }
+
+    private List<Recipe> parseMenuRecommendationResponse(String content, Integer userId) {
+        log.info("Starting to parse menu recommendation response");
+        log.debug("Content to parse: {}", content);
+        
+        List<Recipe> recipes = new ArrayList<>();
+        
+        // AI 응답에서 여러 메뉴 추천을 파싱
+        // 예: "1. 김치찌개\n2. 된장찌개\n3. 미역국" 형태로 파싱
+        String[] lines = content.split("\\n");
+        int menuCount = 0;
+        
+        for (String line : lines) {
+            line = line.trim();
+            if (line.isEmpty()) continue;
+            
+            // 번호로 시작하는 메뉴 찾기 (1., 2., 3. 등)
+            if (line.matches("^\\d+\\..*")) {
+                String menuName = line.replaceAll("^\\d+\\.\\s*", "").trim();
+                if (!menuName.isEmpty()) {
+                    Recipe recipe = new Recipe();
+                    recipe.setTitle(menuName);
+                    recipe.setCategory("한식"); // 기본값, 나중에 개선 가능
+                    recipe.setCookingTime(30); // 기본값
+                    recipe.setDifficulty("중"); // 기본값
+                    recipe.setDescription("메뉴 추천: " + menuName);
+                    recipe.setImageUrl(null);
+                    
+                    recipes.add(recipe);
+                    menuCount++;
+                    
+                    // 최대 5개 메뉴까지만 추천
+                    if (menuCount >= 5) break;
+                }
+            }
+        }
+        
+        // 메뉴를 찾지 못한 경우 기본 메뉴 추천
+        if (recipes.isEmpty()) {
+            Recipe defaultRecipe = new Recipe();
+            defaultRecipe.setTitle("메뉴 추천");
+            defaultRecipe.setCategory("기타");
+            defaultRecipe.setCookingTime(0);
+            defaultRecipe.setDifficulty("중");
+            defaultRecipe.setDescription(content);
+            defaultRecipe.setImageUrl(null);
+            recipes.add(defaultRecipe);
+        }
+        
+        log.info("Parsed {} menu recommendations", recipes.size());
+        return recipes;
     }
 }

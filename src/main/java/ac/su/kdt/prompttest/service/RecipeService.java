@@ -1,5 +1,6 @@
 package ac.su.kdt.prompttest.service;
 
+import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.UserRecipe;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
@@ -22,26 +23,11 @@ public class RecipeService {
     private final PerplexityService perplexityService;
 
     @Transactional
-    public Recipe requestRecipe(Integer userId, String request) {
-        // 프롬프트 생성
-        String prompt = promptService.generatePrompt(userId, request); // 이 프롬프트는 사용자의 프롬프트
+    public RecipeResponseDTO requestRecipe(Integer userId, String chatRoomId, String request, Boolean useRefrigerator, Boolean isSpecificRecipe) {
+        // Perplexity API를 통해 레시피 생성 (isSpecificRecipe 파라미터 전달)
+        RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, request, useRefrigerator, isSpecificRecipe);
         
-        // Perplexity API를 통해 레시피 생성
-        String response = perplexityService.getResponseAsString(userId, prompt);
-        
-        // 결과 저장
-        Recipe recipe = Recipe.builder()
-                .title(extractTitle(response))
-                .description(response)
-                .category(determineCategory(response))
-                .cookingTime(extractCookingTime(response))
-                .difficulty(determineDifficulty(response))
-                .image(extractImage(response))
-                .build();
-        
-        Recipe savedRecipe = recipeRepository.save(recipe);
-        
-        return savedRecipe;
+        return recipeResponse;
     }
     
     public List<UserRecipe> getRecipeHistory(Integer userId) {
@@ -50,7 +36,8 @@ public class RecipeService {
 
     @Transactional // 사용자가 레시피를 저장
     public UserRecipe saveUserRecipe(Integer userId, Integer recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
+        // Check if recipe exists
+        recipeRepository.findById(recipeId)
             .orElseThrow(() -> new RuntimeException("Recipe not found"));
             
         UserRecipe userRecipe = UserRecipe.builder()
@@ -123,8 +110,28 @@ public class RecipeService {
         return ""; // 기본값
     }
 
-    private byte[] extractImage(String response) {
-        // TODO: 이미지 데이터 처리 로직 구현
-        return null;
+    private String extractImageUrl(String response) {
+        // 7. 이미지 URL: 패턴 시도
+        Pattern pattern = Pattern.compile("7\\.\\s*이미지 URL\\s*:\\s*([^\\n]+)");
+        Matcher matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        
+        // 5. 이미지 URL: 패턴 시도 (기존 형식)
+        pattern = Pattern.compile("5\\.\\s*이미지 URL\\s*:\\s*([^\\n]+)");
+        matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        
+        // 일반적인 이미지 URL 패턴 시도
+        pattern = Pattern.compile("(https?://[^\\s]+\\.[^\\s]+(?:png|jpg|jpeg|gif|webp))");
+        matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        
+        return null; // 이미지 URL을 찾을 수 없는 경우
     }
 } 

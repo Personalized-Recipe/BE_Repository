@@ -577,8 +577,8 @@ public class AuthService {
                         if (profile.get("nickname") != null) {
                             nickname = profile.get("nickname").asText();
                             System.out.println("닉네임 추출: " + nickname);
-                        }
-                        
+                    }
+                    
                         if (profile.get("profile_image_url") != null) {
                             profileImage = profile.get("profile_image_url").asText();
                             System.out.println("프로필 이미지 URL 추출: " + profileImage);

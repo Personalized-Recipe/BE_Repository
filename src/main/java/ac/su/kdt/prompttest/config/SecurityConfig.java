@@ -42,7 +42,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // 공개 엔드포인트 (인증 불필요)
-                        .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/recipes/request", "/api/v1/**", "/api/test/**").permitAll()
+                        .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/v1/**", "/api/test/**").permitAll()
+                        
+                        // 레시피 관련 엔드포인트 (개발 중 임시 공개)
+                        .requestMatchers("/api/recipes/**").permitAll() // 개발 중 임시 허용
                         
                         // 사용자 관련 엔드포인트 (인증 필요)
                         .requestMatchers("/api/users/me").permitAll() // 임시로 허용 (개발 중)

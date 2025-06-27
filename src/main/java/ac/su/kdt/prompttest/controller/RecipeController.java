@@ -1,6 +1,7 @@
 package ac.su.kdt.prompttest.controller;
 
 import ac.su.kdt.prompttest.dto.RecipeRequestDTO;
+import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.UserRecipe;
 import ac.su.kdt.prompttest.service.RecipeService;
@@ -18,12 +19,15 @@ public class RecipeController {
     private final RecipeService recipeService;
     
     @PostMapping("/request") // 사용자의 요청을 받아 레시피 생성
-    public ResponseEntity<Recipe> requestRecipe(@RequestBody RecipeRequestDTO recipeRequest) {
-        Recipe recipe = recipeService.requestRecipe(
+    public ResponseEntity<RecipeResponseDTO> requestRecipe(@RequestBody RecipeRequestDTO recipeRequest) {
+        RecipeResponseDTO recipeResponse = recipeService.requestRecipe(
             recipeRequest.getUserId(),
-            recipeRequest.getRequest()
+            recipeRequest.getChatRoomId(),
+            recipeRequest.getRequest(),
+            recipeRequest.getUseRefrigerator(),
+            recipeRequest.getIsSpecificRecipe()
         );
-        return ResponseEntity.ok(recipe);
+        return ResponseEntity.ok(recipeResponse);
     }
     
     @GetMapping("/history/{userId}") // 사용자의 레시피 조회 이력 조회

@@ -47,7 +47,7 @@ public class UserPrompt {
     @Column(length = 100)
     private String preference;
     
-    @Column(length = 10)
+    @Column(length = 50)
     private String nickname;
     
     @Column(name = "created_at", nullable = false)

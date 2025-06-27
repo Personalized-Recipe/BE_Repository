@@ -1,6 +1,8 @@
 package ac.su.kdt.prompttest.service;
 
+import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
 import ac.su.kdt.prompttest.entity.ChatHistory;
+import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.repository.ChatHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,11 +26,22 @@ public class ChatHistoryService {
         // 세션 ID 생성
         String sessionId = UUID.randomUUID().toString();
         
-        // 프롬프트 생성
-        String prompt = promptService.generatePrompt(userId, message);
+        // Perplexity API 호출 (메뉴 추천으로 처리)
+        RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, message, false, false);
         
-        // Perplexity API 호출
-        String response = perplexityService.getResponseAsString(userId, message);
+        // 응답을 문자열로 변환
+        String response;
+        if (recipeResponse.getType().equals("recipe-list")) {
+            // 메뉴 추천인 경우
+            response = "메뉴 추천:\n";
+            for (Recipe recipe : recipeResponse.getRecipes()) {
+                response += "- " + recipe.getTitle() + "\n";
+            }
+        } else {
+            // 특정 레시피인 경우
+            Recipe recipe = recipeResponse.getRecipe();
+            response = recipe.getTitle() + "\n" + recipe.getDescription();
+        }
         
         // 채팅 기록 생성
         ChatHistory chatHistory = ChatHistory.builder()

@@ -48,10 +48,10 @@ public class UserController {
                 log.info("SecurityContext principal이 User 객체가 아님: {}", principal);
             }
             
-            User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser();
             log.info("현재 사용자 조회 성공: userId={}, username={}, provider={}, profileImage={}", 
                     user.getUserId(), user.getUsername(), user.getProvider(), user.getProfileImage());
-            return ResponseEntity.ok(UserDTO.from(user));
+        return ResponseEntity.ok(UserDTO.from(user));
         } catch (Exception e) {
             log.error("현재 사용자 조회 실패: {}", e.getMessage(), e);
             

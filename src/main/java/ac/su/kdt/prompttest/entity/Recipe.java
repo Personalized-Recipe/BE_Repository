@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Recipe")
+@Table(name = "recipe")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer recipeId; 
     
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 255)
     private String title; // 요리 이름
     
     @Column(columnDefinition = "TEXT")
@@ -28,8 +28,8 @@ public class Recipe {
     @Column(length = 50)
     private String category; // 요리 카테고리
 
-    @Lob
-    private byte[] image; // 요리 이미지
+    @Column(length = 500)
+    private String imageUrl; // 요리 이미지 URL
     
     private Integer cookingTime; // 조리 시간
     
