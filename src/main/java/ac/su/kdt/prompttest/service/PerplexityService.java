@@ -122,7 +122,6 @@ public class PerplexityService {
     }
 
     
-    // 이전 메서드들 - 타입 충돌로 인해 주석 처리
     public Recipe getResponse(Integer userId, String userPrompt) {
         RecipeResponseDTO response = getResponse(userId, userPrompt, false, true);
         if (response.getType().equals("recipe-detail")) {
@@ -269,13 +268,14 @@ public class PerplexityService {
         String category = parseCategoryFromResponse(content);
         recipe.setCategory(category);
         
-        // 이미지 URL 파싱 - AI 응답에서 직접 받기
+        // 7. 이미지 URL 파싱
         String imageUrl = parseImageUrlFromResponse(content);
         if (imageUrl != null) {
             log.info("Found image URL: {}", imageUrl);
             recipe.setImageUrl(imageUrl);
         } else {
-            recipe.setImageUrl(null);
+            // 기본 이미지 URL 설정 (Imgur)
+            recipe.setImageUrl("https://i.imgur.com/8tMUxoP.jpg");
         }
         
         // 재료와 양 파싱 - 여러 패턴 시도
@@ -667,7 +667,7 @@ public class PerplexityService {
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from AI response (Pattern 7): {}", imageUrl);
-            return imageUrl;
+            return validateAndCleanImageUrl(imageUrl);
         }
         
         // 기존 형식 (5. 이미지 URL:) 시도
@@ -676,7 +676,7 @@ public class PerplexityService {
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from AI response (Pattern 5): {}", imageUrl);
-            return imageUrl;
+            return validateAndCleanImageUrl(imageUrl);
         }
         
         // 일반적인 이미지 URL 패턴 시도
@@ -685,11 +685,41 @@ public class PerplexityService {
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from general pattern: {}", imageUrl);
-            return imageUrl;
+            return validateAndCleanImageUrl(imageUrl);
         }
         
         log.warn("No image URL found in AI response");
         return null;
+    }
+    
+    private String validateAndCleanImageUrl(String imageUrl) {
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            return null;
+        }
+        
+        // URL 정리
+        String cleanedUrl = imageUrl.trim();
+        
+        // Imgur 도메인만 허용
+        if (!cleanedUrl.contains("imgur.com") && !cleanedUrl.contains("i.imgur.com")) {
+            log.warn("Image URL is not from Imgur: {}", cleanedUrl);
+            return null;
+        }
+        
+        // 일반적인 이미지 확장자 확인
+        if (!cleanedUrl.matches(".*\\.(jpg|jpeg|png|gif|webp)(\\?.*)?$")) {
+            log.warn("Invalid image URL format: {}", cleanedUrl);
+            return null;
+        }
+        
+        // Imgur URL 형식 검증
+        if (!cleanedUrl.matches("https?://(?:i\\.)?imgur\\.com/[a-zA-Z0-9]+\\.[a-zA-Z]{3,4}(\\?.*)?$")) {
+            log.warn("Invalid Imgur URL format: {}", cleanedUrl);
+            return null;
+        }
+        
+        log.info("Valid Imgur image URL found: {}", cleanedUrl);
+        return cleanedUrl;
     }
 
     private String extractIngredientsFromCookingMethod(String content) {
@@ -775,7 +805,7 @@ public class PerplexityService {
                     recipe.setCategory("한식"); // 기본값, 나중에 개선 가능
                     recipe.setCookingTime(30); // 기본값
                     recipe.setDifficulty("중"); // 기본값
-                    recipe.setDescription("메뉴 추천: " + menuName);
+                    recipe.setDescription("메뉴 추천: " + menuName + "\n\n클릭하면 상세 레시피를 확인할 수 있습니다.");
                     recipe.setImageUrl(null);
                     
                     recipes.add(recipe);

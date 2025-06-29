@@ -57,4 +57,17 @@ public class RecipeController {
         Recipe recipe = recipeService.getRecipeById(recipeId);
         return ResponseEntity.ok(recipe);
     }
+    
+    @PostMapping("/detail") // 메뉴 클릭 시 특정 레시피 상세 조회
+    public ResponseEntity<RecipeResponseDTO> getRecipeDetail(@RequestBody RecipeRequestDTO recipeRequest) {
+        // 특정 레시피 요청으로 처리 (isSpecificRecipe: true)
+        RecipeResponseDTO recipeResponse = recipeService.requestRecipe(
+            recipeRequest.getUserId(),
+            recipeRequest.getChatRoomId(),
+            recipeRequest.getRequest(),
+            recipeRequest.getUseRefrigerator(),
+            true // isSpecificRecipe를 true로 설정
+        );
+        return ResponseEntity.ok(recipeResponse);
+    }
 }

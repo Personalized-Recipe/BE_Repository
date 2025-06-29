@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
@@ -56,6 +58,13 @@ public class SecurityConfig {
                         // 프롬프트 관련 엔드포인트 (인증 필요)
                         .requestMatchers("/api/users/{userId}/prompt").authenticated()
                         .requestMatchers("/api/users/{userId}/fields/{field}").authenticated()
+                        
+                        // 재료 관련 엔드포인트 (인증 필요)
+                        .requestMatchers("/api/ingredients/user/{userId}").authenticated() // 재료 추가
+                        .requestMatchers("/api/ingredients/{userId}").authenticated() // 재료 조회
+                        .requestMatchers("/api/ingredients/{userId}/{ingredientName}").authenticated() // 재료 수정/삭제
+                        .requestMatchers("/api/ingredients/all").authenticated() // 모든 재료 조회
+                        .requestMatchers("/api/ingredients/search").authenticated() // 재료 검색
                         
                         // 기타 모든 요청은 인증 필요
                         .anyRequest().authenticated()
