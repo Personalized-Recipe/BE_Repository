@@ -100,6 +100,10 @@ public class RecipeService {
             .orElseThrow(() -> new RuntimeException("Recipe not found"));
     }
 
+    public Recipe getRecipeByTitle(String title) { // 제목으로 레시피 조회
+        return recipeRepository.findByTitle(title);
+    }
+
     // Helper methods
     private String extractTitle(String response) {
         // "1. 요리 이름: " 다음에 오는 텍스트를 추출

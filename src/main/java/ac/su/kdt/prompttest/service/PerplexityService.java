@@ -800,12 +800,15 @@ public class PerplexityService {
             if (line.matches("^\\d+\\..*")) {
                 String menuName = line.replaceAll("^\\d+\\.\\s*", "").trim();
                 if (!menuName.isEmpty()) {
-                    Recipe recipe = parseRecipeFromMenuSection(content, menuName, userId);
-                    recipes.add(recipe);
-                    menuCount++;
-                    
-                    // 최대 5개 메뉴까지만 추천
-                    if (menuCount >= 5) break;
+                    // 메뉴명에 해당하는 상세 레시피 정보를 파싱하여 DB에 저장
+                    Recipe recipe = parseAndSaveDetailedRecipeFromMenu(content, menuName, userId);
+                    if (recipe != null) {
+                        recipes.add(recipe);
+                        menuCount++;
+                        
+                        // 최대 5개 메뉴까지만 추천
+                        if (menuCount >= 5) break;
+                    }
                 }
             }
         }
@@ -826,8 +829,11 @@ public class PerplexityService {
         return recipes;
     }
 
-    private Recipe parseRecipeFromMenuSection(String recipeContent, String menuName, Integer userId) {
+    private Recipe parseAndSaveDetailedRecipeFromMenu(String recipeContent, String menuName, Integer userId) {
         try {
+            log.info("Parsing detailed recipe for menu: {}", menuName);
+            
+            // 메뉴명에 해당하는 상세 레시피 정보를 파싱
             Recipe recipe = new Recipe();
             recipe.setTitle(menuName);
             
@@ -886,12 +892,38 @@ public class PerplexityService {
             
             recipe.setDescription(descriptionBuilder.toString().trim());
             
-            // 메뉴 추천에서는 DB 저장하지 않음 (ID가 null인 상태로 반환)
-            log.info("Created recipe object for menu recommendation: {}", recipe.getTitle());
-            return recipe;
+            // 상세 레시피 정보가 충분한 경우에만 DB에 저장
+            if (recipe.getDescription() != null && 
+                !recipe.getDescription().contains("조리 방법 정보를 찾을 수 없습니다") &&
+                recipe.getDescription().contains("조리 방법:")) {
+                
+                try {
+                    // 제목으로 기존 레시피가 있는지 확인
+                    Recipe existingRecipe = recipeRepository.findByTitle(recipe.getTitle());
+                    if (existingRecipe != null) {
+                        log.info("Found existing recipe with same title: {}", recipe.getTitle());
+                        return existingRecipe;
+                    }
+                    
+                    // 새로운 레시피 저장
+                    log.info("Saving new detailed recipe for menu: {}", recipe.getTitle());
+                    recipe = recipeRepository.save(recipe);
+                    log.info("Saved detailed recipe with ID: {}", recipe.getRecipeId());
+                    
+                    return recipe;
+                } catch (Exception e) {
+                    log.error("Error saving detailed recipe for menu: {}", menuName, e);
+                    // 저장 실패해도 레시피는 반환
+                    return recipe;
+                }
+            } else {
+                log.warn("Insufficient recipe information for menu: {}. Not saving to DB.", menuName);
+                // 상세 정보가 부족한 경우 DB 저장하지 않고 반환
+                return recipe;
+            }
             
         } catch (Exception e) {
-            log.error("Error parsing recipe from menu section: {}", e.getMessage());
+            log.error("Error parsing detailed recipe for menu: {}", menuName, e);
             return null;
         }
     }

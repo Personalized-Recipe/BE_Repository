@@ -2,8 +2,11 @@ package ac.su.kdt.prompttest.controller;
 
 import ac.su.kdt.prompttest.entity.ChatHistory;
 import ac.su.kdt.prompttest.entity.User;
+import ac.su.kdt.prompttest.entity.Recipe;
+import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
 import ac.su.kdt.prompttest.service.ChatHistoryService;
 import ac.su.kdt.prompttest.service.ChatService;
+import ac.su.kdt.prompttest.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ public class ChatHistoryController {
     
     private final ChatHistoryService chatHistoryService;
     private final ChatService chatService;
+    private final RecipeService recipeService;
     
     @GetMapping("/user/{userId}/session/{sessionId}")
     public ResponseEntity<List<ChatHistory>> getChatHistory(
@@ -80,6 +84,7 @@ public class ChatHistoryController {
         if (chatHistory.isUserMessage()) {
             message.put("type", "text");
             message.put("role", "user");
+            message.put("content", chatHistory.getMessage());
             return message;
         }
         
@@ -104,14 +109,34 @@ public class ChatHistoryController {
         
         // 레시피 ID가 있는 경우 상세 레시피로 처리
         if (recipeId != null) {
-            message.put("type", "recipe-detail");
-            // TODO: RecipeService에서 레시피 상세 정보 조회
-            // message.put("recipe", recipeDetail);
-            return message;
+            log.info("레시피 ID {}로 상세 레시피 조회 시도", recipeId);
+            try {
+                Recipe recipe = recipeService.getRecipeById(recipeId);
+                if (recipe != null) {
+                    log.info("레시피 조회 성공: {}", recipe.getTitle());
+                    message.put("type", "recipe-detail");
+                    Map<String, Object> recipeMap = new HashMap<>();
+                    recipeMap.put("recipeId", recipe.getRecipeId());
+                    recipeMap.put("title", recipe.getTitle());
+                    recipeMap.put("description", recipe.getDescription());
+                    recipeMap.put("category", recipe.getCategory());
+                    recipeMap.put("imageUrl", recipe.getImageUrl());
+                    recipeMap.put("cookingTime", recipe.getCookingTime());
+                    recipeMap.put("difficulty", recipe.getDifficulty());
+                    message.put("recipe", recipeMap);
+                    log.info("레시피 상세 정보 파싱 완료: {}", recipeMap);
+                    return message;
+                } else {
+                    log.warn("레시피 ID {}로 조회했지만 결과가 null입니다", recipeId);
+                }
+            } catch (Exception e) {
+                log.error("레시피 ID {} 조회 실패: {}", recipeId, e.getMessage(), e);
+            }
         }
         
         // 메뉴 추천 메시지인지 확인
         if (isMenuRecommendation(content)) {
+            log.info("메뉴 추천 메시지로 판별됨");
             message.put("type", "recipe-list");
             List<Map<String, Object>> recipes = parseMenuRecommendation(content);
             message.put("recipes", recipes);
@@ -119,6 +144,7 @@ public class ChatHistoryController {
         }
         
         // 일반 텍스트로 처리
+        log.info("일반 텍스트 메시지로 처리됨");
         message.put("type", "text");
         message.put("content", content);
         return message;
@@ -180,13 +206,45 @@ public class ChatHistoryController {
             String menuTitle = extractMenuTitle(trimmedLine);
             if (menuTitle != null && !menuTitle.isEmpty()) {
                 Map<String, Object> recipe = new HashMap<>();
-                recipe.put("recipeId", recipes.size() + 1); // 임시 ID
-                recipe.put("title", menuTitle);
-                recipe.put("description", "");
-                recipe.put("category", "기타");
-                recipe.put("imageUrl", "https://i.imgur.com/8tMUxoP.jpg");
-                recipe.put("cookingTime", "정보 없음");
-                recipe.put("difficulty", "정보 없음");
+                
+                // DB에서 해당 메뉴명의 상세 레시피 정보 조회
+                try {
+                    Recipe detailedRecipe = recipeService.getRecipeByTitle(menuTitle);
+                    if (detailedRecipe != null) {
+                        // DB에 저장된 상세 정보가 있는 경우
+                        recipe.put("recipeId", detailedRecipe.getRecipeId());
+                        recipe.put("title", detailedRecipe.getTitle());
+                        recipe.put("description", detailedRecipe.getDescription());
+                        recipe.put("category", detailedRecipe.getCategory());
+                        recipe.put("imageUrl", detailedRecipe.getImageUrl());
+                        recipe.put("cookingTime", detailedRecipe.getCookingTime());
+                        recipe.put("difficulty", detailedRecipe.getDifficulty());
+                        recipe.put("hasDetailedInfo", true);
+                        log.info("메뉴 '{}'의 상세 레시피 정보를 DB에서 조회했습니다. ID: {}", menuTitle, detailedRecipe.getRecipeId());
+                    } else {
+                        // DB에 상세 정보가 없는 경우 (기본 정보만)
+                        recipe.put("recipeId", null);
+                        recipe.put("title", menuTitle);
+                        recipe.put("description", "");
+                        recipe.put("category", "기타");
+                        recipe.put("imageUrl", "https://i.imgur.com/8tMUxoP.jpg");
+                        recipe.put("cookingTime", "정보 없음");
+                        recipe.put("difficulty", "정보 없음");
+                        recipe.put("hasDetailedInfo", false);
+                        log.info("메뉴 '{}'의 상세 레시피 정보가 DB에 없습니다.", menuTitle);
+                    }
+                } catch (Exception e) {
+                    log.error("메뉴 '{}'의 상세 레시피 정보 조회 중 오류: {}", menuTitle, e.getMessage());
+                    // 오류 발생 시 기본 정보로 설정
+                    recipe.put("recipeId", null);
+                    recipe.put("title", menuTitle);
+                    recipe.put("description", "");
+                    recipe.put("category", "기타");
+                    recipe.put("imageUrl", "https://i.imgur.com/8tMUxoP.jpg");
+                    recipe.put("cookingTime", "정보 없음");
+                    recipe.put("difficulty", "정보 없음");
+                    recipe.put("hasDetailedInfo", false);
+                }
                 
                 recipes.add(recipe);
             }
@@ -322,6 +380,57 @@ public class ChatHistoryController {
         } catch (Exception e) {
             log.error("채팅방 세션 조회 실패: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
+        }
+    }
+    
+    /**
+     * 채팅 메시지 전송 및 AI 응답 처리
+     * @param chatRoomId 채팅방 ID
+     * @param request 채팅 요청 데이터
+     * @return AI 응답
+     */
+    @PostMapping("/{chatRoomId}")
+    public ResponseEntity<Map<String, Object>> sendChatMessage(
+            @PathVariable Integer chatRoomId,
+            @RequestBody Map<String, Object> request) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            
+            String message = (String) request.get("message");
+            Boolean useRefrigerator = (Boolean) request.get("useRefrigerator");
+            Boolean isSpecificRecipe = (Boolean) request.get("isSpecificRecipe");
+            
+            if (message == null || message.trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            // RecipeService를 통해 메시지 처리
+            RecipeResponseDTO recipeResponse = recipeService.requestRecipe(
+                user.getUserId(), 
+                chatRoomId.toString(), 
+                message, 
+                useRefrigerator != null ? useRefrigerator : false,
+                isSpecificRecipe != null ? isSpecificRecipe : false
+            );
+            
+            // RecipeResponseDTO를 Map으로 변환
+            Map<String, Object> response = new HashMap<>();
+            if (recipeResponse.getRecipe() != null) {
+                response.put("type", "recipe-detail");
+                response.put("recipe", recipeResponse.getRecipe());
+            } else if (recipeResponse.getRecipes() != null && !recipeResponse.getRecipes().isEmpty()) {
+                response.put("type", "recipe-list");
+                response.put("recipes", recipeResponse.getRecipes());
+            } else {
+                response.put("type", "text");
+                response.put("content", "레시피를 찾을 수 없습니다.");
+            }
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("채팅 메시지 처리 실패: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
         }
     }
 } 
