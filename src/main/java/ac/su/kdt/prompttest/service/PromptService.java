@@ -104,11 +104,11 @@ public class PromptService {
             """, request);
     }
     
-    // 메뉴 추천용 프롬프트 생성 (간단한 요리명 목록)
+    // 메뉴 추천용 프롬프트 생성 (상세 레시피 포함)
     private String generateMenuRecommendationPrompt(Integer userId, String request, Boolean useRefrigerator, User user, UserPrompt userPrompt) {
         StringBuilder promptBuilder = new StringBuilder();
         
-        promptBuilder.append("당신은 메뉴 추천 전문가입니다. 사용자의 요청에 맞는 5개의 메뉴를 추천해주세요.\n\n");
+        promptBuilder.append("당신은 메뉴 추천 전문가입니다. 사용자의 요청에 맞는 5개의 메뉴를 추천하고, 각 메뉴의 상세한 레시피를 제공해주세요.\n\n");
         
         // 1. 보유 재료 우선 추천 (1순위 - useRefrigerator가 true일 때)
         if (useRefrigerator != null && useRefrigerator) {
@@ -157,9 +157,10 @@ public class PromptService {
             promptBuilder.append("**참고**: 위 선호도는 참고사항이며, 보유 재료, 사용자 요청, 개인화 정보가 우선입니다.\n\n");
         }
         
-        // 5. 메뉴 추천 형식 지정
+        // 5. 메뉴 추천 형식 지정 (상세 레시피 포함)
         promptBuilder.append("## 메뉴 추천 형식\n");
-        promptBuilder.append("**다음 형식으로 5개의 메뉴명만 제공해주세요:**\n\n");
+        promptBuilder.append("**다음 형식으로 5개의 메뉴를 추천하고, 각 메뉴의 상세한 레시피를 제공해주세요:**\n\n");
+        
         promptBuilder.append("### 추천 메뉴 목록\n\n");
         promptBuilder.append("1. [메뉴명 1]\n");
         promptBuilder.append("2. [메뉴명 2]\n");
@@ -167,15 +168,48 @@ public class PromptService {
         promptBuilder.append("4. [메뉴명 4]\n");
         promptBuilder.append("5. [메뉴명 5]\n\n");
         
+        promptBuilder.append("### 각 메뉴의 상세 레시피\n\n");
+        promptBuilder.append("**1. [메뉴명 1] 레시피**\n");
+        promptBuilder.append("1. 요리 이름: [요리명]\n");
+        promptBuilder.append("2. 카테고리: [한식/중식/일식/양식/분식/기타]\n");
+        promptBuilder.append("3. 조리 시간: [분]\n");
+        promptBuilder.append("4. 조리 방법:\n");
+        promptBuilder.append("   1. 첫 번째 단계 (구체적인 조리 방법)\n");
+        promptBuilder.append("   2. 두 번째 단계 (구체적인 조리 방법)\n");
+        promptBuilder.append("   3. 세 번째 단계 (구체적인 조리 방법)\n");
+        promptBuilder.append("   ...\n\n");
+        promptBuilder.append("5. 필요한 재료와 양:\n");
+        promptBuilder.append("   - 재료명과 양\n");
+        promptBuilder.append("   - 재료명과 양\n");
+        promptBuilder.append("   ...\n\n");
+        promptBuilder.append("6. 난이도: [상/중/하]\n");
+        promptBuilder.append("7. 이미지 URL: [실제 요리 이미지 URL]\n");
+        promptBuilder.append("8. 요리 팁:\n");
+        promptBuilder.append("   - 팁이나 주의사항\n");
+        promptBuilder.append("   - 팁이나 주의사항\n\n");
+        
+        promptBuilder.append("**2. [메뉴명 2] 레시피**\n");
+        promptBuilder.append("[위와 동일한 형식으로 2번 메뉴의 상세 레시피]\n\n");
+        
+        promptBuilder.append("**3. [메뉴명 3] 레시피**\n");
+        promptBuilder.append("[위와 동일한 형식으로 3번 메뉴의 상세 레시피]\n\n");
+        
+        promptBuilder.append("**4. [메뉴명 4] 레시피**\n");
+        promptBuilder.append("[위와 동일한 형식으로 4번 메뉴의 상세 레시피]\n\n");
+        
+        promptBuilder.append("**5. [메뉴명 5] 레시피**\n");
+        promptBuilder.append("[위와 동일한 형식으로 5번 메뉴의 상세 레시피]\n\n");
+        
         promptBuilder.append("### 추천 이유\n");
         promptBuilder.append("- 상황 분석: [사용자 요청에 맞는 상황 설명]\n");
         promptBuilder.append("- 추천 기준: [어떤 기준으로 메뉴를 선택했는지 설명]\n");
         promptBuilder.append("- 개인화 고려사항: [알레르기, 건강상태 등을 어떻게 고려했는지]\n");
         promptBuilder.append("- 추가 팁: [선택한 메뉴에 대한 추가 조언]\n\n");
         
-        promptBuilder.append("**중요**: 메뉴 추천이므로 상세한 레시피가 아닌 메뉴명 목록과 추천 이유만 제공해주세요.\n");
+        promptBuilder.append("**중요**: 각 메뉴의 상세 레시피를 반드시 포함해주세요.\n");
+        promptBuilder.append("**중요**: 각 레시피는 1번부터 8번까지 모든 섹션을 빠짐없이 포함해야 합니다.\n");
+        promptBuilder.append("**중요**: 7번 이미지 URL은 Imgur (https://imgur.com) 사이트에서만 해당 요리의 이미지를 찾아주세요.\n");
         promptBuilder.append("**중요**: 각 메뉴의 추천 이유는 반드시 사용자 요청과의 연관성을 명확히 설명해주세요.\n");
-        promptBuilder.append("**중요**: 사용자가 특정 메뉴의 레시피를 원한다면 해당 메뉴명을 클릭하거나 '레시피'라는 단어를 포함해서 다시 요청하라고 안내해주세요.\n");
         promptBuilder.append("**우선순위**: 1순위(보유 재료) > 2순위(사용자 요청) > 3순위(개인화 정보) > 4순위(선호도) 순으로 고려해주세요.\n");
         
         return promptBuilder.toString();

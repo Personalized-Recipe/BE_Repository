@@ -3,8 +3,7 @@ package ac.su.kdt.prompttest.service;
 import ac.su.kdt.prompttest.entity.ChatHistory;
 import ac.su.kdt.prompttest.repository.ChatHistoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.relational.core.sql.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,61 +14,99 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatService {
     
     private final ChatHistoryRepository chatHistoryRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private static final String CHAT_CACHE_KEY = "chat:session:";
-    private static final long CHAT_CACHE_TTL = 24 * 60 * 60; // 24시간
     
     @Transactional
-    public void saveChat(Integer userId, String message, boolean isUserMessage, Integer recipeId) {
-        // 새로운 세션 ID 생성 또는 기존 세션 ID 사용
-        String sessionId = getCurrentSessionId(userId);
-        
-        // 채팅 내역 저장
-        ChatHistory chatHistory = ChatHistory.builder()
-                .userId(userId)
-                .message(message)
-                .isUserMessage(isUserMessage)
-                .sessionId(sessionId)
-                .recipeId(recipeId)
-                .build();
-        
-        // Redis 캐시에 저장
-        String cacheKey = CHAT_CACHE_KEY + userId + ":" + sessionId;
-        redisTemplate.opsForList().rightPush(cacheKey, chatHistory);
-        redisTemplate.expire(cacheKey, CHAT_CACHE_TTL, java.util.concurrent.TimeUnit.SECONDS);
-        
-        // DB에도 저장
-        chatHistoryRepository.save(chatHistory);
+    public ChatHistory saveChat(Integer userId, String message, boolean isUserMessage, Integer recipeId, Integer chatRoomId) {
+        try {
+            // 채팅방 ID가 있는 경우 해당 채팅방의 세션 ID 사용, 없으면 새로운 세션 생성
+            String sessionId = getSessionIdForChatRoom(userId, chatRoomId);
+            
+            // 채팅 내역 저장
+            ChatHistory chatHistory = ChatHistory.builder()
+                    .userId(userId)
+                    .message(message)
+                    .isUserMessage(isUserMessage)
+                    .sessionId(sessionId)
+                    .recipeId(recipeId)
+                    .chatRoomId(chatRoomId)
+                    .build();
+            
+            // DB에 저장
+            ChatHistory savedChat = chatHistoryRepository.save(chatHistory);
+            
+            log.info("채팅 메시지 저장 성공: userId={}, chatRoomId={}, sessionId={}, isUserMessage={}", 
+                    userId, chatRoomId, sessionId, isUserMessage);
+            return savedChat;
+            
+        } catch (Exception e) {
+            log.error("채팅 메시지 저장 실패: userId={}, chatRoomId={}, message={}", userId, chatRoomId, message, e);
+            throw new RuntimeException("채팅 메시지 저장에 실패했습니다: " + e.getMessage(), e);
+        }
     }
     
+    /**
+     * 특정 세션의 최근 채팅 내역 조회
+     */
     public List<ChatHistory> getRecentChats(Integer userId, String sessionId) {
-        // 먼저 Redis 캐시에서 조회
-        String cacheKey = CHAT_CACHE_KEY + userId + ":" + sessionId;
-        List<Object> cachedChats = redisTemplate.opsForList().range(cacheKey, 0, -1);
-        
-        if (cachedChats != null && !cachedChats.isEmpty()) {
-            return cachedChats.stream()
-                    .map(chat -> (ChatHistory) chat)
-                    .toList();
-        }
-        
-        // 캐시에 없으면 DB에서 조회
         return chatHistoryRepository.findByUserIdAndSessionIdOrderByCreatedAtDesc(userId, sessionId);
     }
     
-    private String getCurrentSessionId(Integer userId) {
-        String cacheKey = "user:session:" + userId;
-        String sessionId = (String) redisTemplate.opsForValue().get(cacheKey);
+    /**
+     * 특정 채팅방의 세션 ID 조회 (없으면 생성)
+     */
+    public String getSessionIdForChatRoom(Integer userId, Integer chatRoomId) {
+        if (chatRoomId != null) {
+            // 채팅방이 있는 경우 해당 채팅방의 기존 세션 ID 조회
+            List<ChatHistory> existingChats = chatHistoryRepository.findByUserIdAndChatRoomIdOrderByCreatedAtAsc(userId, chatRoomId);
+            
+            if (!existingChats.isEmpty()) {
+                // 기존 채팅이 있으면 첫 번째 메시지의 세션 ID 사용
+                return existingChats.get(0).getSessionId();
+            } else {
+                // 새로운 채팅방이면 새로운 세션 ID 생성
+                return UUID.randomUUID().toString();
+            }
+        } else {
+            // 채팅방이 없는 경우 새로운 세션 ID 생성
+            return UUID.randomUUID().toString();
+        }
+    }
+    
+    /**
+     * 사용자의 모든 세션 ID 조회
+     */
+    public List<String> getUserSessionIds(Integer userId) {
+        return chatHistoryRepository.findDistinctSessionIdsByUserId(userId);
+    }
+    
+    /**
+     * 특정 세션의 대화 컨텍스트 조회 (AI 모델용)
+     */
+    public String getConversationContext(Integer userId, String sessionId, int maxMessages) {
+        List<ChatHistory> recentChats = chatHistoryRepository
+                .findByUserIdAndSessionIdOrderByCreatedAtDesc(userId, sessionId);
         
-        if (sessionId == null) {
-            sessionId = UUID.randomUUID().toString();
-            redisTemplate.opsForValue().set(cacheKey, sessionId);
+        if (recentChats.isEmpty()) {
+            return "";
         }
         
-        return sessionId;
+        // 최근 메시지들만 선택 (AI 컨텍스트 제한 고려)
+        List<ChatHistory> contextMessages = recentChats.stream()
+                .limit(maxMessages)
+                .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt())) // 시간순 정렬
+                .toList();
+        
+        StringBuilder context = new StringBuilder();
+        for (ChatHistory chat : contextMessages) {
+            String role = chat.isUserMessage() ? "사용자" : "AI";
+            context.append(role).append(": ").append(chat.getMessage()).append("\n");
+        }
+        
+        return context.toString();
     }
     
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행

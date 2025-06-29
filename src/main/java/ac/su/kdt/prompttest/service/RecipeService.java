@@ -1,6 +1,7 @@
 package ac.su.kdt.prompttest.service;
 
 import ac.su.kdt.prompttest.dto.RecipeResponseDTO;
+import ac.su.kdt.prompttest.entity.ChatHistory;
 import ac.su.kdt.prompttest.entity.Recipe;
 import ac.su.kdt.prompttest.entity.UserRecipe;
 import ac.su.kdt.prompttest.repository.RecipeRepository;
@@ -19,15 +20,55 @@ public class RecipeService {
     
     private final RecipeRepository recipeRepository;
     private final UserRecipeRepository userRecipeRepository;
-    private final PromptService promptService;
     private final PerplexityService perplexityService;
+    private final ChatService chatService;
 
     @Transactional
     public RecipeResponseDTO requestRecipe(Integer userId, String chatRoomId, String request, Boolean useRefrigerator, Boolean isSpecificRecipe) {
-        // Perplexity API를 통해 레시피 생성 (isSpecificRecipe 파라미터 전달)
-        RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, request, useRefrigerator, isSpecificRecipe);
-        
-        return recipeResponse;
+        try {
+            // 채팅방 ID 파싱
+            Integer roomId = null;
+            if (chatRoomId != null && !chatRoomId.trim().isEmpty()) {
+                try {
+                    roomId = Integer.parseInt(chatRoomId);
+                } catch (NumberFormatException e) {
+                    // chatRoomId가 숫자가 아닌 경우 무시
+                }
+            }
+            
+            // 1. 사용자 메시지 저장 (한 번만)
+            ChatHistory userMessage = chatService.saveChat(userId, request, true, null, roomId);
+            
+            // 2. Perplexity API를 통해 레시피 생성
+            RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, request, useRefrigerator, isSpecificRecipe);
+            
+            // 3. AI 응답을 채팅 히스토리에 저장
+            String responseMessage;
+            Integer recipeId = null;
+            
+            if (recipeResponse.getType().equals("recipe-list")) {
+                responseMessage = "메뉴 추천:\n";
+                for (Recipe recipe : recipeResponse.getRecipes()) {
+                    responseMessage += "- " + recipe.getTitle() + "\n";
+                }
+                // 메뉴 추천의 경우 recipe_id는 null (개별 레시피가 아니므로)
+            } else {
+                // 특정 레시피인 경우
+                Recipe recipe = recipeResponse.getRecipe();
+                responseMessage = recipe.getTitle() + "\n" + recipe.getDescription();
+                recipeId = recipe.getRecipeId(); // 레시피 ID 저장
+            }
+            
+            ChatHistory aiMessage = chatService.saveChat(userId, responseMessage, false, recipeId, roomId);
+            
+            return recipeResponse;
+            
+        } catch (Exception e) {
+            // 에러 발생 시 로그 기록
+            System.err.println("레시피 요청 처리 중 에러 발생: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("레시피 요청 처리에 실패했습니다: " + e.getMessage(), e);
+        }
     }
     
     public List<UserRecipe> getRecipeHistory(Integer userId) {

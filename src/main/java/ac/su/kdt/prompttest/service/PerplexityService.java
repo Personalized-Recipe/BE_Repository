@@ -800,14 +800,7 @@ public class PerplexityService {
             if (line.matches("^\\d+\\..*")) {
                 String menuName = line.replaceAll("^\\d+\\.\\s*", "").trim();
                 if (!menuName.isEmpty()) {
-                    Recipe recipe = new Recipe();
-                    recipe.setTitle(menuName);
-                    recipe.setCategory("한식"); // 기본값, 나중에 개선 가능
-                    recipe.setCookingTime(30); // 기본값
-                    recipe.setDifficulty("중"); // 기본값
-                    recipe.setDescription("메뉴 추천: " + menuName + "\n\n클릭하면 상세 레시피를 확인할 수 있습니다.");
-                    recipe.setImageUrl(null);
-                    
+                    Recipe recipe = parseRecipeFromMenuSection(content, menuName, userId);
                     recipes.add(recipe);
                     menuCount++;
                     
@@ -825,11 +818,81 @@ public class PerplexityService {
             defaultRecipe.setCookingTime(0);
             defaultRecipe.setDifficulty("중");
             defaultRecipe.setDescription(content);
-            defaultRecipe.setImageUrl(null);
+            defaultRecipe.setImageUrl("https://i.imgur.com/8tMUxoP.jpg");
             recipes.add(defaultRecipe);
         }
         
         log.info("Parsed {} menu recommendations", recipes.size());
         return recipes;
+    }
+
+    private Recipe parseRecipeFromMenuSection(String recipeContent, String menuName, Integer userId) {
+        try {
+            Recipe recipe = new Recipe();
+            recipe.setTitle(menuName);
+            
+            // 카테고리 파싱
+            String category = parseCategoryFromResponse(recipeContent);
+            recipe.setCategory(category);
+            
+            // 이미지 URL 파싱
+            String imageUrl = parseImageUrlFromResponse(recipeContent);
+            if (imageUrl != null) {
+                recipe.setImageUrl(imageUrl);
+            } else {
+                recipe.setImageUrl("https://i.imgur.com/8tMUxoP.jpg");
+            }
+            
+            // 조리 시간 파싱
+            Pattern timePattern = Pattern.compile("3\\.\\s*조리 시간\\s*:\\s*(\\d+)\\s*분");
+            Matcher timeMatcher = timePattern.matcher(recipeContent);
+            if (timeMatcher.find()) {
+                recipe.setCookingTime(Integer.parseInt(timeMatcher.group(1)));
+            } else {
+                recipe.setCookingTime(30); // 기본값
+            }
+            
+            // 난이도 파싱
+            Pattern difficultyPattern = Pattern.compile("6\\.\\s*난이도\\s*:\\s*(.+?)(?=\\n|$)");
+            Matcher difficultyMatcher = difficultyPattern.matcher(recipeContent);
+            if (difficultyMatcher.find()) {
+                String difficulty = difficultyMatcher.group(1).trim();
+                recipe.setDifficulty(normalizeDifficulty(difficulty));
+            } else {
+                recipe.setDifficulty("중"); // 기본값
+            }
+            
+            // 재료와 양 파싱
+            String ingredientsText = null;
+            Pattern ingredientPattern = Pattern.compile("5\\.\\s*필요한 재료와 양\\s*:\\s*(.+?)(?=\\n\\d\\.|\\n조리 방법|$)", Pattern.DOTALL);
+            Matcher ingredientMatcher = ingredientPattern.matcher(recipeContent);
+            if (ingredientMatcher.find()) {
+                ingredientsText = ingredientMatcher.group(1).trim();
+            }
+            
+            // 조리 방법 파싱
+            String cookingMethod = parseCookingMethod(recipeContent);
+            
+            // description 구성
+            StringBuilder descriptionBuilder = new StringBuilder();
+            if (ingredientsText != null) {
+                descriptionBuilder.append("필요한 재료와 양:\n").append(ingredientsText.trim()).append("\n\n");
+            }
+            if (cookingMethod != null) {
+                descriptionBuilder.append(cookingMethod);
+            } else {
+                descriptionBuilder.append("조리 방법 정보를 찾을 수 없습니다.\n\n");
+            }
+            
+            recipe.setDescription(descriptionBuilder.toString().trim());
+            
+            // 메뉴 추천에서는 DB 저장하지 않음 (ID가 null인 상태로 반환)
+            log.info("Created recipe object for menu recommendation: {}", recipe.getTitle());
+            return recipe;
+            
+        } catch (Exception e) {
+            log.error("Error parsing recipe from menu section: {}", e.getMessage());
+            return null;
+        }
     }
 }

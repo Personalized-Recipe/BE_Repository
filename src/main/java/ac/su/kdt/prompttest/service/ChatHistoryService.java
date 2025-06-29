@@ -71,6 +71,17 @@ public class ChatHistoryService {
         return chatHistoryRepository.findByUserIdAndSessionIdOrderByCreatedAtDesc(userId, sessionId);
     }
     
+    /**
+     * 특정 채팅방의 메시지 조회
+     * @param userId 사용자 ID
+     * @param chatRoomId 채팅방 ID
+     * @return 채팅방의 메시지 목록
+     */
+    @Transactional(readOnly = true)
+    public List<ChatHistory> getChatRoomMessages(Integer userId, Integer chatRoomId) {
+        return chatHistoryRepository.findByUserIdAndChatRoomIdOrderByCreatedAtAsc(userId, chatRoomId);
+    }
+    
     @Transactional
     public ChatHistory saveChatHistory(Integer userId, String message, String type) {
         String sessionId = UUID.randomUUID().toString();
