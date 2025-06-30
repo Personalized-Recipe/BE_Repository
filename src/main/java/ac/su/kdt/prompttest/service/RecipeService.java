@@ -29,7 +29,6 @@ public class RecipeService {
     @Transactional
     public RecipeResponseDTO requestRecipe(Integer userId, String chatRoomId, String request, Boolean useRefrigerator, Boolean isSpecificRecipe) {
         try {
-            // 채팅방 ID 파싱
             Integer roomId = null;
             if (chatRoomId != null && !chatRoomId.trim().isEmpty()) {
                 try {
@@ -39,11 +38,11 @@ public class RecipeService {
                 }
             }
             
-            // 1. Perplexity API를 통해 레시피 생성 (먼저 실행)
-            RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, request, useRefrigerator, isSpecificRecipe);
-            
-            // 2. 사용자 메시지 저장 (Recipe 생성 이후)
+            // 1. 사용자 메시지 저장 (먼저 실행)
             ChatHistory userMessage = chatService.saveChat(userId, request, true, null, roomId);
+            
+            // 2. Perplexity API를 통해 레시피 생성 (사용자 메시지 저장 이후)
+            RecipeResponseDTO recipeResponse = perplexityService.getResponse(userId, request, useRefrigerator, isSpecificRecipe);
             
             // 3. AI 응답을 채팅 히스토리에 저장
             String responseMessage;

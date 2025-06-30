@@ -821,7 +821,9 @@ public class PerplexityService {
             // 번호로 시작하는 메뉴 찾기 (1., 2., 3. 등)
             if (line.matches("^\\d+\\..*")) {
                 String menuName = line.replaceAll("^\\d+\\.\\s*", "").trim();
-                if (!menuName.isEmpty()) {
+                
+                // 유효한 메뉴명인지 검증
+                if (isValidMenuName(menuName)) {
                     // 메뉴명에 해당하는 상세 레시피 정보를 파싱하여 DB에 저장
                     Recipe recipe = parseAndSaveDetailedRecipeFromMenu(content, menuName, userId);
                     if (recipe != null) {
@@ -831,6 +833,8 @@ public class PerplexityService {
                         // 최대 5개 메뉴까지만 추천
                         if (menuCount >= 5) break;
                     }
+                } else {
+                    log.warn("Invalid menu name detected, skipping: {}", menuName);
                 }
             }
         }
@@ -843,8 +847,74 @@ public class PerplexityService {
         log.info("Parsed {} menu recommendations", recipes.size());
         return recipes;
     }
+    
+    /**
+     * 메뉴명이 유효한지 검증하는 메서드
+     */
+    private boolean isValidMenuName(String menuName) {
+        if (menuName == null || menuName.trim().isEmpty()) {
+            return false;
+        }
+        
+        String lowerName = menuName.toLowerCase().trim();
+        
+        // 너무 짧은 텍스트 (2글자 이하) 제외
+        if (menuName.length() <= 2) {
+            return false;
+        }
+        
+        // 부적절한 패턴들 제외
+        String[] invalidPatterns = {
+            "이미지", "url", "http", "https", "imgur", "com",
+            "요리 팁", "팁:", "tip:", "조리법", "레시피",
+            "재료", "양념", "소스", "장", "가루", "오일",
+            "조리 시간", "난이도", "분량", "인분",
+            "준비", "과정", "단계", "순서",
+            "주의", "참고", "알림", "안내"
+        };
+        
+        for (String pattern : invalidPatterns) {
+            if (lowerName.contains(pattern)) {
+                return false;
+            }
+        }
+        
+        // 메뉴명에 적합한 키워드가 포함된 경우 우선 포함
+        String[] menuKeywords = {
+            "찌개", "국", "탕", "찜", "구이", "볶음", "튀김", "전", "부침", "무침",
+            "나물", "김치", "반찬", "밥", "면", "국수", "라면", "떡", "만두",
+            "스프", "샐러드", "스테이크", "파스타", "피자", "햄버거", "샌드위치",
+            "케이크", "빵", "과자", "아이스크림", "주스", "차", "커피", "술",
+            "요리", "메뉴", "음식", "식사", "아침", "점심", "저녁", "간식",
+            "도시락", "비빔밥", "덮밥", "칼국수", "말이", "계란말이"
+        };
+        
+        for (String keyword : menuKeywords) {
+            if (lowerName.contains(keyword)) {
+                return true;
+            }
+        }
+        
+        // 기본적으로는 포함 (메뉴명에 재료가 포함되어도 허용)
+        return true;
+    }
 
+    /**
+     * Recipe 저장을 위한 별도 트랜잭션 메서드
+     */
     @Transactional
+    public Recipe saveRecipeInNewTransaction(Recipe recipe) {
+        try {
+            log.info("Saving recipe in new transaction: {}", recipe.getTitle());
+            Recipe savedRecipe = recipeRepository.save(recipe);
+            log.info("Successfully saved recipe with ID: {}", savedRecipe.getRecipeId());
+            return savedRecipe;
+        } catch (Exception e) {
+            log.error("Error saving recipe in new transaction: {}", recipe.getTitle(), e);
+            return null;
+        }
+    }
+
     private Recipe parseAndSaveDetailedRecipeFromMenu(String recipeContent, String menuName, Integer userId) {
         try {
             log.info("Parsing detailed recipe for menu: {}", menuName);
@@ -931,19 +1001,17 @@ public class PerplexityService {
                 recipe.getDescription().contains("조리 방법:")) {
                 
                 try {
-                    // 저장 전에 한 번 더 중복 체크 (동시성 문제 방지)
-                    Recipe duplicateCheck = recipeRepository.findByTitle(recipe.getTitle());
-                    if (duplicateCheck != null) {
-                        log.info("Duplicate recipe found during save for: {}. Returning existing recipe.", recipe.getTitle());
-                        return duplicateCheck;
-                    }
-                    
-                    // 새로운 레시피 저장
+                    // 별도 트랜잭션에서 Recipe 저장
                     log.info("Saving new detailed recipe for menu: {}", recipe.getTitle());
-                    recipe = recipeRepository.save(recipe);
-                    log.info("Saved detailed recipe with ID: {}", recipe.getRecipeId());
+                    recipe = saveRecipeInNewTransaction(recipe);
                     
-                    return recipe;
+                    if (recipe != null) {
+                        log.info("Successfully saved recipe with ID: {}", recipe.getRecipeId());
+                        return recipe;
+                    } else {
+                        log.error("Failed to save recipe: {}", menuName);
+                        return null;
+                    }
                 } catch (Exception e) {
                     log.error("Error saving detailed recipe for menu: {}", menuName, e);
                     // 저장 실패 시 null 반환
