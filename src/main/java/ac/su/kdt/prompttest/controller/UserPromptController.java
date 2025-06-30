@@ -98,16 +98,16 @@ public class UserPromptController {
             
             userPrompt.setGender((String) promptData.get("gender"));
             
-            // pregnant 필드 안전한 타입 변환
-            Object pregnantObj = promptData.get("pregnant");
-            if (pregnantObj != null) {
-                if (pregnantObj instanceof Boolean) {
-                    userPrompt.setIsPregnant((Boolean) pregnantObj);
-                } else if (pregnantObj instanceof String) {
-                    String pregnantStr = (String) pregnantObj;
-                    if ("true".equalsIgnoreCase(pregnantStr) || "yes".equalsIgnoreCase(pregnantStr)) {
+            // isPregnant 필드 안전한 타입 변환
+            Object isPregnantObj = promptData.get("isPregnant");
+            if (isPregnantObj != null) {
+                if (isPregnantObj instanceof Boolean) {
+                    userPrompt.setIsPregnant((Boolean) isPregnantObj);
+                } else if (isPregnantObj instanceof String) {
+                    String isPregnantStr = (String) isPregnantObj;
+                    if ("true".equalsIgnoreCase(isPregnantStr) || "yes".equalsIgnoreCase(isPregnantStr)) {
                         userPrompt.setIsPregnant(true);
-                    } else if ("false".equalsIgnoreCase(pregnantStr) || "no".equalsIgnoreCase(pregnantStr) || "none".equalsIgnoreCase(pregnantStr)) {
+                    } else if ("false".equalsIgnoreCase(isPregnantStr) || "no".equalsIgnoreCase(isPregnantStr) || "none".equalsIgnoreCase(isPregnantStr)) {
                         userPrompt.setIsPregnant(false);
                     } else {
                         userPrompt.setIsPregnant(false); // 기본값
@@ -118,7 +118,7 @@ public class UserPromptController {
             }
             
             userPrompt.setAllergy((String) promptData.get("allergy"));
-            userPrompt.setHealthStatus((String) promptData.get("health"));
+            userPrompt.setHealthStatus((String) promptData.get("healthStatus"));
             userPrompt.setPreference((String) promptData.get("preference"));
             
             UserPrompt createdPrompt = userPromptService.createUserPrompt(userId, userPrompt);

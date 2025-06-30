@@ -46,8 +46,15 @@ public class SecurityConfig {
                         // 공개 엔드포인트 (인증 불필요)
                         .requestMatchers("/api/oauth/**", "/api/auth/**", "/api/v1/**", "/api/test/**").permitAll()
                         
-                        // 레시피 관련 엔드포인트 (개발 중 임시 공개)
-                        .requestMatchers("/api/recipes/**").permitAll() // 개발 중 임시 허용
+                        // 레시피 관련 엔드포인트 (인증 필요)
+                        .requestMatchers("/api/recipes/request").authenticated() // 레시피 요청
+                        .requestMatchers("/api/recipes/history/{userId}").authenticated() // 저장된 레시피 조회
+                        .requestMatchers("/api/recipes/save/{userId}/{recipeId}").authenticated() // 레시피 저장
+                        .requestMatchers("/api/recipes/delete/{userId}/{recipeId}").authenticated() // 레시피 삭제
+                        .requestMatchers("/api/recipes/{recipeId}").authenticated() // 레시피 상세 조회
+                        .requestMatchers("/api/recipes/detail").authenticated() // 레시피 상세 요청
+                        .requestMatchers("/api/recipes/invalid-titles").authenticated() // 관리자용
+                        .requestMatchers("/api/recipes/cleanup/{recipeId}").authenticated() // 관리자용
                         
                         // 사용자 관련 엔드포인트 (인증 필요)
                         .requestMatchers("/api/users/me").permitAll() // 임시로 허용 (개발 중)

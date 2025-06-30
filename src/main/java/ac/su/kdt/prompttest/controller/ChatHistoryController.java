@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -107,6 +106,10 @@ public class ChatHistoryController {
     private Map<String, Object> parseAIMessage(String content, Integer recipeId) {
         Map<String, Object> message = new HashMap<>();
         
+        log.info("=== AI 메시지 파싱 시작 ===");
+        log.info("원본 메시지: {}", content);
+        log.info("레시피 ID: {}", recipeId);
+        
         // 레시피 ID가 있는 경우 상세 레시피로 처리
         if (recipeId != null) {
             log.info("레시피 ID {}로 상세 레시피 조회 시도", recipeId);
@@ -134,13 +137,17 @@ public class ChatHistoryController {
             }
         }
         
-        // 메뉴 추천 메시지인지 확인
+        // 메뉴 추천 메시지인지 판별 (강화된 버전)
+        log.info("메뉴 추천 메시지 판별 시도...");
         if (isMenuRecommendation(content)) {
             log.info("메뉴 추천 메시지로 판별됨");
             message.put("type", "recipe-list");
-            List<Map<String, Object>> recipes = parseMenuRecommendation(content);
+            List<Map<String, Object>> recipes = recipeService.parseMenuRecommendation(content);
             message.put("recipes", recipes);
+            log.info("메뉴 추천 파싱 완료. 총 {}개의 레시피 추출", recipes.size());
             return message;
+        } else {
+            log.info("메뉴 추천 메시지가 아님으로 판별됨");
         }
         
         // 일반 텍스트로 처리
@@ -151,7 +158,7 @@ public class ChatHistoryController {
     }
     
     /**
-     * 메뉴 추천 메시지인지 판별
+     * 메뉴 추천 메시지인지 판별 (강화된 버전)
      * @param content 메시지 내용
      * @return 메뉴 추천 여부
      */
@@ -162,12 +169,30 @@ public class ChatHistoryController {
         
         String lowerContent = content.toLowerCase();
         
+        // 상세 레시피 키워드가 포함된 경우 메뉴 추천이 아님
+        String[] detailedRecipeKeywords = {
+            "요리 이름:", "조리 시간:", "난이도:", "조리 방법:", "필요한 재료와 양:",
+            "재료:", "양념:", "소스:", "조리 과정:", "만드는 방법:",
+            "1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.", "10.",
+            "불을 끄고", "완성합니다", "그릇에 담아", "졸아들면", "익으면",
+            "볶으면", "끓으면", "굽으면", "튀기면", "찌면", "삶으면",
+            "데치면", "무치면", "섞으면", "향을 내", "마무리", "마지막에"
+        };
+        
+        for (String keyword : detailedRecipeKeywords) {
+            if (lowerContent.contains(keyword)) {
+                log.info("상세 레시피 키워드 '{}' 발견으로 메뉴 추천이 아님으로 판별", keyword);
+                return false;
+            }
+        }
+        
         // 메뉴 추천 키워드 확인
         boolean hasRecommendationKeywords = lowerContent.contains("메뉴 추천") || 
                                           lowerContent.contains("추천 메뉴") ||
                                           lowerContent.contains("추천:") ||
                                           lowerContent.contains("다음과 같은") ||
-                                          lowerContent.contains("추천드립니다");
+                                          lowerContent.contains("추천드립니다") ||
+                                          lowerContent.contains("추천해드립니다");
         
         // 메뉴 목록 패턴 확인 (줄바꿈으로 구분된 항목들)
         String[] lines = content.split("\n");
@@ -177,138 +202,21 @@ public class ChatHistoryController {
             String trimmedLine = line.trim();
             if (trimmedLine.isEmpty()) continue;
             
-            // 메뉴 항목 패턴 확인
+            // 메뉴 항목 패턴 확인 (더 엄격하게)
             if (trimmedLine.startsWith("- ") || 
                 trimmedLine.startsWith("• ") ||
-                trimmedLine.matches("^\\d+\\..*") ||
-                (trimmedLine.length() > 1 && !trimmedLine.contains(":") && !trimmedLine.contains("재료") && !trimmedLine.contains("조리"))) {
+                (trimmedLine.matches("^\\d+\\..*") && !trimmedLine.contains(":"))) {
                 menuItemCount++;
             }
         }
         
-        return hasRecommendationKeywords || menuItemCount >= 2;
-    }
-    
-    /**
-     * 메뉴 추천 메시지를 파싱해서 레시피 목록 생성
-     * @param content 메뉴 추천 메시지
-     * @return 레시피 목록
-     */
-    private List<Map<String, Object>> parseMenuRecommendation(String content) {
-        List<Map<String, Object>> recipes = new ArrayList<>();
-        String[] lines = content.split("\n");
+        // 메뉴 추천 키워드가 있거나, 메뉴 항목이 1개 이상이면 메뉴 추천으로 판별
+        boolean isMenuList = hasRecommendationKeywords || menuItemCount >= 1;
         
-        for (String line : lines) {
-            String trimmedLine = line.trim();
-            if (trimmedLine.isEmpty()) continue;
-            
-            // 메뉴명 추출
-            String menuTitle = extractMenuTitle(trimmedLine);
-            if (menuTitle != null && !menuTitle.isEmpty()) {
-                Map<String, Object> recipe = new HashMap<>();
-                
-                // DB에서 해당 메뉴명의 상세 레시피 정보 조회
-                try {
-                    Recipe detailedRecipe = recipeService.getRecipeByTitle(menuTitle);
-                    if (detailedRecipe != null) {
-                        // DB에 저장된 상세 정보가 있는 경우
-                        recipe.put("recipeId", detailedRecipe.getRecipeId());
-                        recipe.put("title", detailedRecipe.getTitle());
-                        recipe.put("description", detailedRecipe.getDescription());
-                        recipe.put("category", detailedRecipe.getCategory());
-                        recipe.put("imageUrl", detailedRecipe.getImageUrl());
-                        recipe.put("cookingTime", detailedRecipe.getCookingTime());
-                        recipe.put("difficulty", detailedRecipe.getDifficulty());
-                        recipe.put("hasDetailedInfo", true);
-                        log.info("메뉴 '{}'의 상세 레시피 정보를 DB에서 조회했습니다. ID: {}", menuTitle, detailedRecipe.getRecipeId());
-                    } else {
-                        // DB에 상세 정보가 없는 경우 (기본 정보만)
-                        recipe.put("recipeId", null);
-                        recipe.put("title", menuTitle);
-                        recipe.put("description", "");
-                        recipe.put("category", "기타");
-                        recipe.put("imageUrl", "https://i.imgur.com/8tMUxoP.jpg");
-                        recipe.put("cookingTime", "정보 없음");
-                        recipe.put("difficulty", "정보 없음");
-                        recipe.put("hasDetailedInfo", false);
-                        log.info("메뉴 '{}'의 상세 레시피 정보가 DB에 없습니다.", menuTitle);
-                    }
-                } catch (Exception e) {
-                    log.error("메뉴 '{}'의 상세 레시피 정보 조회 중 오류: {}", menuTitle, e.getMessage());
-                    // 오류 발생 시 기본 정보로 설정
-                    recipe.put("recipeId", null);
-                    recipe.put("title", menuTitle);
-                    recipe.put("description", "");
-                    recipe.put("category", "기타");
-                    recipe.put("imageUrl", "https://i.imgur.com/8tMUxoP.jpg");
-                    recipe.put("cookingTime", "정보 없음");
-                    recipe.put("difficulty", "정보 없음");
-                    recipe.put("hasDetailedInfo", false);
-                }
-                
-                recipes.add(recipe);
-            }
-        }
+        log.info("메뉴 추천 판별 결과: hasRecommendationKeywords={}, menuItemCount={}, isMenuList={}", 
+                hasRecommendationKeywords, menuItemCount, isMenuList);
         
-        return recipes;
-    }
-    
-    /**
-     * 메뉴명 추출
-     * @param line 원본 라인
-     * @return 추출된 메뉴명
-     */
-    private String extractMenuTitle(String line) {
-        // 다양한 패턴으로 메뉴명 추출
-        String[] patterns = {
-            "^[-•]\\s*(.+)$",           // "- 메뉴명" 또는 "• 메뉴명"
-            "^\\d+\\.\\s*(.+)$",        // "1. 메뉴명"
-            "^([가-힣\\s]+)$",          // 한글만 있는 줄
-            "^(.+?)(?:\\s*[-•]\\s*|$)"  // 일반적인 메뉴명 패턴
-        };
-        
-        for (String pattern : patterns) {
-            java.util.regex.Pattern p = java.util.regex.Pattern.compile(pattern);
-            java.util.regex.Matcher m = p.matcher(line);
-            
-            if (m.find() && m.group(1) != null) {
-                String candidate = m.group(1).trim();
-                
-                // 메뉴명이 아닌 키워드 제외
-                if (isValidMenuTitle(candidate)) {
-                    return candidate;
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    /**
-     * 유효한 메뉴명인지 확인
-     * @param title 메뉴명 후보
-     * @return 유효성 여부
-     */
-    private boolean isValidMenuTitle(String title) {
-        if (title == null || title.length() <= 1) {
-            return false;
-        }
-        
-        String lowerTitle = title.toLowerCase();
-        
-        // 제외할 키워드들
-        String[] excludeKeywords = {
-            "메뉴 추천", "추천 메뉴", "다음과 같은", "추천드립니다", 
-            "레시피", "재료", "조리법", "조리 방법", "필요한 재료"
-        };
-        
-        for (String keyword : excludeKeywords) {
-            if (lowerTitle.contains(keyword)) {
-                return false;
-            }
-        }
-        
-        return true;
+        return isMenuList;
     }
     
     /**

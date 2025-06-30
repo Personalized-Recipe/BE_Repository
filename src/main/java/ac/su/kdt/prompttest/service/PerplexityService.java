@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import ac.su.kdt.prompttest.entity.User;
 import ac.su.kdt.prompttest.service.UserService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -661,13 +662,18 @@ public class PerplexityService {
     }
 
     private String parseImageUrlFromResponse(String content) {
+        log.info("=== 이미지 URL 파싱 시작 ===");
+        log.info("파싱할 콘텐츠 길이: {}", content.length());
+        
         // 수정된 형식 (7. 이미지 URL:) 먼저 시도
         Pattern imageUrlPattern = Pattern.compile("7\\.\\s*이미지 URL\\s*:\\s*(.+?)(?=\\n|$)");
         Matcher imageUrlMatcher = imageUrlPattern.matcher(content);
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from AI response (Pattern 7): {}", imageUrl);
-            return validateAndCleanImageUrl(imageUrl);
+            String validatedUrl = validateAndCleanImageUrl(imageUrl);
+            log.info("Validated URL (Pattern 7): {}", validatedUrl);
+            return validatedUrl;
         }
         
         // 기존 형식 (5. 이미지 URL:) 시도
@@ -676,7 +682,9 @@ public class PerplexityService {
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from AI response (Pattern 5): {}", imageUrl);
-            return validateAndCleanImageUrl(imageUrl);
+            String validatedUrl = validateAndCleanImageUrl(imageUrl);
+            log.info("Validated URL (Pattern 5): {}", validatedUrl);
+            return validatedUrl;
         }
         
         // 일반적인 이미지 URL 패턴 시도
@@ -685,10 +693,13 @@ public class PerplexityService {
         if (imageUrlMatcher.find()) {
             String imageUrl = imageUrlMatcher.group(1).trim();
             log.info("Found image URL from general pattern: {}", imageUrl);
-            return validateAndCleanImageUrl(imageUrl);
+            String validatedUrl = validateAndCleanImageUrl(imageUrl);
+            log.info("Validated URL (General pattern): {}", validatedUrl);
+            return validatedUrl;
         }
         
         log.warn("No image URL found in AI response");
+        log.info("=== 이미지 URL 파싱 완료 ===");
         return null;
     }
     
@@ -700,10 +711,18 @@ public class PerplexityService {
         // URL 정리
         String cleanedUrl = imageUrl.trim();
         
+        log.info("Validating image URL: {}", cleanedUrl);
+        
         // Imgur 도메인만 허용
         if (!cleanedUrl.contains("imgur.com") && !cleanedUrl.contains("i.imgur.com")) {
             log.warn("Image URL is not from Imgur: {}", cleanedUrl);
             return null;
+        }
+        
+        // 도메인만 있는 경우 (예: imgur.com) 기본 이미지로 대체
+        if (cleanedUrl.equals("imgur.com") || cleanedUrl.equals("i.imgur.com")) {
+            log.warn("Only domain provided, using default image: {}", cleanedUrl);
+            return "https://i.imgur.com/8tMUxoP.jpg";
         }
         
         // 일반적인 이미지 확장자 확인
@@ -712,8 +731,11 @@ public class PerplexityService {
             return null;
         }
         
-        // Imgur URL 형식 검증
-        if (!cleanedUrl.matches("https?://(?:i\\.)?imgur\\.com/[a-zA-Z0-9]+\\.[a-zA-Z]{3,4}(\\?.*)?$")) {
+        // Imgur URL 형식 검증 (더 유연하게)
+        // https://i.imgur.com/ 또는 https://imgur.com/ 로 시작하고
+        // 그 뒤에 알파벳, 숫자, 언더스코어, 하이픈이 포함된 ID가 오고
+        // 마지막에 이미지 확장자가 오는 형식
+        if (!cleanedUrl.matches("https?://(?:i\\.)?imgur\\.com/[a-zA-Z0-9_-]+\\.[a-zA-Z]{3,4}(\\?.*)?$")) {
             log.warn("Invalid Imgur URL format: {}", cleanedUrl);
             return null;
         }
@@ -813,25 +835,26 @@ public class PerplexityService {
             }
         }
         
-        // 메뉴를 찾지 못한 경우 기본 메뉴 추천
+        // 메뉴를 찾지 못한 경우 기본 메뉴 추천 (DB 저장하지 않음)
         if (recipes.isEmpty()) {
-            Recipe defaultRecipe = new Recipe();
-            defaultRecipe.setTitle("메뉴 추천");
-            defaultRecipe.setCategory("기타");
-            defaultRecipe.setCookingTime(0);
-            defaultRecipe.setDifficulty("중");
-            defaultRecipe.setDescription(content);
-            defaultRecipe.setImageUrl("https://i.imgur.com/8tMUxoP.jpg");
-            recipes.add(defaultRecipe);
+            log.warn("No valid menu recommendations found. Returning empty list.");
         }
         
         log.info("Parsed {} menu recommendations", recipes.size());
         return recipes;
     }
 
+    @Transactional
     private Recipe parseAndSaveDetailedRecipeFromMenu(String recipeContent, String menuName, Integer userId) {
         try {
             log.info("Parsing detailed recipe for menu: {}", menuName);
+            
+            // 먼저 DB에서 동일한 제목의 레시피가 있는지 확인
+            Recipe existingRecipe = recipeRepository.findByTitle(menuName);
+            if (existingRecipe != null) {
+                log.info("Found existing recipe with same title: {}. Skipping creation.", menuName);
+                return existingRecipe; // 기존 레시피 반환
+            }
             
             // 메뉴명에 해당하는 상세 레시피 정보를 파싱
             Recipe recipe = new Recipe();
@@ -839,7 +862,11 @@ public class PerplexityService {
             
             // 카테고리 파싱
             String category = parseCategoryFromResponse(recipeContent);
-            recipe.setCategory(category);
+            if (category != null && !category.isEmpty()) {
+                recipe.setCategory(category);
+            } else {
+                recipe.setCategory("한식"); // 기본 카테고리
+            }
             
             // 이미지 URL 파싱
             String imageUrl = parseImageUrlFromResponse(recipeContent);
@@ -853,7 +880,13 @@ public class PerplexityService {
             Pattern timePattern = Pattern.compile("3\\.\\s*조리 시간\\s*:\\s*(\\d+)\\s*분");
             Matcher timeMatcher = timePattern.matcher(recipeContent);
             if (timeMatcher.find()) {
-                recipe.setCookingTime(Integer.parseInt(timeMatcher.group(1)));
+                try {
+                    int cookingTime = Integer.parseInt(timeMatcher.group(1));
+                    recipe.setCookingTime(cookingTime);
+                } catch (NumberFormatException e) {
+                    log.warn("Failed to parse cooking time: {}", timeMatcher.group(1));
+                    recipe.setCookingTime(30); // 기본값
+                }
             } else {
                 recipe.setCookingTime(30); // 기본값
             }
@@ -898,11 +931,11 @@ public class PerplexityService {
                 recipe.getDescription().contains("조리 방법:")) {
                 
                 try {
-                    // 제목으로 기존 레시피가 있는지 확인
-                    Recipe existingRecipe = recipeRepository.findByTitle(recipe.getTitle());
-                    if (existingRecipe != null) {
-                        log.info("Found existing recipe with same title: {}", recipe.getTitle());
-                        return existingRecipe;
+                    // 저장 전에 한 번 더 중복 체크 (동시성 문제 방지)
+                    Recipe duplicateCheck = recipeRepository.findByTitle(recipe.getTitle());
+                    if (duplicateCheck != null) {
+                        log.info("Duplicate recipe found during save for: {}. Returning existing recipe.", recipe.getTitle());
+                        return duplicateCheck;
                     }
                     
                     // 새로운 레시피 저장
@@ -913,13 +946,13 @@ public class PerplexityService {
                     return recipe;
                 } catch (Exception e) {
                     log.error("Error saving detailed recipe for menu: {}", menuName, e);
-                    // 저장 실패해도 레시피는 반환
-                    return recipe;
+                    // 저장 실패 시 null 반환
+                    return null;
                 }
             } else {
                 log.warn("Insufficient recipe information for menu: {}. Not saving to DB.", menuName);
-                // 상세 정보가 부족한 경우 DB 저장하지 않고 반환
-                return recipe;
+                // 상세 정보가 부족한 경우 null 반환
+                return null;
             }
             
         } catch (Exception e) {
