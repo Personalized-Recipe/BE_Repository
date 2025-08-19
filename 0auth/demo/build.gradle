@@ -1,0 +1,60 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Boot Starters: 핵심 기능들을 모아놓은 의존성 패키지
+	implementation 'org.springframework.boot:spring-boot-starter-web' // RESTful API 개발
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // 비동기 통신을 위한 WebClient 사용
+	implementation 'org.springframework.boot:spring-boot-starter-security' // 인증 및 보안
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // 데이터베이스 연동 (JPA)
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검증
+
+	// Database
+	runtimeOnly 'com.mysql:mysql-connector-j' // MySQL 데이터베이스 드라이버
+
+	// Lombok: 반복적인 코드를 어노테이션으로 대체하여 생산성 향상
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// JWT: 토큰 생성 및 검증을 위한 라이브러리
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// OpenAPI (Swagger): API 문서 자동화 및 테스트 UI 제공
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// DevTools & Configuration
+	developmentOnly 'org.springframework.boot:spring-boot-devtools' // 개발 편의성 (자동 재시작 등)
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' // application.properties 자동 완성
+
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,26 @@
+.middle-distance-page {
+  padding-top: 80px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+.middle-distance-container {
+  text-align: center;
+  max-width: 600px;
+}
+
+.middle-distance-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.middle-distance-container p {
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.6;
+}
